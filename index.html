@@ -1,1630 +1,1647 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>YouTube Monetization Service</title>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<style>
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-    font-family:Arial,Helvetica,sans-serif;
-}
-
-:root{
-    --bg:#07070b;
-    --panel:#11111a;
-    --panel2:#171722;
-    --border:#29293a;
-    --primary:#8b5cf6;
-    --secondary:#06b6d4;
-    --text:#fff;
-    --muted:#9696a8;
-    --success:#22c55e;
-    --danger:#ef4444;
-}
-
-body{
-    background:
-        radial-gradient(circle at top right,rgba(139,92,246,.15),transparent 30%),
-        radial-gradient(circle at bottom left,rgba(6,182,212,.10),transparent 30%),
-        var(--bg);
-    color:var(--text);
-    min-height:100vh;
-}
-
-button,input,textarea,select{
-    font:inherit;
-}
-
-button{
-    cursor:pointer;
-}
-
-.hidden{
-    display:none!important;
-}
-
-/* LOADING */
-
-#loading{
-    position:fixed;
-    inset:0;
-    background:#050507;
-    z-index:9999;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    flex-direction:column;
-    gap:15px;
-}
-
-.loader{
-    width:45px;
-    height:45px;
-    border:4px solid #222;
-    border-top-color:var(--primary);
-    border-radius:50%;
-    animation:spin 1s linear infinite;
-}
-
-@keyframes spin{
-    to{transform:rotate(360deg)}
-}
-
-/* AUTH */
-
-.auth-page{
-    min-height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-}
-
-.auth-box{
-    width:100%;
-    max-width:430px;
-    background:rgba(17,17,26,.95);
-    border:1px solid var(--border);
-    border-radius:25px;
-    padding:35px;
-    box-shadow:0 0 60px rgba(139,92,246,.12);
-}
-
-.logo{
-    text-align:center;
-    margin-bottom:25px;
-}
-
-.logo-icon{
-    width:70px;
-    height:70px;
-    margin:auto;
-    border-radius:20px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:30px;
-    font-weight:bold;
-    background:linear-gradient(135deg,var(--primary),var(--secondary));
-    box-shadow:0 0 35px rgba(139,92,246,.3);
-}
-
-.logo h1{
-    margin-top:15px;
-    font-size:23px;
-}
-
-.logo p{
-    color:var(--muted);
-    margin-top:7px;
-    font-size:13px;
-}
-
-.tabs{
-    display:flex;
-    gap:5px;
-    background:#0a0a10;
-    padding:5px;
-    border-radius:12px;
-    margin-bottom:20px;
-}
-
-.tab{
-    flex:1;
-    border:0;
-    padding:11px;
-    background:transparent;
-    color:var(--muted);
-    border-radius:9px;
-}
-
-.tab.active{
-    background:var(--primary);
-    color:white;
-}
-
-.field{
-    margin-bottom:15px;
-}
-
-.field label{
-    display:block;
-    color:#ccc;
-    font-size:13px;
-    margin-bottom:7px;
-}
-
-.field input,
-.field textarea,
-.field select{
-    width:100%;
-    background:#0a0a10;
-    border:1px solid var(--border);
-    color:white;
-    border-radius:11px;
-    padding:13px;
-    outline:none;
-}
-
-.field input:focus,
-.field textarea:focus,
-.field select:focus{
-    border-color:var(--primary);
-}
-
-.btn{
-    border:0;
-    border-radius:11px;
-    padding:13px 17px;
-    color:white;
-    font-weight:bold;
-    background:linear-gradient(135deg,var(--primary),#6d28d9);
-}
-
-.btn:hover{
-    opacity:.9;
-}
-
-.btn-full{
-    width:100%;
-}
-
-.btn-secondary{
-    background:#20202d;
-}
-
-.btn-danger{
-    background:var(--danger);
-}
-
-.error{
-    background:rgba(239,68,68,.1);
-    border:1px solid rgba(239,68,68,.3);
-    color:#fca5a5;
-    padding:10px;
-    border-radius:10px;
-    font-size:13px;
-    margin-bottom:15px;
-}
-
-.success{
-    background:rgba(34,197,94,.1);
-    border:1px solid rgba(34,197,94,.3);
-    color:#86efac;
-    padding:10px;
-    border-radius:10px;
-    font-size:13px;
-    margin-bottom:15px;
-}
-
-/* APP */
-
-.app{
-    min-height:100vh;
-    padding-bottom:90px;
-}
-
-.topbar{
-    height:75px;
-    padding:0 25px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    border-bottom:1px solid var(--border);
-    background:rgba(7,7,11,.88);
-    backdrop-filter:blur(15px);
-    position:sticky;
-    top:0;
-    z-index:100;
-}
-
-.brand{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    font-weight:bold;
-}
-
-.brand-icon{
-    width:38px;
-    height:38px;
-    border-radius:11px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:linear-gradient(135deg,var(--primary),var(--secondary));
-}
-
-.user-mini{
-    display:flex;
-    align-items:center;
-    gap:10px;
-}
-
-.avatar{
-    width:38px;
-    height:38px;
-    border-radius:50%;
-    background:linear-gradient(135deg,var(--primary),var(--secondary));
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-weight:bold;
-}
-
-.container{
-    width:100%;
-    max-width:1200px;
-    margin:auto;
-    padding:25px;
-}
-
-.page{
-    display:none;
-}
-
-.page.active{
-    display:block;
-}
-
-/* HERO */
-
-.hero{
-    padding:35px;
-    border:1px solid var(--border);
-    border-radius:25px;
-    background:
-        linear-gradient(135deg,rgba(139,92,246,.18),rgba(6,182,212,.07)),
-        var(--panel);
-    position:relative;
-    overflow:hidden;
-}
-
-.hero:after{
-    content:"";
-    position:absolute;
-    width:300px;
-    height:300px;
-    right:-120px;
-    top:-120px;
-    border-radius:50%;
-    background:rgba(139,92,246,.15);
-    filter:blur(30px);
-}
-
-.hero h2{
-    font-size:32px;
-    max-width:650px;
-    line-height:1.2;
-}
-
-.hero p{
-    color:var(--muted);
-    margin-top:13px;
-    max-width:650px;
-    line-height:1.6;
-}
-
-.hero-buttons{
-    display:flex;
-    gap:10px;
-    margin-top:22px;
-    flex-wrap:wrap;
-}
-
-/* STATS */
-
-.stats{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:15px;
-    margin-top:20px;
-}
-
-.stat{
-    background:var(--panel);
-    border:1px solid var(--border);
-    border-radius:17px;
-    padding:20px;
-}
-
-.stat small{
-    color:var(--muted);
-}
-
-.stat strong{
-    display:block;
-    margin-top:7px;
-    font-size:23px;
-}
-
-/* SECTION */
-
-.section-title{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin:30px 0 15px;
-}
-
-.section-title h3{
-    font-size:20px;
-}
-
-/* PACKAGES */
-
-.packages{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:18px;
-}
-
-.package{
-    background:var(--panel);
-    border:1px solid var(--border);
-    border-radius:20px;
-    padding:22px;
-    transition:.2s;
-}
-
-.package:hover{
-    transform:translateY(-3px);
-    border-color:var(--primary);
-    box-shadow:0 15px 40px rgba(139,92,246,.1);
-}
-
-.package.popular{
-    border-color:var(--primary);
-}
-
-.badge{
-    display:inline-block;
-    background:rgba(139,92,246,.15);
-    color:#c4b5fd;
-    border:1px solid rgba(139,92,246,.3);
-    border-radius:30px;
-    padding:5px 10px;
-    font-size:11px;
-    margin-bottom:12px;
-}
-
-.package h4{
-    font-size:19px;
-}
-
-.price{
-    font-size:26px;
-    font-weight:bold;
-    margin:13px 0;
-}
-
-.package ul{
-    list-style:none;
-    color:var(--muted);
-    line-height:2;
-    margin-bottom:15px;
-}
-
-.package li:before{
-    content:"✓";
-    color:var(--success);
-    margin-right:8px;
-}
-
-/* CARD */
-
-.card{
-    background:var(--panel);
-    border:1px solid var(--border);
-    border-radius:20px;
-    padding:22px;
-}
-
-.payment-box{
-    background:#0a0a10;
-    border:1px dashed var(--border);
-    border-radius:15px;
-    padding:18px;
-    margin-bottom:12px;
-}
-
-.payment-box strong{
-    display:block;
-    font-size:18px;
-    margin-top:5px;
-}
-
-.muted{
-    color:var(--muted);
-}
-
-/* TABLE */
-
-.table-wrap{
-    overflow:auto;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-    min-width:650px;
-}
-
-th,td{
-    text-align:left;
-    padding:13px;
-    border-bottom:1px solid var(--border);
-}
-
-th{
-    color:#aaa;
-    font-size:12px;
-}
-
-td{
-    font-size:13px;
-}
-
-.status{
-    display:inline-block;
-    padding:5px 9px;
-    border-radius:20px;
-    font-size:11px;
-}
-
-.status.pending{
-    color:#facc15;
-    background:rgba(250,204,21,.1);
-}
-
-.status.process{
-    color:#38bdf8;
-    background:rgba(56,189,248,.1);
-}
-
-.status.done{
-    color:#4ade80;
-    background:rgba(74,222,128,.1);
-}
-
-.status.cancel{
-    color:#f87171;
-    background:rgba(248,113,113,.1);
-}
-
-/* CHAT */
-
-.chat-box{
-    height:500px;
-    display:flex;
-    flex-direction:column;
-}
-
-.messages{
-    flex:1;
-    overflow-y:auto;
-    padding:10px;
-    background:#09090e;
-    border-radius:15px;
-    margin-bottom:12px;
-}
-
-.message{
-    max-width:78%;
-    padding:10px 13px;
-    border-radius:14px;
-    margin-bottom:10px;
-    font-size:13px;
-    line-height:1.5;
-}
-
-.message.me{
-    margin-left:auto;
-    background:linear-gradient(135deg,#6d28d9,#4c1d95);
-}
-
-.message.admin{
-    background:#1d1d29;
-}
-
-.message small{
-    display:block;
-    color:#aaa;
-    font-size:9px;
-    margin-top:5px;
-}
-
-.chat-form{
-    display:flex;
-    gap:8px;
-}
-
-.chat-form input{
-    flex:1;
-    background:#0a0a10;
-    color:white;
-    border:1px solid var(--border);
-    padding:13px;
-    border-radius:12px;
-}
-
-/* BOTTOM NAV */
-
-.bottom-nav{
-    position:fixed;
-    left:50%;
-    transform:translateX(-50%);
-    bottom:15px;
-    width:calc(100% - 30px);
-    max-width:700px;
-    background:rgba(17,17,26,.94);
-    border:1px solid var(--border);
-    backdrop-filter:blur(15px);
-    border-radius:20px;
-    padding:8px;
-    display:flex;
-    justify-content:space-around;
-    z-index:200;
-}
-
-.nav-btn{
-    border:0;
-    background:transparent;
-    color:#777;
-    padding:8px 12px;
-    border-radius:12px;
-    font-size:11px;
-}
-
-.nav-btn span{
-    display:block;
-    font-size:20px;
-    margin-bottom:3px;
-}
-
-.nav-btn.active{
-    color:white;
-    background:rgba(139,92,246,.18);
-}
-
-/* MODAL */
-
-.modal{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.75);
-    z-index:500;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-}
-
-.modal-box{
-    width:100%;
-    max-width:500px;
-    max-height:90vh;
-    overflow:auto;
-    background:var(--panel);
-    border:1px solid var(--border);
-    border-radius:20px;
-    padding:25px;
-}
-
-.modal-header{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    margin-bottom:20px;
-}
-
-.close{
-    background:#22222e;
-    color:white;
-    border:0;
-    width:35px;
-    height:35px;
-    border-radius:10px;
-}
-
-/* MOBILE */
-
-@media(max-width:800px){
-    .packages{
-        grid-template-columns:1fr;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>YouTube Monetization Service</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
-    .stats{
-        grid-template-columns:1fr;
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #08080b;
+      color: #fff;
+      min-height: 100vh;
     }
 
-    .hero{
-        padding:25px;
+    button,
+    input,
+    select,
+    textarea {
+      font-family: inherit;
     }
 
-    .hero h2{
-        font-size:25px;
+    button {
+      cursor: pointer;
     }
 
-    .container{
-        padding:15px;
+    .hidden {
+      display: none !important;
     }
 
-    .topbar{
-        padding:0 15px;
+    /* =========================
+       LOADING
+    ========================= */
+
+    #loadingScreen {
+      position: fixed;
+      inset: 0;
+      background: #08080b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 99999;
+      flex-direction: column;
+      gap: 20px;
     }
 
-    .brand-text{
-        display:none;
+    .loader {
+      width: 65px;
+      height: 65px;
+      border: 6px solid #25252c;
+      border-top-color: #7c3aed;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
     }
-}
-</style>
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .loading-text {
+      font-size: 18px;
+      color: #aaa;
+    }
+
+    /* =========================
+       LOGIN
+    ========================= */
+
+    #authPage {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      background:
+        radial-gradient(circle at top, #21142e 0, #08080b 45%);
+    }
+
+    .auth-box {
+      width: 100%;
+      max-width: 460px;
+      background: #111116;
+      border: 1px solid #2d2d38;
+      border-radius: 28px;
+      padding: 35px;
+      box-shadow: 0 20px 70px rgba(0,0,0,.5);
+    }
+
+    .logo {
+      text-align: center;
+      font-size: 65px;
+      margin-bottom: 8px;
+    }
+
+    .auth-title {
+      text-align: center;
+      font-size: 30px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .auth-subtitle {
+      text-align: center;
+      color: #999;
+      margin-bottom: 30px;
+    }
+
+    .tabs {
+      display: flex;
+      background: #08080b;
+      border-radius: 14px;
+      padding: 5px;
+      margin-bottom: 25px;
+    }
+
+    .tab {
+      flex: 1;
+      border: 0;
+      background: transparent;
+      color: #aaa;
+      padding: 13px;
+      border-radius: 10px;
+      font-size: 15px;
+    }
+
+    .tab.active {
+      background: #7c3aed;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 8px;
+      color: #ddd;
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      background: #08080b;
+      border: 1px solid #373740;
+      color: #fff;
+      padding: 15px;
+      border-radius: 13px;
+      outline: none;
+      font-size: 15px;
+    }
+
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      border-color: #7c3aed;
+    }
+
+    .main-btn {
+      width: 100%;
+      border: 0;
+      background: linear-gradient(135deg, #7c3aed, #9333ea);
+      color: white;
+      padding: 16px;
+      border-radius: 14px;
+      font-weight: bold;
+      font-size: 16px;
+      margin-top: 5px;
+    }
+
+    .main-btn:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    .message {
+      margin-top: 15px;
+      padding: 13px;
+      border-radius: 12px;
+      text-align: center;
+      display: none;
+    }
+
+    .message.error {
+      display: block;
+      background: #35161b;
+      color: #ff8f99;
+    }
+
+    .message.success {
+      display: block;
+      background: #12321e;
+      color: #72e59a;
+    }
+
+    /* =========================
+       APP
+    ========================= */
+
+    #appPage {
+      min-height: 100vh;
+      padding-bottom: 90px;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(8,8,11,.94);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid #292932;
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: auto;
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 21px;
+      font-weight: 800;
+    }
+
+    .brand span {
+      color: #a78bfa;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .user-name {
+      color: #bbb;
+      font-size: 14px;
+    }
+
+    .logout-btn {
+      border: 0;
+      background: #321925;
+      color: #ffadb9;
+      padding: 11px 15px;
+      border-radius: 12px;
+      font-weight: bold;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 25px 20px;
+    }
+
+    .hero {
+      background:
+        radial-gradient(circle at right top, rgba(124,58,237,.28), transparent 35%),
+        #111116;
+      border: 1px solid #2d2d38;
+      border-radius: 25px;
+      padding: 30px;
+      margin-bottom: 25px;
+    }
+
+    .hero h1 {
+      font-size: 34px;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      color: #aaa;
+      line-height: 1.6;
+    }
+
+    /* =========================
+       NAVIGATION
+    ========================= */
+
+    .nav-menu {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 25px;
+    }
+
+    .nav-btn {
+      border: 1px solid #2d2d38;
+      background: #111116;
+      color: #bbb;
+      padding: 14px 10px;
+      border-radius: 14px;
+      font-size: 14px;
+    }
+
+    .nav-btn.active {
+      background: #7c3aed;
+      color: white;
+      border-color: #7c3aed;
+      font-weight: bold;
+    }
+
+    /* =========================
+       SECTION
+    ========================= */
+
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .section-title {
+      font-size: 27px;
+      margin-bottom: 18px;
+    }
+
+    /* =========================
+       STATS
+    ========================= */
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .stat {
+      background: #111116;
+      border: 1px solid #2d2d38;
+      border-radius: 20px;
+      padding: 22px;
+    }
+
+    .stat-icon {
+      font-size: 30px;
+      margin-bottom: 15px;
+    }
+
+    .stat-label {
+      color: #999;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 27px;
+      font-weight: bold;
+    }
+
+    /* =========================
+       PACKAGES
+    ========================= */
+
+    .packages {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .package {
+      background: #111116;
+      border: 1px solid #30303a;
+      border-radius: 22px;
+      padding: 22px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .package:hover {
+      border-color: #7c3aed;
+      transform: translateY(-2px);
+    }
+
+    .package h3 {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .price {
+      color: #a78bfa;
+      font-size: 27px;
+      font-weight: 800;
+      margin-bottom: 15px;
+    }
+
+    .package ul {
+      list-style: none;
+      margin-bottom: 20px;
+    }
+
+    .package li {
+      color: #bbb;
+      padding: 7px 0;
+      border-bottom: 1px solid #202027;
+    }
+
+    .package li::before {
+      content: "✓ ";
+      color: #6ee7a0;
+      font-weight: bold;
+    }
+
+    .buy-btn {
+      width: 100%;
+      border: 0;
+      background: #7c3aed;
+      color: white;
+      padding: 14px;
+      border-radius: 12px;
+      font-weight: bold;
+    }
+
+    /* =========================
+       ORDERS
+    ========================= */
+
+    .order-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .order {
+      background: #111116;
+      border: 1px solid #2d2d38;
+      border-radius: 18px;
+      padding: 20px;
+    }
+
+    .order-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 12px;
+    }
+
+    .order-title {
+      font-weight: bold;
+      font-size: 17px;
+    }
+
+    .status {
+      padding: 6px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .status.pending {
+      background: #3b3013;
+      color: #ffd66b;
+    }
+
+    .status.process {
+      background: #162b44;
+      color: #73baff;
+    }
+
+    .status.completed {
+      background: #12321e;
+      color: #70e89b;
+    }
+
+    .status.cancelled {
+      background: #35161b;
+      color: #ff8f99;
+    }
+
+    .order-info {
+      color: #aaa;
+      line-height: 1.7;
+    }
+
+    /* =========================
+       PAYMENT
+    ========================= */
+
+    .payment-card {
+      background: #111116;
+      border: 1px solid #2d2d38;
+      border-radius: 20px;
+      padding: 22px;
+      margin-bottom: 15px;
+    }
+
+    .payment-card h3 {
+      margin-bottom: 8px;
+    }
+
+    .payment-number {
+      font-size: 22px;
+      color: #a78bfa;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+
+    .payment-note {
+      color: #999;
+      line-height: 1.6;
+    }
+
+    /* =========================
+       CHAT
+    ========================= */
+
+    .chat-box {
+      background: #111116;
+      border: 1px solid #2d2d38;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .chat-header {
+      padding: 18px;
+      border-bottom: 1px solid #2d2d38;
+      font-weight: bold;
+    }
+
+    .chat-messages {
+      height: 420px;
+      overflow-y: auto;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .chat-message {
+      max-width: 80%;
+      padding: 11px 14px;
+      border-radius: 15px;
+      line-height: 1.5;
+    }
+
+    .chat-message.user {
+      align-self: flex-end;
+      background: #7c3aed;
+    }
+
+    .chat-message.admin {
+      align-self: flex-start;
+      background: #25252e;
+      color: #ddd;
+    }
+
+    .chat-time {
+      font-size: 10px;
+      opacity: .65;
+      margin-top: 5px;
+    }
+
+    .chat-form {
+      display: flex;
+      gap: 10px;
+      padding: 15px;
+      border-top: 1px solid #2d2d38;
+    }
+
+    .chat-form input {
+      flex: 1;
+      background: #08080b;
+      border: 1px solid #363640;
+      color: #fff;
+      padding: 13px;
+      border-radius: 12px;
+      outline: none;
+    }
+
+    .chat-send {
+      border: 0;
+      background: #7c3aed;
+      color: white;
+      padding: 0 20px;
+      border-radius: 12px;
+      font-weight: bold;
+    }
+
+    /* =========================
+       PROFILE
+    ========================= */
+
+    .profile-card {
+      background: #111116;
+      border: 1px solid #2d2d38;
+      border-radius: 20px;
+      padding: 25px;
+    }
+
+    .profile-row {
+      padding: 15px 0;
+      border-bottom: 1px solid #292932;
+    }
+
+    .profile-row:last-child {
+      border-bottom: 0;
+    }
+
+    .profile-label {
+      color: #888;
+      font-size: 13px;
+      margin-bottom: 5px;
+    }
+
+    .profile-value {
+      font-size: 17px;
+    }
+
+    /* =========================
+       MODAL
+    ========================= */
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.75);
+      z-index: 5000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-box {
+      width: 100%;
+      max-width: 500px;
+      background: #111116;
+      border: 1px solid #353540;
+      border-radius: 22px;
+      padding: 25px;
+    }
+
+    .modal-title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .cancel-btn {
+      flex: 1;
+      border: 1px solid #363640;
+      background: #222229;
+      color: #ddd;
+      padding: 14px;
+      border-radius: 12px;
+    }
+
+    .confirm-btn {
+      flex: 1;
+      border: 0;
+      background: #7c3aed;
+      color: white;
+      padding: 14px;
+      border-radius: 12px;
+      font-weight: bold;
+    }
+
+    /* =========================
+       TOAST
+    ========================= */
+
+    #toast {
+      position: fixed;
+      left: 50%;
+      bottom: 25px;
+      transform: translateX(-50%);
+      background: #222229;
+      border: 1px solid #3a3a45;
+      color: white;
+      padding: 13px 20px;
+      border-radius: 12px;
+      z-index: 10000;
+      display: none;
+      max-width: 90%;
+      text-align: center;
+    }
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media (max-width: 800px) {
+      .packages {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .nav-menu {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .hero h1 {
+        font-size: 27px;
+      }
+
+      .user-name {
+        display: none;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .auth-box {
+        padding: 25px 20px;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .header-inner {
+        padding: 13px;
+      }
+
+      .brand {
+        font-size: 17px;
+      }
+
+      .container {
+        padding: 18px 13px;
+      }
+
+      .hero {
+        padding: 22px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<div id="loading">
-    <div class="loader"></div>
-    <div>Memuat sistem...</div>
+<!-- =========================
+     LOADING
+========================= -->
+
+<div id="loadingScreen">
+  <div class="loader"></div>
+  <div class="loading-text">Memuat sistem...</div>
 </div>
 
-<!-- AUTH -->
 
-<section id="authPage" class="auth-page hidden">
+<!-- =========================
+     AUTH PAGE
+========================= -->
 
-    <div class="auth-box">
+<div id="authPage" class="hidden">
 
-        <div class="logo">
-            <div class="logo-icon">YT</div>
-            <h1>YT Monetize Service</h1>
-            <p>Platform layanan bantuan monetisasi YouTube</p>
+  <div class="auth-box">
+
+    <div class="logo">🎬</div>
+
+    <div class="auth-title">
+      YouTube Monetization
+    </div>
+
+    <div class="auth-subtitle">
+      Layanan bantuan monetisasi YouTube
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" id="loginTab">
+        Login
+      </button>
+
+      <button class="tab" id="registerTab">
+        Daftar
+      </button>
+    </div>
+
+    <form id="authForm">
+
+      <div class="field">
+        <label>Email</label>
+        <input
+          type="email"
+          id="email"
+          placeholder="Masukkan email"
+          required
+          autocomplete="email"
+        >
+      </div>
+
+      <div class="field">
+        <label>Password</label>
+        <input
+          type="password"
+          id="password"
+          placeholder="Masukkan password"
+          required
+          minlength="6"
+          autocomplete="current-password"
+        >
+      </div>
+
+      <div
+        class="field hidden"
+        id="nameField"
+      >
+        <label>Nama</label>
+        <input
+          type="text"
+          id="name"
+          placeholder="Nama lengkap"
+          autocomplete="name"
+        >
+      </div>
+
+      <button
+        type="submit"
+        class="main-btn"
+        id="authButton"
+      >
+        LOGIN
+      </button>
+
+      <div id="authMessage" class="message"></div>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     APP PAGE
+========================= -->
+
+<div id="appPage" class="hidden">
+
+  <header>
+
+    <div class="header-inner">
+
+      <div class="brand">
+        🎬
+        <div>
+          YOUTUBE
+          <span>SERVICE</span>
+        </div>
+      </div>
+
+      <div class="header-right">
+
+        <div
+          class="user-name"
+          id="headerUserName"
+        >
+          Member
         </div>
 
-        <div class="tabs">
-            <button id="loginTab" class="tab active" onclick="showAuth('login')">
-                Login
-            </button>
+        <button
+          class="logout-btn"
+          id="logoutButton"
+        >
+          Logout
+        </button>
 
-            <button id="registerTab" class="tab" onclick="showAuth('register')">
-                Daftar
-            </button>
-        </div>
-
-        <div id="authMessage"></div>
-
-        <!-- LOGIN -->
-
-        <form id="loginForm">
-
-            <div class="field">
-                <label>Email</label>
-                <input
-                    type="email"
-                    id="loginEmail"
-                    placeholder="nama@email.com"
-                    required
-                >
-            </div>
-
-            <div class="field">
-                <label>Password</label>
-                <input
-                    type="password"
-                    id="loginPassword"
-                    placeholder="Password"
-                    required
-                >
-            </div>
-
-            <button class="btn btn-full" type="submit">
-                Masuk
-            </button>
-
-        </form>
-
-        <!-- REGISTER -->
-
-        <form id="registerForm" class="hidden">
-
-            <div class="field">
-                <label>Nama</label>
-                <input
-                    type="text"
-                    id="registerName"
-                    placeholder="Nama Anda"
-                    required
-                >
-            </div>
-
-            <div class="field">
-                <label>Email</label>
-                <input
-                    type="email"
-                    id="registerEmail"
-                    placeholder="nama@email.com"
-                    required
-                >
-            </div>
-
-            <div class="field">
-                <label>Password</label>
-                <input
-                    type="password"
-                    id="registerPassword"
-                    placeholder="Minimal 6 karakter"
-                    minlength="6"
-                    required
-                >
-            </div>
-
-            <button class="btn btn-full" type="submit">
-                Buat Akun
-            </button>
-
-        </form>
+      </div>
 
     </div>
-</section>
+
+  </header>
 
 
-<!-- APP -->
+  <main class="container">
 
-<section id="app" class="app hidden">
+    <!-- HERO -->
 
-    <header class="topbar">
+    <div class="hero">
 
-        <div class="brand">
-            <div class="brand-icon">YT</div>
-            <span class="brand-text">YT MONETIZE SERVICE</span>
+      <h1>
+        Dashboard Member
+      </h1>
+
+      <p>
+        Selamat datang di layanan monetisasi YouTube.
+        Pilih paket yang tersedia dan hubungi admin apabila
+        membutuhkan bantuan.
+      </p>
+
+    </div>
+
+
+    <!-- NAV -->
+
+    <div class="nav-menu">
+
+      <button
+        class="nav-btn active"
+        data-section="home"
+      >
+        🏠 Beranda
+      </button>
+
+      <button
+        class="nav-btn"
+        data-section="packages"
+      >
+        💰 Harga
+      </button>
+
+      <button
+        class="nav-btn"
+        data-section="orders"
+      >
+        📦 Pesanan
+      </button>
+
+      <button
+        class="nav-btn"
+        data-section="payment"
+      >
+        💳 Pembayaran
+      </button>
+
+      <button
+        class="nav-btn"
+        data-section="chat"
+      >
+        💬 Live Chat
+      </button>
+
+      <button
+        class="nav-btn"
+        data-section="profile"
+      >
+        👤 Profil
+      </button>
+
+    </div>
+
+
+    <!-- =========================
+         HOME
+    ========================= -->
+
+    <section
+      id="section-home"
+      class="section active"
+    >
+
+      <h2 class="section-title">
+        Ringkasan
+      </h2>
+
+      <div class="stats">
+
+        <div class="stat">
+          <div class="stat-icon">📦</div>
+
+          <div class="stat-label">
+            Total Pesanan
+          </div>
+
+          <div
+            class="stat-value"
+            id="totalOrders"
+          >
+            0
+          </div>
         </div>
 
-        <div class="user-mini">
-            <div>
-                <small id="topName">Member</small>
-            </div>
-            <div class="avatar" id="topAvatar">M</div>
+
+        <div class="stat">
+          <div class="stat-icon">⏳</div>
+
+          <div class="stat-label">
+            Pesanan Pending
+          </div>
+
+          <div
+            class="stat-value"
+            id="pendingOrders"
+          >
+            0
+          </div>
         </div>
 
-    </header>
 
+        <div class="stat">
+          <div class="stat-icon">💬</div>
 
-    <main class="container">
+          <div class="stat-label">
+            Pesan Chat
+          </div>
 
-        <!-- HOME -->
+          <div
+            class="stat-value"
+            id="totalMessages"
+          >
+            0
+          </div>
+        </div>
 
-        <section id="homePage" class="page active">
+      </div>
 
-            <div class="hero">
 
-                <h2>
-                    Bangun Channel YouTube Anda
-                    Dengan Lebih Terarah
-                </h2>
+      <div class="payment-card">
 
-                <p>
-                    Layanan bantuan dan pendampingan untuk channel
-                    YouTube yang ingin mempersiapkan dan mengembangkan
-                    channel menuju monetisasi sesuai kebijakan YouTube.
-                </p>
+        <h3>
+          📢 Informasi
+        </h3>
 
-                <div class="hero-buttons">
-                    <button
-                        class="btn"
-                        onclick="openPage('pricesPage')"
-                    >
-                        Lihat Paket
-                    </button>
+        <p class="payment-note">
+          Pastikan data channel YouTube yang kamu berikan
+          benar sebelum membuat pesanan.
+          Jangan memberikan password akun Google kepada siapa pun.
+        </p>
 
-                    <button
-                        class="btn btn-secondary"
-                        onclick="openPage('chatPage')"
-                    >
-                        💬 Hubungi Admin
-                    </button>
-                </div>
+      </div>
 
-            </div>
+    </section>
 
 
-            <div class="stats">
+    <!-- =========================
+         PACKAGES
+    ========================= -->
 
-                <div class="stat">
-                    <small>Status Member</small>
-                    <strong>Aktif</strong>
-                </div>
+    <section
+      id="section-packages"
+      class="section"
+    >
 
-                <div class="stat">
-                    <small>Pesanan Anda</small>
-                    <strong id="totalOrders">0</strong>
-                </div>
+      <h2 class="section-title">
+        💰 List Harga Monetisasi
+      </h2>
 
-                <div class="stat">
-                    <small>Status Sistem</small>
-                    <strong style="color:#4ade80">
-                        Online
-                    </strong>
-                </div>
+      <div
+        id="packagesContainer"
+        class="packages"
+      >
 
-            </div>
+        <div class="payment-card">
+          Memuat paket...
+        </div>
 
+      </div>
 
-            <div class="section-title">
-                <h3>Paket Populer</h3>
-                <button
-                    class="btn btn-secondary"
-                    onclick="openPage('pricesPage')"
-                >
-                    Semua Paket
-                </button>
-            </div>
+    </section>
 
-            <div id="homePackages" class="packages"></div>
 
-        </section>
+    <!-- =========================
+         ORDERS
+    ========================= -->
 
+    <section
+      id="section-orders"
+      class="section"
+    >
 
-        <!-- PRICE -->
+      <h2 class="section-title">
+        📦 Pesanan Saya
+      </h2>
 
-        <section id="pricesPage" class="page">
+      <div
+        id="ordersContainer"
+        class="order-list"
+      >
+        <div class="payment-card">
+          Memuat pesanan...
+        </div>
+      </div>
 
-            <div class="section-title">
-                <div>
-                    <h3>List Harga Monetisasi</h3>
-                    <p class="muted">
-                        Pilih layanan yang sesuai kebutuhan channel.
-                    </p>
-                </div>
-            </div>
+    </section>
 
-            <div id="packages" class="packages"></div>
 
-        </section>
+    <!-- =========================
+         PAYMENT
+    ========================= -->
 
+    <section
+      id="section-payment"
+      class="section"
+    >
 
-        <!-- PAYMENT -->
+      <h2 class="section-title">
+        💳 Metode Pembayaran
+      </h2>
 
-        <section id="paymentPage" class="page">
+      <div id="paymentContainer">
 
-            <div class="section-title">
-                <div>
-                    <h3>Metode Pembayaran</h3>
-                    <p class="muted">
-                        Lakukan pembayaran ke rekening resmi admin.
-                    </p>
-                </div>
-            </div>
+        <div class="payment-card">
+          Memuat metode pembayaran...
+        </div>
 
-            <div class="card">
+      </div>
 
-                <div class="payment-box">
-                    <small class="muted">Bank</small>
-                    <strong id="bankName">
-                        BCA
-                    </strong>
-                </div>
+    </section>
 
-                <div class="payment-box">
-                    <small class="muted">Nomor Rekening</small>
-                    <strong id="bankNumber">
-                        0000000000
-                    </strong>
-                </div>
 
-                <div class="payment-box">
-                    <small class="muted">Atas Nama</small>
-                    <strong id="bankOwner">
-                        NAMA ANDA
-                    </strong>
-                </div>
+    <!-- =========================
+         CHAT
+    ========================= -->
 
-                <p class="muted" style="margin-top:15px;font-size:12px">
-                    Pastikan nama rekening tujuan sesuai dengan informasi
-                    pembayaran yang diberikan admin.
-                </p>
+    <section
+      id="section-chat"
+      class="section"
+    >
 
-            </div>
+      <h2 class="section-title">
+        💬 Live Chat Admin
+      </h2>
 
-        </section>
+      <div class="chat-box">
 
+        <div class="chat-header">
+          👨‍💻 Hubungi Admin
+        </div>
 
-        <!-- ORDERS -->
-
-        <section id="ordersPage" class="page">
-
-            <div class="section-title">
-                <div>
-                    <h3>Pesanan Saya</h3>
-                    <p class="muted">
-                        Riwayat pesanan layanan Anda.
-                    </p>
-                </div>
-            </div>
-
-            <div class="card">
-
-                <div class="table-wrap">
-
-                    <table>
-
-                        <thead>
-                            <tr>
-                                <th>Paket</th>
-                                <th>Harga</th>
-                                <th>Channel</th>
-                                <th>Status</th>
-                                <th>Tanggal</th>
-                            </tr>
-                        </thead>
-
-                        <tbody id="ordersTable">
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- CHAT -->
-
-        <section id="chatPage" class="page">
-
-            <div class="section-title">
-                <div>
-                    <h3>Live Chat Admin</h3>
-                    <p class="muted">
-                        Hubungi admin apabila mengalami kesulitan.
-                    </p>
-                </div>
-            </div>
-
-            <div class="card chat-box">
-
-                <div id="messages" class="messages"></div>
-
-                <form
-                    id="chatForm"
-                    class="chat-form"
-                >
-
-                    <input
-                        id="chatInput"
-                        placeholder="Tulis pesan..."
-                        autocomplete="off"
-                        required
-                    >
-
-                    <button class="btn">
-                        Kirim
-                    </button>
-
-                </form>
-
-            </div>
-
-        </section>
-
-
-        <!-- PROFILE -->
-
-        <section id="profilePage" class="page">
-
-            <div class="section-title">
-                <div>
-                    <h3>Profil Member</h3>
-                    <p class="muted">
-                        Informasi akun Anda.
-                    </p>
-                </div>
-            </div>
-
-            <div class="card">
-
-                <div class="field">
-                    <label>Nama</label>
-                    <input id="profileName" readonly>
-                </div>
-
-                <div class="field">
-                    <label>Email</label>
-                    <input id="profileEmail" readonly>
-                </div>
-
-                <button
-                    class="btn btn-danger"
-                    onclick="logout()"
-                >
-                    Keluar
-                </button>
-
-            </div>
-
-        </section>
-
-    </main>
-
-
-    <!-- NAVIGATION -->
-
-    <nav class="bottom-nav">
-
-        <button
-            class="nav-btn active"
-            onclick="openPage('homePage',this)"
+        <div
+          id="chatMessages"
+          class="chat-messages"
         >
-            <span>⌂</span>
-            Home
-        </button>
+        </div>
 
-        <button
-            class="nav-btn"
-            onclick="openPage('pricesPage',this)"
+        <form
+          id="chatForm"
+          class="chat-form"
         >
-            <span>💎</span>
-            Harga
-        </button>
 
-        <button
-            class="nav-btn"
-            onclick="openPage('ordersPage',this)"
-        >
-            <span>📋</span>
-            Pesanan
-        </button>
+          <input
+            type="text"
+            id="chatInput"
+            placeholder="Tulis pesan..."
+            autocomplete="off"
+            required
+          >
 
-        <button
-            class="nav-btn"
-            onclick="openPage('chatPage',this)"
-        >
-            <span>💬</span>
-            Chat
-        </button>
+          <button
+            type="submit"
+            class="chat-send"
+          >
+            Kirim
+          </button>
 
-        <button
-            class="nav-btn"
-            onclick="openPage('profilePage',this)"
-        >
-            <span>👤</span>
-            Profil
-        </button>
+        </form>
 
-    </nav>
+      </div>
 
-</section>
+    </section>
 
 
-<!-- ORDER MODAL -->
+    <!-- =========================
+         PROFILE
+    ========================= -->
+
+    <section
+      id="section-profile"
+      class="section"
+    >
+
+      <h2 class="section-title">
+        👤 Profil Saya
+      </h2>
+
+      <div class="profile-card">
+
+        <div class="profile-row">
+
+          <div class="profile-label">
+            Nama
+          </div>
+
+          <div
+            class="profile-value"
+            id="profileName"
+          >
+            -
+          </div>
+
+        </div>
+
+
+        <div class="profile-row">
+
+          <div class="profile-label">
+            Email
+          </div>
+
+          <div
+            class="profile-value"
+            id="profileEmail"
+          >
+            -
+          </div>
+
+        </div>
+
+
+        <div class="profile-row">
+
+          <div class="profile-label">
+            Status
+          </div>
+
+          <div
+            class="profile-value"
+            id="profileStatus"
+          >
+            Member
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+
+<!-- =========================
+     ORDER MODAL
+========================= -->
 
 <div
-    id="orderModal"
-    class="modal hidden"
+  id="orderModal"
+  class="modal hidden"
 >
 
-    <div class="modal-box">
+  <div class="modal-box">
 
-        <div class="modal-header">
+    <div class="modal-title">
+      📦 Buat Pesanan
+    </div>
 
-            <h3>Pesan Layanan</h3>
+    <div id="selectedPackage"></div>
 
-            <button
-                class="close"
-                onclick="closeOrder()"
-            >
-                ×
-            </button>
+    <div class="field">
 
-        </div>
+      <label>
+        URL Channel YouTube
+      </label>
 
-        <div id="orderMessage"></div>
-
-        <form id="orderForm">
-
-            <input
-                type="hidden"
-                id="orderPackageId"
-            >
-
-            <div class="field">
-                <label>Paket</label>
-                <input id="orderPackageName" readonly>
-            </div>
-
-            <div class="field">
-                <label>Harga</label>
-                <input id="orderPackagePrice" readonly>
-            </div>
-
-            <div class="field">
-                <label>Link Channel YouTube</label>
-                <input
-                    id="channelUrl"
-                    type="url"
-                    placeholder="https://youtube.com/@channel"
-                    required
-                >
-            </div>
-
-            <div class="field">
-                <label>Catatan</label>
-                <textarea
-                    id="orderNote"
-                    rows="4"
-                    placeholder="Informasi tambahan..."
-                ></textarea>
-            </div>
-
-            <div class="field">
-                <label>Bukti Pembayaran</label>
-                <input
-                    id="paymentProof"
-                    type="file"
-                    accept="image/*,.pdf"
-                    required
-                >
-            </div>
-
-            <button class="btn btn-full">
-                Kirim Pesanan
-            </button>
-
-        </form>
+      <input
+        type="url"
+        id="youtubeUrl"
+        placeholder="https://www.youtube.com/@channelkamu"
+        required
+      >
 
     </div>
 
+
+    <div class="field">
+
+      <label>
+        Catatan
+      </label>
+
+      <textarea
+        id="orderNote"
+        rows="4"
+        placeholder="Informasi tambahan untuk admin..."
+      ></textarea>
+
+    </div>
+
+
+    <div class="modal-actions">
+
+      <button
+        class="cancel-btn"
+        id="cancelOrder"
+        type="button"
+      >
+        Batal
+      </button>
+
+      <button
+        class="confirm-btn"
+        id="confirmOrder"
+        type="button"
+      >
+        Buat Pesanan
+      </button>
+
+    </div>
+
+  </div>
+
 </div>
+
+
+<div id="toast"></div>
 
 
 <script>
 
 /* ============================================================
-   SUPABASE CONFIG
-   GANTI 2 BARIS INI
+   KONFIGURASI SUPABASE
+   GANTI 2 BAGIAN INI SAJA
 ============================================================ */
 
-const SUPABASE_URL =
-"https://qnvptfefmbxiaynuhfcx.supabase.co";
+const SUPABASE_URL = "https://qnvptfefmbxiaynuhfcx.supabase.co";
 
-const SUPABASE_ANON_KEY =
-"sb_publishable_67asK3gfVhUIpNeEs2uOPQ_2kF4AMQf";
-
-
-const supabaseClient =
-    window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_ANON_KEY
-    );
+const SUPABASE_ANON_KEY = "sb_publishable_67asK3gfVhUIpNeEs2uOPQ_2kF4AMQf";
 
 
 /* ============================================================
-   KONFIGURASI PEMBAYARAN
-   EDIT BAGIAN INI
+   CEK KONFIGURASI
 ============================================================ */
 
-const PAYMENT = {
+const configValid =
+  SUPABASE_URL &&
+  SUPABASE_ANON_KEY &&
+  !SUPABASE_URL.includes("GANTI_DENGAN") &&
+  !SUPABASE_ANON_KEY.includes("GANTI_DENGAN");
 
-    bank:
-        "seabank",
 
-    number:
-        "0000000000",
+let supabaseClient = null;
 
-    owner:
-        "resti"
+if (configValid) {
 
-};
+  supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+  );
+
+}
 
 
 /* ============================================================
-   DATA PAKET
-   BISA ANDA EDIT
-============================================================ */
-
-const PACKAGES = [
-
-    {
-        id:"basic",
-        name:"Basic",
-        price:500000,
-        popular:false,
-        description:"Pendampingan dasar channel",
-        features:[
-            "Pengecekan channel",
-            "Panduan persiapan monetisasi",
-            "Pendampingan admin"
-        ]
-    },
-
-    {
-        id:"standard",
-        name:"Standard",
-        price:1000000,
-        popular:true,
-        description:"Pendampingan lebih lengkap",
-        features:[
-            "Audit channel",
-            "Optimasi dasar",
-            "Panduan persiapan YPP",
-            "Pendampingan admin"
-        ]
-    },
-
-    {
-        id:"premium",
-        name:"Premium",
-        price:2000000,
-        popular:false,
-        description:"Pendampingan channel premium",
-        features:[
-            "Audit channel",
-            "Optimasi channel",
-            "Pendampingan konten",
-            "Panduan YPP",
-            "Prioritas live chat"
-        ]
-    }
-
-];
-
-
-/* ============================================================
-   GLOBAL
+   STATE
 ============================================================ */
 
 let currentUser = null;
-let chatChannel = null;
+let currentProfile = null;
+let selectedPackage = null;
+let isRegisterMode = false;
+let chatSubscription = null;
 
 
 /* ============================================================
-   START
+   ELEMENT
 ============================================================ */
 
-document.addEventListener(
-    "DOMContentLoaded",
-    async () => {
+const loadingScreen =
+  document.getElementById("loadingScreen");
 
-        setPayment();
+const authPage =
+  document.getElementById("authPage");
 
-        renderPackages();
+const appPage =
+  document.getElementById("appPage");
 
-        const {
-            data:{
-                session
-            }
-        } = await supabaseClient
-            .auth
-            .getSession();
+const authForm =
+  document.getElementById("authForm");
 
-        if(session){
+const loginTab =
+  document.getElementById("loginTab");
 
-            currentUser =
-                session.user;
+const registerTab =
+  document.getElementById("registerTab");
 
-            await showApp();
+const nameField =
+  document.getElementById("nameField");
 
-        }else{
+const authButton =
+  document.getElementById("authButton");
 
-            showAuthPage();
-
-        }
-
-        supabaseClient
-            .auth
-            .onAuthStateChange(
-                async(event,session)=>{
-
-                    if(session){
-
-                        currentUser =
-                            session.user;
-
-                        await showApp();
-
-                    }else{
-
-                        currentUser =
-                            null;
-
-                        showAuthPage();
-
-                    }
-
-                }
-            );
-
-    }
-);
+const authMessage =
+  document.getElementById("authMessage");
 
 
 /* ============================================================
-   AUTH PAGE
+   UI
 ============================================================ */
 
-function showAuthPage(){
+function showAuth() {
 
-    document
-        .getElementById("loading")
-        .classList.add("hidden");
+  loadingScreen.classList.add("hidden");
 
-    document
-        .getElementById("authPage")
-        .classList.remove("hidden");
+  appPage.classList.add("hidden");
 
-    document
-        .getElementById("app")
-        .classList.add("hidden");
+  authPage.classList.remove("hidden");
 
 }
 
 
-function showAuth(type){
+function showApp() {
 
-    const login =
-        document.getElementById(
-            "loginForm"
-        );
+  loadingScreen.classList.add("hidden");
 
-    const register =
-        document.getElementById(
-            "registerForm"
-        );
+  authPage.classList.add("hidden");
 
-    const loginTab =
-        document.getElementById(
-            "loginTab"
-        );
-
-    const registerTab =
-        document.getElementById(
-            "registerTab"
-        );
-
-    if(type==="login"){
-
-        login.classList.remove("hidden");
-        register.classList.add("hidden");
-
-        loginTab.classList.add("active");
-        registerTab.classList.remove("active");
-
-    }else{
-
-        login.classList.add("hidden");
-        register.classList.remove("hidden");
-
-        loginTab.classList.remove("active");
-        registerTab.classList.add("active");
-
-    }
-
-    clearAuthMessage();
+  appPage.classList.remove("hidden");
 
 }
 
 
-function authMessage(
-    text,
-    type="error"
-){
+function showAuthMessage(text, type) {
 
-    document.getElementById(
-        "authMessage"
-    ).innerHTML =
-        `<div class="${type}">
-            ${escapeHtml(text)}
-        </div>`;
+  authMessage.textContent = text;
+
+  authMessage.className =
+    "message " + type;
 
 }
 
 
-function clearAuthMessage(){
+function toast(text) {
 
-    document.getElementById(
-        "authMessage"
-    ).innerHTML="";
+  const el =
+    document.getElementById("toast");
+
+  el.textContent = text;
+
+  el.style.display = "block";
+
+  clearTimeout(window.toastTimer);
+
+  window.toastTimer =
+    setTimeout(() => {
+
+      el.style.display = "none";
+
+    }, 3000);
 
 }
 
 
 /* ============================================================
-   REGISTER
+   AUTH MODE
 ============================================================ */
 
-document
-    .getElementById("registerForm")
-    .addEventListener(
-        "submit",
-        async(e)=>{
+loginTab.addEventListener("click", () => {
 
-            e.preventDefault();
+  isRegisterMode = false;
 
-            clearAuthMessage();
+  loginTab.classList.add("active");
 
-            const name =
-                document
-                .getElementById("registerName")
-                .value
-                .trim();
+  registerTab.classList.remove("active");
 
-            const email =
-                document
-                .getElementById("registerEmail")
-                .value
-                .trim();
+  nameField.classList.add("hidden");
 
-            const password =
-                document
-                .getElementById("registerPassword")
-                .value;
+  authButton.textContent = "LOGIN";
 
-            if(password.length<6){
+  authMessage.className = "message";
 
-                authMessage(
-                    "Password minimal 6 karakter."
-                );
+});
 
-                return;
 
-            }
+registerTab.addEventListener("click", () => {
 
-            const {
-                data,
-                error
-            } =
-            await supabaseClient
-                .auth
-                .signUp({
+  isRegisterMode = true;
 
-                    email,
-                    password,
+  registerTab.classList.add("active");
 
-                    options:{
-                        data:{
-                            full_name:name
-                        }
-                    }
+  loginTab.classList.remove("active");
 
-                });
+  nameField.classList.remove("hidden");
 
-            if(error){
+  authButton.textContent = "DAFTAR";
 
-                authMessage(
-                    error.message
-                );
+  authMessage.className = "message";
 
-                return;
+});
 
-            }
 
-            if(data.user){
+/* ============================================================
+   AUTH SUBMIT
+============================================================ */
 
-                const {
-                    error:profileError
-                } =
-                
-                if(profileError){
+authForm.addEventListener("submit", async (event) => {
 
-                    console.log(
-                        profileError
-                    );
+  event.preventDefault();
 
-                }
+  if (!configValid) {
 
-            }
-
-            authMessage(
-                "Pendaftaran berhasil. Silakan cek email jika verifikasi email diaktifkan.",
-                "success"
-            );
-
-        }
+    showAuthMessage(
+      "Supabase URL / ANON KEY belum diisi.",
+      "error"
     );
 
+    return;
 
-/* ============================================================
-   LOGIN
-============================================================ */
+  }
 
-document
-    .getElementById("loginForm")
-    .addEventListener(
-        "submit",
-        async(e)=>{
+  const email =
+    document.getElementById("email").value.trim();
 
-            e.preventDefault();
+  const password =
+    document.getElementById("password").value;
 
-            clearAuthMessage();
+  const name =
+    document.getElementById("name").value.trim();
 
-            const email =
-                document
-                .getElementById("loginEmail")
-                .value
-                .trim();
+  authButton.disabled = true;
 
-            const password =
-                document
-                .getElementById("loginPassword")
-                .value;
+  authButton.textContent =
+    isRegisterMode ? "MENDAFTAR..." : "LOGIN...";
 
-            const {
-                error
-            } =
-            await supabaseClient
-                .auth
-                .signInWithPassword({
 
-                    email,
-                    password
+  try {
 
-                });
+    if (isRegisterMode) {
 
-            if(error){
+      const { data, error } =
+        await supabaseClient.auth.signUp({
 
-                authMessage(
-                    error.message
-                );
+          email: email,
 
-                return;
+          password: password,
 
+          options: {
+            data: {
+              name: name
             }
+          }
 
-        }
+        });
+
+
+      if (error) {
+        throw error;
+      }
+
+
+      if (!data.session) {
+
+        showAuthMessage(
+          "Pendaftaran berhasil. Silakan cek email untuk verifikasi jika konfirmasi email aktif.",
+          "success"
+        );
+
+      } else {
+
+        await loadUser();
+
+      }
+
+    } else {
+
+      const { data, error } =
+        await supabaseClient.auth.signInWithPassword({
+
+          email: email,
+
+          password: password
+
+        });
+
+
+      if (error) {
+        throw error;
+      }
+
+
+      if (data.user) {
+
+        await loadUser();
+
+      }
+
+    }
+
+  } catch (error) {
+
+    console.error(error);
+
+    showAuthMessage(
+      error.message || "Gagal memproses akun.",
+      "error"
     );
 
+  } finally {
+
+    authButton.disabled = false;
+
+    authButton.textContent =
+      isRegisterMode ? "DAFTAR" : "LOGIN";
+
+  }
+
+});
+
 
 /* ============================================================
-   SHOW APP
+   LOAD USER
 ============================================================ */
 
-async function showApp(){
+async function loadUser() {
 
-    document
-        .getElementById("loading")
-        .classList.add("hidden");
+  const {
+    data: {
+      user
+    },
+    error
+  } =
+    await supabaseClient.auth.getUser();
 
-    document
-        .getElementById("authPage")
-        .classList.add("hidden");
 
-    document
-        .getElementById("app")
-        .classList.remove("hidden");
+  if (error || !user) {
 
-    await loadProfile();
+    currentUser = null;
 
-    await loadOrders();
+    showAuth();
 
-    await loadMessages();
+    return;
 
-    subscribeChat();
+  }
+
+
+  currentUser = user;
+
+
+  await loadProfile();
+
+  showApp();
+
+  updateProfileUI();
+
+  await loadAllData();
 
 }
 
@@ -1633,173 +1650,130 @@ async function showApp(){
    PROFILE
 ============================================================ */
 
-async function loadProfile(){
+async function loadProfile() {
 
-    if(!currentUser)
-        return;
+  if (!currentUser) {
+    return;
+  }
 
-    let name =
-        currentUser
-        .user_metadata
-        ?.full_name || "Member";
 
-    const {
-        data
-    } =
+  const {
+    data,
+    error
+  } =
     await supabaseClient
-        .from("profiles")
-        .select("*")
-        .eq("id",currentUser.id)
-        .maybeSingle();
-
-    if(data && data.full_name){
-
-        name =
-            data.full_name;
-
-    }
-
-    document
-        .getElementById("topName")
-        .textContent=name;
-
-    document
-        .getElementById("topAvatar")
-        .textContent=
-            name
-            .charAt(0)
-            .toUpperCase();
-
-    document
-        .getElementById("profileName")
-        .value=name;
-
-    document
-        .getElementById("profileEmail")
-        .value=currentUser.email;
-
-}
+      .from("profiles")
+      .select("*")
+      .eq("id", currentUser.id)
+      .maybeSingle();
 
 
-/* ============================================================
-   LOGOUT
-============================================================ */
+  if (error) {
 
-async function logout(){
+    console.error(
+      "Profile error:",
+      error
+    );
 
-    if(chatChannel){
+    currentProfile = {
 
-        await supabaseClient
-            .removeChannel(
-                chatChannel
-            );
+      id: currentUser.id,
 
-        chatChannel=null;
+      email: currentUser.email,
 
-    }
+      name:
+        currentUser.user_metadata?.name ||
+        currentUser.email,
 
-    await supabaseClient
-        .auth
-        .signOut();
+      role: "member"
 
-}
+    };
+
+    return;
+
+  }
 
 
-/* ============================================================
-   NAVIGATION
-============================================================ */
+  if (data) {
 
-function openPage(
-    pageId,
-    button=null
-){
+    currentProfile = data;
 
-    document
-        .querySelectorAll(".page")
-        .forEach(
-            page=>{
-                page.classList.remove(
-                    "active"
-                );
-            }
-        );
+  } else {
 
-    const page =
-        document.getElementById(
-            pageId
-        );
+    currentProfile = {
 
-    if(page)
-        page.classList.add("active");
+      id: currentUser.id,
 
-    if(button){
+      email: currentUser.email,
 
-        document
-            .querySelectorAll(".nav-btn")
-            .forEach(
-                b=>{
-                    b.classList.remove(
-                        "active"
-                    );
-                }
-            );
+      name:
+        currentUser.user_metadata?.name ||
+        currentUser.email,
 
-        button.classList.add("active");
+      role: "member"
 
-    }else{
+    };
 
-        document
-            .querySelectorAll(".nav-btn")
-            .forEach(
-                b=>{
-                    b.classList.remove(
-                        "active"
-                    );
-                }
-            );
-
-        const target =
-            Array.from(
-                document.querySelectorAll(
-                    ".nav-btn"
-                )
-            ).find(
-                b =>
-                b.getAttribute(
-                    "onclick"
-                )?.includes(pageId)
-            );
-
-        if(target)
-            target.classList.add(
-                "active"
-            );
-
-    }
+  }
 
 }
 
 
 /* ============================================================
-   PAYMENT
+   UPDATE PROFILE UI
 ============================================================ */
 
-function setPayment(){
+function updateProfileUI() {
 
-    document
-        .getElementById("bankName")
-        .textContent=
-            PAYMENT.bank;
+  const name =
+    currentProfile?.name ||
+    currentProfile?.full_name ||
+    currentUser?.user_metadata?.name ||
+    currentUser?.email ||
+    "Member";
 
-    document
-        .getElementById("bankNumber")
-        .textContent=
-            PAYMENT.number;
 
-    document
-        .getElementById("bankOwner")
-        .textContent=
-            PAYMENT.owner;
+  document.getElementById(
+    "headerUserName"
+  ).textContent = name;
+
+
+  document.getElementById(
+    "profileName"
+  ).textContent = name;
+
+
+  document.getElementById(
+    "profileEmail"
+  ).textContent =
+    currentUser?.email || "-";
+
+
+  document.getElementById(
+    "profileStatus"
+  ).textContent =
+    currentProfile?.role || "member";
+
+}
+
+
+/* ============================================================
+   LOAD ALL DATA
+============================================================ */
+
+async function loadAllData() {
+
+  await Promise.allSettled([
+
+    loadPackages(),
+
+    loadOrders(),
+
+    loadPayments(),
+
+    loadMessages()
+
+  ]);
 
 }
 
@@ -1808,364 +1782,182 @@ function setPayment(){
    PACKAGES
 ============================================================ */
 
-function formatRupiah(number){
-
-    return new Intl.NumberFormat(
-        "id-ID",
-        {
-            style:"currency",
-            currency:"IDR",
-            maximumFractionDigits:0
-        }
-    ).format(number);
-
-}
-
-
-function renderPackages(){
-
-    const html =
-        PACKAGES
-        .map(
-            item=>`
-
-            <div class="package
-                ${item.popular ? "popular":""}">
-
-                ${
-                    item.popular
-                    ?
-                    `<span class="badge">
-                        PALING POPULER
-                    </span>`
-                    :
-                    ""
-                }
-
-                <h4>
-                    ${escapeHtml(item.name)}
-                </h4>
-
-                <div class="price">
-                    ${formatRupiah(item.price)}
-                </div>
-
-                <p
-                    class="muted"
-                    style="margin-bottom:12px"
-                >
-                    ${escapeHtml(item.description)}
-                </p>
-
-                <ul>
-                    ${
-                        item.features
-                        .map(
-                            f=>`
-                            <li>
-                                ${escapeHtml(f)}
-                            </li>
-                            `
-                        )
-                        .join("")
-                    }
-                </ul>
-
-                <button
-                    class="btn btn-full"
-                    onclick="openOrder('${item.id}')"
-                >
-                    Pesan Sekarang
-                </button>
-
-            </div>
-
-            `
-        )
-        .join("");
-
-    document
-        .getElementById("packages")
-        .innerHTML=html;
-
-    document
-        .getElementById("homePackages")
-        .innerHTML=
-            PACKAGES
-            .slice(0,3)
-            .map(
-                item=>`
-
-                <div class="package">
-
-                    ${
-                        item.popular
-                        ?
-                        `<span class="badge">
-                            POPULER
-                        </span>`
-                        :
-                        ""
-                    }
-
-                    <h4>
-                        ${escapeHtml(item.name)}
-                    </h4>
-
-                    <div class="price">
-                        ${formatRupiah(item.price)}
-                    </div>
-
-                    <p class="muted">
-                        ${escapeHtml(item.description)}
-                    </p>
-
-                    <br>
-
-                    <button
-                        class="btn btn-full"
-                        onclick="openOrder('${item.id}')"
-                    >
-                        Pesan
-                    </button>
-
-                </div>
-
-                `
-            )
-            .join("");
-
-}
-
-
-/* ============================================================
-   ORDER MODAL
-============================================================ */
-
-function openOrder(packageId){
-
-    const item =
-        PACKAGES.find(
-            x=>x.id===packageId
-        );
-
-    if(!item)
-        return;
-
-    document
-        .getElementById("orderPackageId")
-        .value=item.id;
-
-    document
-        .getElementById("orderPackageName")
-        .value=item.name;
-
-    document
-        .getElementById("orderPackagePrice")
-        .value=
-            formatRupiah(item.price);
-
-    document
-        .getElementById("orderMessage")
-        .innerHTML="";
-
-    document
-        .getElementById("orderModal")
-        .classList.remove("hidden");
-
-}
-
-
-function closeOrder(){
-
-    document
-        .getElementById("orderModal")
-        .classList.add("hidden");
-
-}
-
-
-/* ============================================================
-   SUBMIT ORDER
-============================================================ */
-
-document
-    .getElementById("orderForm")
-    .addEventListener(
-        "submit",
-        async(e)=>{
-
-            e.preventDefault();
-
-            if(!currentUser)
-                return;
-
-            const packageId =
-                document
-                .getElementById("orderPackageId")
-                .value;
-
-            const item =
-                PACKAGES.find(
-                    x=>x.id===packageId
-                );
-
-            if(!item)
-                return;
-
-            const channelUrl =
-                document
-                .getElementById("channelUrl")
-                .value
-                .trim();
-
-            const note =
-                document
-                .getElementById("orderNote")
-                .value
-                .trim();
-
-            const file =
-                document
-                .getElementById("paymentProof")
-                .files[0];
-
-            if(!file){
-
-                showOrderMessage(
-                    "Bukti pembayaran wajib diupload."
-                );
-
-                return;
-
-            }
-
-            if(file.size > 5*1024*1024){
-
-                showOrderMessage(
-                    "Ukuran file maksimal 5 MB."
-                );
-
-                return;
-
-            }
-
-            showOrderMessage(
-                "Mengirim pesanan...",
-                "success"
-            );
-
-            try{
-
-                const ext =
-                    file.name
-                    .split(".")
-                    .pop()
-                    .toLowerCase();
-
-                const filePath =
-                    currentUser.id +
-                    "/" +
-                    Date.now() +
-                    "." +
-                    ext;
-
-                const {
-                    error:uploadError
-                } =
-                await supabaseClient
-                    .storage
-                    .from("payment-proofs")
-                    .upload(
-                        filePath,
-                        file
-                    );
-
-                if(uploadError)
-                    throw uploadError;
-
-                const {
-                    data,
-                    error
-                } =
-                await supabaseClient
-                    .from("orders")
-                    .insert({
-
-                        user_id:
-                            currentUser.id,
-
-                        package_id:
-                            item.id,
-
-                        package_name:
-                            item.name,
-
-                        amount:
-                            item.price,
-
-                        channel_url:
-                            channelUrl,
-
-                        note:
-                            note,
-
-                        payment_proof:
-                            filePath,
-
-                        status:
-                            "pending"
-
-                    })
-                    .select()
-                    .single();
-
-                if(error)
-                    throw error;
-
-                showOrderMessage(
-                    "Pesanan berhasil dikirim.",
-                    "success"
-                );
-
-                document
-                    .getElementById("orderForm")
-                    .reset();
-
-                setTimeout(
-                    ()=>{
-                        closeOrder();
-                        loadOrders();
-                    },
-                    1200
-                );
-
-            }catch(error){
-
-                console.error(error);
-
-                showOrderMessage(
-                    error.message ||
-                    "Gagal membuat pesanan."
-                );
-
-            }
-
-        }
+async function loadPackages() {
+
+  const container =
+    document.getElementById(
+      "packagesContainer"
     );
 
 
-function showOrderMessage(
-    text,
-    type="error"
-){
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("packages")
+      .select("*")
+      .eq("active", true)
+      .order("price", {
+        ascending: true
+      });
 
-    document
-        .getElementById("orderMessage")
-        .innerHTML =
-        `<div class="${type}">
-            ${escapeHtml(text)}
-        </div>`;
+
+  if (error) {
+
+    console.error(
+      "Packages:",
+      error
+    );
+
+    /*
+      Jika tabel packages belum ada,
+      tampilkan paket contoh agar website
+      tetap bisa dibuka.
+    */
+
+    container.innerHTML = `
+
+      <div class="package">
+
+        <h3>Monetisasi Basic</h3>
+
+        <div class="price">
+          Rp 500.000
+        </div>
+
+        <ul>
+          <li>Pengajuan monetisasi</li>
+          <li>Pemeriksaan channel</li>
+          <li>Bantuan proses</li>
+        </ul>
+
+        <button
+          class="buy-btn"
+          onclick="openOrderModal({
+            id:'basic',
+            name:'Monetisasi Basic',
+            price:500000
+          })"
+        >
+          Pilih Paket
+        </button>
+
+      </div>
+
+
+      <div class="package">
+
+        <h3>Monetisasi Premium</h3>
+
+        <div class="price">
+          Rp 1.000.000
+        </div>
+
+        <ul>
+          <li>Pemeriksaan channel</li>
+          <li>Pendampingan proses</li>
+          <li>Bantuan admin</li>
+        </ul>
+
+        <button
+          class="buy-btn"
+          onclick="openOrderModal({
+            id:'premium',
+            name:'Monetisasi Premium',
+            price:1000000
+          })"
+        >
+          Pilih Paket
+        </button>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  if (!data || data.length === 0) {
+
+    container.innerHTML = `
+
+      <div class="payment-card">
+
+        <h3>Belum ada paket</h3>
+
+        <p class="payment-note">
+          Admin belum menambahkan paket layanan.
+        </p>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  container.innerHTML = data.map(pkg => {
+
+    const features =
+      pkg.features ||
+      pkg.description ||
+      "Layanan monetisasi YouTube";
+
+
+    const featureList =
+      Array.isArray(features)
+        ? features
+        : String(features)
+            .split("\n");
+
+
+    return `
+
+      <div class="package">
+
+        <h3>
+          ${escapeHTML(
+            pkg.name || "Paket"
+          )}
+        </h3>
+
+        <div class="price">
+          ${formatRupiah(
+            pkg.price || 0
+          )}
+        </div>
+
+        <ul>
+
+          ${featureList.map(item => `
+
+            <li>
+              ${escapeHTML(
+                String(item)
+              )}
+            </li>
+
+          `).join("")}
+
+        </ul>
+
+        <button
+          class="buy-btn"
+          onclick='openOrderModal(${JSON.stringify(pkg)})'
+        >
+          Pilih Paket
+        </button>
+
+      </div>
+
+    `;
+
+  }).join("");
 
 }
 
@@ -2174,150 +1966,314 @@ function showOrderMessage(
    ORDERS
 ============================================================ */
 
-async function loadOrders(){
+async function loadOrders() {
 
-    if(!currentUser)
-        return;
+  const container =
+    document.getElementById(
+      "ordersContainer"
+    );
 
-    const {
-        data,
-        error
-    } =
+
+  const {
+    data,
+    error
+  } =
     await supabaseClient
-        .from("orders")
-        .select("*")
-        .eq(
-            "user_id",
-            currentUser.id
-        )
-        .order(
-            "created_at",
-            {
-                ascending:false
-            }
-        );
+      .from("orders")
+      .select("*")
+      .eq("user_id", currentUser.id)
+      .order("created_at", {
+        ascending: false
+      });
 
-    if(error){
 
-        console.error(error);
+  if (error) {
 
-        return;
+    console.error(
+      "Orders:",
+      error
+    );
 
-    }
+    container.innerHTML = `
 
-    const orders =
-        data || [];
+      <div class="payment-card">
 
-    document
-        .getElementById("totalOrders")
-        .textContent=
-            orders.length;
+        <p class="payment-note">
+          Belum ada pesanan atau tabel pesanan
+          belum tersedia.
+        </p>
 
-    const tbody =
-        document
-        .getElementById("ordersTable");
+      </div>
 
-    if(!orders.length){
+    `;
 
-        tbody.innerHTML=`
-            <tr>
-                <td
-                    colspan="5"
-                    style="text-align:center"
-                >
-                    Belum ada pesanan.
-                </td>
-            </tr>
-        `;
+    updateStats([]);
 
-        return;
+    return;
 
-    }
+  }
 
-    tbody.innerHTML =
-        orders
-        .map(
-            order=>`
 
-            <tr>
+  updateStats(data || []);
 
-                <td>
-                    ${escapeHtml(
-                        order.package_name || "-"
-                    )}
-                </td>
 
-                <td>
-                    ${formatRupiah(
-                        order.amount || 0
-                    )}
-                </td>
+  if (!data || data.length === 0) {
 
-                <td>
-                    <a
-                        href="${escapeAttribute(
-                            order.channel_url || "#"
-                        )}"
-                        target="_blank"
-                        style="color:#a78bfa"
-                    >
-                        Channel
-                    </a>
-                </td>
+    container.innerHTML = `
 
-                <td>
-                    ${statusBadge(
-                        order.status
-                    )}
-                </td>
+      <div class="payment-card">
 
-                <td>
-                    ${formatDate(
-                        order.created_at
-                    )}
-                </td>
+        <h3>
+          Belum ada pesanan
+        </h3>
 
-            </tr>
+        <p class="payment-note">
+          Pilih paket monetisasi untuk membuat pesanan.
+        </p>
 
-            `
-        )
-        .join("");
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  container.innerHTML =
+    data.map(order => {
+
+      const status =
+        String(
+          order.status || "pending"
+        ).toLowerCase();
+
+
+      return `
+
+        <div class="order">
+
+          <div class="order-top">
+
+            <div class="order-title">
+              ${escapeHTML(
+                order.package_name ||
+                order.package ||
+                "Pesanan Monetisasi"
+              )}
+            </div>
+
+            <div class="status ${getStatusClass(status)}">
+              ${escapeHTML(
+                status.toUpperCase()
+              )}
+            </div>
+
+          </div>
+
+          <div class="order-info">
+
+            <div>
+              💰 Harga:
+              ${formatRupiah(
+                order.amount ||
+                order.price ||
+                0
+              )}
+            </div>
+
+            <div>
+              🔗 Channel:
+              ${escapeHTML(
+                order.youtube_url ||
+                order.channel_url ||
+                "-"
+              )}
+            </div>
+
+            <div>
+              📅 Dibuat:
+              ${formatDate(
+                order.created_at
+              )}
+            </div>
+
+          </div>
+
+        </div>
+
+      `;
+
+    }).join("");
 
 }
 
 
-function statusBadge(status){
+/* ============================================================
+   STATS
+============================================================ */
 
-    let cls="pending";
+function updateStats(orders) {
 
-    let text="Menunggu";
+  document.getElementById(
+    "totalOrders"
+  ).textContent =
+    orders.length;
 
-    if(status==="processing"){
 
-        cls="process";
-        text="Diproses";
+  const pending =
+    orders.filter(order => {
 
-    }
+      const s =
+        String(
+          order.status || ""
+        ).toLowerCase();
 
-    if(status==="completed"){
+      return [
+        "pending",
+        "waiting",
+        "menunggu"
+      ].includes(s);
 
-        cls="done";
-        text="Selesai";
+    }).length;
 
-    }
 
-    if(status==="cancelled"){
+  document.getElementById(
+    "pendingOrders"
+  ).textContent =
+    pending;
 
-        cls="cancel";
-        text="Dibatalkan";
+}
 
-    }
 
-    return `
-        <span class="status ${cls}">
-            ${text}
-        </span>
+/* ============================================================
+   PAYMENT METHODS
+============================================================ */
+
+async function loadPayments() {
+
+  const container =
+    document.getElementById(
+      "paymentContainer"
+    );
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("payment_methods")
+      .select("*")
+      .eq("active", true)
+      .order("created_at", {
+        ascending: true
+      });
+
+
+  if (error) {
+
+    console.error(
+      "Payment methods:",
+      error
+    );
+
+    container.innerHTML = `
+
+      <div class="payment-card">
+
+        <h3>
+          💳 Pembayaran
+        </h3>
+
+        <p class="payment-note">
+          Metode pembayaran akan ditampilkan
+          setelah admin mengaturnya.
+        </p>
+
+      </div>
+
     `;
+
+    return;
+
+  }
+
+
+  if (!data || data.length === 0) {
+
+    container.innerHTML = `
+
+      <div class="payment-card">
+
+        <h3>
+          Belum tersedia
+        </h3>
+
+        <p class="payment-note">
+          Admin belum menambahkan metode pembayaran.
+        </p>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  container.innerHTML =
+    data.map(payment => {
+
+      return `
+
+        <div class="payment-card">
+
+          <h3>
+            💳 ${escapeHTML(
+              payment.name ||
+              payment.bank_name ||
+              "Pembayaran"
+            )}
+          </h3>
+
+          <div class="payment-number">
+            ${escapeHTML(
+              payment.account_number ||
+              payment.number ||
+              "-"
+            )}
+          </div>
+
+          <p>
+            A/N:
+            <strong>
+              ${escapeHTML(
+                payment.account_name ||
+                payment.owner_name ||
+                "-"
+              )}
+            </strong>
+          </p>
+
+          ${
+            payment.note
+              ? `
+                <p class="payment-note">
+                  ${escapeHTML(
+                    payment.note
+                  )}
+                </p>
+              `
+              : ""
+          }
+
+        </div>
+
+      `;
+
+    }).join("");
 
 }
 
@@ -2326,111 +2282,136 @@ function statusBadge(status){
    CHAT
 ============================================================ */
 
-async function loadMessages(){
+async function loadMessages() {
 
-    if(!currentUser)
-        return;
+  if (!currentUser) {
+    return;
+  }
 
-    const {
-        data,
-        error
-    } =
-    await supabaseClient
-        .from("messages")
-        .select("*")
-        .eq(
-            "user_id",
-            currentUser.id
-        )
-        .order(
-            "created_at",
-            {
-                ascending:true
-            }
-        );
 
-    if(error){
-
-        console.error(error);
-
-        return;
-
-    }
-
-    renderMessages(
-        data || []
+  const container =
+    document.getElementById(
+      "chatMessages"
     );
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("messages")
+      .select("*")
+      .eq("user_id", currentUser.id)
+      .order("created_at", {
+        ascending: true
+      });
+
+
+  if (error) {
+
+    console.error(
+      "Messages:",
+      error
+    );
+
+    container.innerHTML = `
+
+      <div class="payment-card">
+
+        <p class="payment-note">
+          Chat belum tersedia.
+        </p>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  renderMessages(data || []);
+
+
+  document.getElementById(
+    "totalMessages"
+  ).textContent =
+    data?.length || 0;
+
+
+  subscribeChat();
 
 }
 
 
-function renderMessages(messages){
+function renderMessages(messages) {
 
-    const box =
-        document
-        .getElementById("messages");
+  const container =
+    document.getElementById(
+      "chatMessages"
+    );
 
-    if(!messages.length){
 
-        box.innerHTML=`
-            <div
-                style="
-                    text-align:center;
-                    color:#777;
-                    padding:30px;
-                "
-            >
-                Belum ada percakapan.<br>
-                Silakan kirim pesan kepada admin.
-            </div>
-        `;
+  if (!messages.length) {
 
-        return;
+    container.innerHTML = `
 
-    }
+      <div style="
+        text-align:center;
+        color:#777;
+        padding:40px 10px;
+      ">
+        Belum ada pesan.<br>
+        Silakan kirim pesan kepada admin.
+      </div>
 
-    box.innerHTML =
-        messages
-        .map(
-            msg=>`
+    `;
 
-            <div
-                class="message
-                ${
-                    msg.sender_type==="member"
-                    ?
-                    "me"
-                    :
-                    "admin"
-                }"
-            >
+    return;
 
-                ${escapeHtml(
-                    msg.message
-                )}
+  }
 
-                <small>
-                    ${
-                        msg.sender_type==="member"
-                        ?
-                        "Anda"
-                        :
-                        "Admin"
-                    }
-                    •
-                    ${formatDate(
-                        msg.created_at
-                    )}
-                </small>
 
-            </div>
+  container.innerHTML =
+    messages.map(message => {
 
-            `
-        )
-        .join("");
+      const isUser =
+        message.sender_id === currentUser.id ||
+        message.role === "member" ||
+        message.sender === "user";
 
-    box.scrollTop =
-        box.scrollHeight;
+
+      return `
+
+        <div class="chat-message ${
+          isUser ? "user" : "admin"
+        }">
+
+          <div>
+            ${escapeHTML(
+              message.message ||
+              message.content ||
+              ""
+            )}
+          </div>
+
+          <div class="chat-time">
+            ${formatDate(
+              message.created_at
+            )}
+          </div>
+
+        </div>
+
+      `;
+
+    }).join("");
+
+
+  container.scrollTop =
+    container.scrollHeight;
 
 }
 
@@ -2439,43 +2420,47 @@ function renderMessages(messages){
    REALTIME CHAT
 ============================================================ */
 
-function subscribeChat(){
+function subscribeChat() {
 
-    if(!currentUser)
-        return;
+  if (!currentUser) {
+    return;
+  }
 
-    if(chatChannel){
 
-        supabaseClient
-            .removeChannel(
-                chatChannel
-            );
+  if (chatSubscription) {
 
-    }
+    try {
+      supabaseClient.removeChannel(
+        chatSubscription
+      );
+    } catch (e) {}
 
-    chatChannel =
-        supabaseClient
-        .channel(
-            "chat-" +
+  }
+
+
+  chatSubscription =
+    supabaseClient
+      .channel(
+        "member-chat-" +
+        currentUser.id
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "messages",
+          filter:
+            "user_id=eq." +
             currentUser.id
-        )
-        .on(
-            "postgres_changes",
-            {
-                event:"INSERT",
-                schema:"public",
-                table:"messages",
-                filter:
-                    "user_id=eq."+
-                    currentUser.id
-            },
-            payload=>{
+        },
+        () => {
 
-                loadMessages();
+          loadMessages();
 
-            }
-        )
-        .subscribe();
+        }
+      )
+      .subscribe();
 
 }
 
@@ -2484,103 +2469,600 @@ function subscribeChat(){
    SEND CHAT
 ============================================================ */
 
-document
-    .getElementById("chatForm")
-    .addEventListener(
-        "submit",
-        async(e)=>{
+document.getElementById(
+  "chatForm"
+).addEventListener(
+  "submit",
+  async event => {
 
-            e.preventDefault();
+    event.preventDefault();
 
-            if(!currentUser)
-                return;
 
-            const input =
-                document
-                .getElementById("chatInput");
+    const input =
+      document.getElementById(
+        "chatInput"
+      );
 
-            const message =
-                input
-                .value
-                .trim();
 
-            if(!message)
-                return;
+    const message =
+      input.value.trim();
 
-            const {
-                error
-            } =
-            await supabaseClient
-                .from("messages")
-                .insert({
 
-                    user_id:
-                        currentUser.id,
+    if (!message) {
+      return;
+    }
 
-                    sender_type:
-                        "member",
 
-                    message:
-                        message
+    input.disabled = true;
 
-                });
 
-            if(error){
+    const {
+      error
+    } =
+      await supabaseClient
+        .from("messages")
+        .insert({
 
-                alert(
-                    error.message
-                );
+          user_id:
+            currentUser.id,
 
-                return;
+          sender_id:
+            currentUser.id,
 
-            }
+          message:
+            message
 
-            input.value="";
+        });
 
-            loadMessages();
 
-        }
-    );
+    input.disabled = false;
+
+
+    if (error) {
+
+      console.error(error);
+
+      toast(
+        "Pesan gagal dikirim."
+      );
+
+      return;
+
+    }
+
+
+    input.value = "";
+
+    await loadMessages();
+
+  }
+);
 
 
 /* ============================================================
-   UTILITIES
+   ORDER MODAL
 ============================================================ */
 
-function formatDate(date){
+function openOrderModal(pkg) {
 
-    if(!date)
-        return "-";
+  selectedPackage = pkg;
 
-    return new Date(date)
-        .toLocaleString(
-            "id-ID",
-            {
-                dateStyle:"short",
-                timeStyle:"short"
-            }
+
+  document.getElementById(
+    "selectedPackage"
+  ).innerHTML = `
+
+    <div class="payment-card">
+
+      <strong>
+        ${escapeHTML(
+          pkg.name || "Paket"
+        )}
+      </strong>
+
+      <div class="price">
+        ${formatRupiah(
+          pkg.price || 0
+        )}
+      </div>
+
+    </div>
+
+  `;
+
+
+  document.getElementById(
+    "youtubeUrl"
+  ).value = "";
+
+
+  document.getElementById(
+    "orderNote"
+  ).value = "";
+
+
+  document.getElementById(
+    "orderModal"
+  ).classList.remove("hidden");
+
+}
+
+
+window.openOrderModal =
+  openOrderModal;
+
+
+document.getElementById(
+  "cancelOrder"
+).addEventListener(
+  "click",
+  () => {
+
+    document.getElementById(
+      "orderModal"
+    ).classList.add("hidden");
+
+  }
+);
+
+
+/* ============================================================
+   CONFIRM ORDER
+============================================================ */
+
+document.getElementById(
+  "confirmOrder"
+).addEventListener(
+  "click",
+  async () => {
+
+    if (!selectedPackage) {
+
+      toast(
+        "Paket belum dipilih."
+      );
+
+      return;
+
+    }
+
+
+    const youtubeUrl =
+      document.getElementById(
+        "youtubeUrl"
+      ).value.trim();
+
+
+    const note =
+      document.getElementById(
+        "orderNote"
+      ).value.trim();
+
+
+    if (!youtubeUrl) {
+
+      toast(
+        "Masukkan URL channel YouTube."
+      );
+
+      return;
+
+    }
+
+
+    const button =
+      document.getElementById(
+        "confirmOrder"
+      );
+
+
+    button.disabled = true;
+
+    button.textContent =
+      "Memproses...";
+
+
+    try {
+
+      const {
+        error
+      } =
+        await supabaseClient
+          .from("orders")
+          .insert({
+
+            user_id:
+              currentUser.id,
+
+            package_id:
+              selectedPackage.id,
+
+            package_name:
+              selectedPackage.name,
+
+            amount:
+              selectedPackage.price || 0,
+
+            youtube_url:
+              youtubeUrl,
+
+            note:
+              note,
+
+            status:
+              "pending"
+
+          });
+
+
+      if (error) {
+        throw error;
+      }
+
+
+      document.getElementById(
+        "orderModal"
+      ).classList.add("hidden");
+
+
+      toast(
+        "Pesanan berhasil dibuat."
+      );
+
+
+      await loadOrders();
+
+
+      showSection("orders");
+
+
+    } catch (error) {
+
+      console.error(error);
+
+      toast(
+        "Gagal membuat pesanan: " +
+        error.message
+      );
+
+    } finally {
+
+      button.disabled = false;
+
+      button.textContent =
+        "Buat Pesanan";
+
+    }
+
+  }
+);
+
+
+/* ============================================================
+   NAVIGATION
+============================================================ */
+
+document
+  .querySelectorAll(".nav-btn")
+  .forEach(button => {
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        showSection(
+          button.dataset.section
         );
 
+      }
+    );
+
+  });
+
+
+function showSection(name) {
+
+  document
+    .querySelectorAll(".section")
+    .forEach(section => {
+
+      section.classList.remove(
+        "active"
+      );
+
+    });
+
+
+  document
+    .querySelectorAll(".nav-btn")
+    .forEach(button => {
+
+      button.classList.remove(
+        "active"
+      );
+
+    });
+
+
+  const section =
+    document.getElementById(
+      "section-" + name
+    );
+
+
+  if (section) {
+
+    section.classList.add(
+      "active"
+    );
+
+  }
+
+
+  const button =
+    document.querySelector(
+      `.nav-btn[data-section="${name}"]`
+    );
+
+
+  if (button) {
+
+    button.classList.add(
+      "active"
+    );
+
+  }
+
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
 }
 
 
-function escapeHtml(value){
+/* ============================================================
+   LOGOUT
+============================================================ */
 
-    return String(value ?? "")
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
+document.getElementById(
+  "logoutButton"
+).addEventListener(
+  "click",
+  async () => {
+
+    if (!supabaseClient) {
+      return;
+    }
+
+
+    await supabaseClient.auth.signOut();
+
+    currentUser = null;
+
+    currentProfile = null;
+
+
+    if (chatSubscription) {
+
+      try {
+
+        await supabaseClient.removeChannel(
+          chatSubscription
+        );
+
+      } catch (e) {}
+
+      chatSubscription = null;
+
+    }
+
+
+    showAuth();
+
+    toast(
+      "Berhasil logout."
+    );
+
+  }
+);
+
+
+/* ============================================================
+   AUTH STATE
+============================================================ */
+
+async function initialize() {
+
+  if (!configValid) {
+
+    showAuth();
+
+    showAuthMessage(
+      "SUPABASE_URL dan SUPABASE_ANON_KEY belum diganti.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  try {
+
+    const {
+      data: {
+        session
+      }
+    } =
+      await supabaseClient.auth.getSession();
+
+
+    if (session?.user) {
+
+      currentUser =
+        session.user;
+
+      await loadUser();
+
+    } else {
+
+      showAuth();
+
+    }
+
+
+    supabaseClient.auth.onAuthStateChange(
+      async (event, session) => {
+
+        if (
+          event === "SIGNED_IN" &&
+          session?.user
+        ) {
+
+          currentUser =
+            session.user;
+
+          await loadUser();
+
+        }
+
+
+        if (
+          event === "SIGNED_OUT"
+        ) {
+
+          currentUser = null;
+
+          currentProfile = null;
+
+          showAuth();
+
+        }
+
+      }
+    );
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    showAuthMessage(
+      "Gagal menghubungkan ke Supabase: " +
+      error.message,
+      "error"
+    );
+
+  }
 
 }
 
 
-function escapeAttribute(value){
+/* ============================================================
+   HELPERS
+============================================================ */
 
-    return escapeHtml(value);
+function formatRupiah(value) {
+
+  const number =
+    Number(value) || 0;
+
+
+  return new Intl.NumberFormat(
+    "id-ID",
+    {
+      style: "currency",
+      currency: "IDR",
+      maximumFractionDigits: 0
+    }
+  ).format(number);
 
 }
+
+
+function formatDate(value) {
+
+  if (!value) {
+    return "-";
+  }
+
+
+  try {
+
+    return new Date(value)
+      .toLocaleString(
+        "id-ID",
+        {
+          dateStyle: "short",
+          timeStyle: "short"
+        }
+      );
+
+  } catch (e) {
+
+    return value;
+
+  }
+
+}
+
+
+function getStatusClass(status) {
+
+  if (
+    ["completed", "success", "selesai"]
+      .includes(status)
+  ) {
+
+    return "completed";
+
+  }
+
+
+  if (
+    ["process", "processing", "diproses"]
+      .includes(status)
+  ) {
+
+    return "process";
+
+  }
+
+
+  if (
+    ["cancelled", "canceled", "batal"]
+      .includes(status)
+  ) {
+
+    return "cancelled";
+
+  }
+
+
+  return "pending";
+
+}
+
+
+function escapeHTML(value) {
+
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+
+}
+
+
+/* ============================================================
+   START
+============================================================ */
+
+initialize();
 
 </script>
 
