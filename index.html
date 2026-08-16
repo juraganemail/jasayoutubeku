@@ -1,0 +1,2599 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YouTube Monetization Service</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+:root{
+    --bg:#07070b;
+    --panel:#11111a;
+    --panel2:#171722;
+    --border:#29293a;
+    --primary:#8b5cf6;
+    --secondary:#06b6d4;
+    --text:#fff;
+    --muted:#9696a8;
+    --success:#22c55e;
+    --danger:#ef4444;
+}
+
+body{
+    background:
+        radial-gradient(circle at top right,rgba(139,92,246,.15),transparent 30%),
+        radial-gradient(circle at bottom left,rgba(6,182,212,.10),transparent 30%),
+        var(--bg);
+    color:var(--text);
+    min-height:100vh;
+}
+
+button,input,textarea,select{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+.hidden{
+    display:none!important;
+}
+
+/* LOADING */
+
+#loading{
+    position:fixed;
+    inset:0;
+    background:#050507;
+    z-index:9999;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    gap:15px;
+}
+
+.loader{
+    width:45px;
+    height:45px;
+    border:4px solid #222;
+    border-top-color:var(--primary);
+    border-radius:50%;
+    animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+    to{transform:rotate(360deg)}
+}
+
+/* AUTH */
+
+.auth-page{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.auth-box{
+    width:100%;
+    max-width:430px;
+    background:rgba(17,17,26,.95);
+    border:1px solid var(--border);
+    border-radius:25px;
+    padding:35px;
+    box-shadow:0 0 60px rgba(139,92,246,.12);
+}
+
+.logo{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.logo-icon{
+    width:70px;
+    height:70px;
+    margin:auto;
+    border-radius:20px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:30px;
+    font-weight:bold;
+    background:linear-gradient(135deg,var(--primary),var(--secondary));
+    box-shadow:0 0 35px rgba(139,92,246,.3);
+}
+
+.logo h1{
+    margin-top:15px;
+    font-size:23px;
+}
+
+.logo p{
+    color:var(--muted);
+    margin-top:7px;
+    font-size:13px;
+}
+
+.tabs{
+    display:flex;
+    gap:5px;
+    background:#0a0a10;
+    padding:5px;
+    border-radius:12px;
+    margin-bottom:20px;
+}
+
+.tab{
+    flex:1;
+    border:0;
+    padding:11px;
+    background:transparent;
+    color:var(--muted);
+    border-radius:9px;
+}
+
+.tab.active{
+    background:var(--primary);
+    color:white;
+}
+
+.field{
+    margin-bottom:15px;
+}
+
+.field label{
+    display:block;
+    color:#ccc;
+    font-size:13px;
+    margin-bottom:7px;
+}
+
+.field input,
+.field textarea,
+.field select{
+    width:100%;
+    background:#0a0a10;
+    border:1px solid var(--border);
+    color:white;
+    border-radius:11px;
+    padding:13px;
+    outline:none;
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus{
+    border-color:var(--primary);
+}
+
+.btn{
+    border:0;
+    border-radius:11px;
+    padding:13px 17px;
+    color:white;
+    font-weight:bold;
+    background:linear-gradient(135deg,var(--primary),#6d28d9);
+}
+
+.btn:hover{
+    opacity:.9;
+}
+
+.btn-full{
+    width:100%;
+}
+
+.btn-secondary{
+    background:#20202d;
+}
+
+.btn-danger{
+    background:var(--danger);
+}
+
+.error{
+    background:rgba(239,68,68,.1);
+    border:1px solid rgba(239,68,68,.3);
+    color:#fca5a5;
+    padding:10px;
+    border-radius:10px;
+    font-size:13px;
+    margin-bottom:15px;
+}
+
+.success{
+    background:rgba(34,197,94,.1);
+    border:1px solid rgba(34,197,94,.3);
+    color:#86efac;
+    padding:10px;
+    border-radius:10px;
+    font-size:13px;
+    margin-bottom:15px;
+}
+
+/* APP */
+
+.app{
+    min-height:100vh;
+    padding-bottom:90px;
+}
+
+.topbar{
+    height:75px;
+    padding:0 25px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border-bottom:1px solid var(--border);
+    background:rgba(7,7,11,.88);
+    backdrop-filter:blur(15px);
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-weight:bold;
+}
+
+.brand-icon{
+    width:38px;
+    height:38px;
+    border-radius:11px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg,var(--primary),var(--secondary));
+}
+
+.user-mini{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.avatar{
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    background:linear-gradient(135deg,var(--primary),var(--secondary));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+}
+
+.container{
+    width:100%;
+    max-width:1200px;
+    margin:auto;
+    padding:25px;
+}
+
+.page{
+    display:none;
+}
+
+.page.active{
+    display:block;
+}
+
+/* HERO */
+
+.hero{
+    padding:35px;
+    border:1px solid var(--border);
+    border-radius:25px;
+    background:
+        linear-gradient(135deg,rgba(139,92,246,.18),rgba(6,182,212,.07)),
+        var(--panel);
+    position:relative;
+    overflow:hidden;
+}
+
+.hero:after{
+    content:"";
+    position:absolute;
+    width:300px;
+    height:300px;
+    right:-120px;
+    top:-120px;
+    border-radius:50%;
+    background:rgba(139,92,246,.15);
+    filter:blur(30px);
+}
+
+.hero h2{
+    font-size:32px;
+    max-width:650px;
+    line-height:1.2;
+}
+
+.hero p{
+    color:var(--muted);
+    margin-top:13px;
+    max-width:650px;
+    line-height:1.6;
+}
+
+.hero-buttons{
+    display:flex;
+    gap:10px;
+    margin-top:22px;
+    flex-wrap:wrap;
+}
+
+/* STATS */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+    margin-top:20px;
+}
+
+.stat{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:17px;
+    padding:20px;
+}
+
+.stat small{
+    color:var(--muted);
+}
+
+.stat strong{
+    display:block;
+    margin-top:7px;
+    font-size:23px;
+}
+
+/* SECTION */
+
+.section-title{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin:30px 0 15px;
+}
+
+.section-title h3{
+    font-size:20px;
+}
+
+/* PACKAGES */
+
+.packages{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+}
+
+.package{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:22px;
+    transition:.2s;
+}
+
+.package:hover{
+    transform:translateY(-3px);
+    border-color:var(--primary);
+    box-shadow:0 15px 40px rgba(139,92,246,.1);
+}
+
+.package.popular{
+    border-color:var(--primary);
+}
+
+.badge{
+    display:inline-block;
+    background:rgba(139,92,246,.15);
+    color:#c4b5fd;
+    border:1px solid rgba(139,92,246,.3);
+    border-radius:30px;
+    padding:5px 10px;
+    font-size:11px;
+    margin-bottom:12px;
+}
+
+.package h4{
+    font-size:19px;
+}
+
+.price{
+    font-size:26px;
+    font-weight:bold;
+    margin:13px 0;
+}
+
+.package ul{
+    list-style:none;
+    color:var(--muted);
+    line-height:2;
+    margin-bottom:15px;
+}
+
+.package li:before{
+    content:"✓";
+    color:var(--success);
+    margin-right:8px;
+}
+
+/* CARD */
+
+.card{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:22px;
+}
+
+.payment-box{
+    background:#0a0a10;
+    border:1px dashed var(--border);
+    border-radius:15px;
+    padding:18px;
+    margin-bottom:12px;
+}
+
+.payment-box strong{
+    display:block;
+    font-size:18px;
+    margin-top:5px;
+}
+
+.muted{
+    color:var(--muted);
+}
+
+/* TABLE */
+
+.table-wrap{
+    overflow:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:650px;
+}
+
+th,td{
+    text-align:left;
+    padding:13px;
+    border-bottom:1px solid var(--border);
+}
+
+th{
+    color:#aaa;
+    font-size:12px;
+}
+
+td{
+    font-size:13px;
+}
+
+.status{
+    display:inline-block;
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:11px;
+}
+
+.status.pending{
+    color:#facc15;
+    background:rgba(250,204,21,.1);
+}
+
+.status.process{
+    color:#38bdf8;
+    background:rgba(56,189,248,.1);
+}
+
+.status.done{
+    color:#4ade80;
+    background:rgba(74,222,128,.1);
+}
+
+.status.cancel{
+    color:#f87171;
+    background:rgba(248,113,113,.1);
+}
+
+/* CHAT */
+
+.chat-box{
+    height:500px;
+    display:flex;
+    flex-direction:column;
+}
+
+.messages{
+    flex:1;
+    overflow-y:auto;
+    padding:10px;
+    background:#09090e;
+    border-radius:15px;
+    margin-bottom:12px;
+}
+
+.message{
+    max-width:78%;
+    padding:10px 13px;
+    border-radius:14px;
+    margin-bottom:10px;
+    font-size:13px;
+    line-height:1.5;
+}
+
+.message.me{
+    margin-left:auto;
+    background:linear-gradient(135deg,#6d28d9,#4c1d95);
+}
+
+.message.admin{
+    background:#1d1d29;
+}
+
+.message small{
+    display:block;
+    color:#aaa;
+    font-size:9px;
+    margin-top:5px;
+}
+
+.chat-form{
+    display:flex;
+    gap:8px;
+}
+
+.chat-form input{
+    flex:1;
+    background:#0a0a10;
+    color:white;
+    border:1px solid var(--border);
+    padding:13px;
+    border-radius:12px;
+}
+
+/* BOTTOM NAV */
+
+.bottom-nav{
+    position:fixed;
+    left:50%;
+    transform:translateX(-50%);
+    bottom:15px;
+    width:calc(100% - 30px);
+    max-width:700px;
+    background:rgba(17,17,26,.94);
+    border:1px solid var(--border);
+    backdrop-filter:blur(15px);
+    border-radius:20px;
+    padding:8px;
+    display:flex;
+    justify-content:space-around;
+    z-index:200;
+}
+
+.nav-btn{
+    border:0;
+    background:transparent;
+    color:#777;
+    padding:8px 12px;
+    border-radius:12px;
+    font-size:11px;
+}
+
+.nav-btn span{
+    display:block;
+    font-size:20px;
+    margin-bottom:3px;
+}
+
+.nav-btn.active{
+    color:white;
+    background:rgba(139,92,246,.18);
+}
+
+/* MODAL */
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.75);
+    z-index:500;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.modal-box{
+    width:100%;
+    max-width:500px;
+    max-height:90vh;
+    overflow:auto;
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:25px;
+}
+
+.modal-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:20px;
+}
+
+.close{
+    background:#22222e;
+    color:white;
+    border:0;
+    width:35px;
+    height:35px;
+    border-radius:10px;
+}
+
+/* MOBILE */
+
+@media(max-width:800px){
+    .packages{
+        grid-template-columns:1fr;
+    }
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .hero{
+        padding:25px;
+    }
+
+    .hero h2{
+        font-size:25px;
+    }
+
+    .container{
+        padding:15px;
+    }
+
+    .topbar{
+        padding:0 15px;
+    }
+
+    .brand-text{
+        display:none;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div id="loading">
+    <div class="loader"></div>
+    <div>Memuat sistem...</div>
+</div>
+
+<!-- AUTH -->
+
+<section id="authPage" class="auth-page hidden">
+
+    <div class="auth-box">
+
+        <div class="logo">
+            <div class="logo-icon">YT</div>
+            <h1>YT Monetize Service</h1>
+            <p>Platform layanan bantuan monetisasi YouTube</p>
+        </div>
+
+        <div class="tabs">
+            <button id="loginTab" class="tab active" onclick="showAuth('login')">
+                Login
+            </button>
+
+            <button id="registerTab" class="tab" onclick="showAuth('register')">
+                Daftar
+            </button>
+        </div>
+
+        <div id="authMessage"></div>
+
+        <!-- LOGIN -->
+
+        <form id="loginForm">
+
+            <div class="field">
+                <label>Email</label>
+                <input
+                    type="email"
+                    id="loginEmail"
+                    placeholder="nama@email.com"
+                    required
+                >
+            </div>
+
+            <div class="field">
+                <label>Password</label>
+                <input
+                    type="password"
+                    id="loginPassword"
+                    placeholder="Password"
+                    required
+                >
+            </div>
+
+            <button class="btn btn-full" type="submit">
+                Masuk
+            </button>
+
+        </form>
+
+        <!-- REGISTER -->
+
+        <form id="registerForm" class="hidden">
+
+            <div class="field">
+                <label>Nama</label>
+                <input
+                    type="text"
+                    id="registerName"
+                    placeholder="Nama Anda"
+                    required
+                >
+            </div>
+
+            <div class="field">
+                <label>Email</label>
+                <input
+                    type="email"
+                    id="registerEmail"
+                    placeholder="nama@email.com"
+                    required
+                >
+            </div>
+
+            <div class="field">
+                <label>Password</label>
+                <input
+                    type="password"
+                    id="registerPassword"
+                    placeholder="Minimal 6 karakter"
+                    minlength="6"
+                    required
+                >
+            </div>
+
+            <button class="btn btn-full" type="submit">
+                Buat Akun
+            </button>
+
+        </form>
+
+    </div>
+</section>
+
+
+<!-- APP -->
+
+<section id="app" class="app hidden">
+
+    <header class="topbar">
+
+        <div class="brand">
+            <div class="brand-icon">YT</div>
+            <span class="brand-text">YT MONETIZE SERVICE</span>
+        </div>
+
+        <div class="user-mini">
+            <div>
+                <small id="topName">Member</small>
+            </div>
+            <div class="avatar" id="topAvatar">M</div>
+        </div>
+
+    </header>
+
+
+    <main class="container">
+
+        <!-- HOME -->
+
+        <section id="homePage" class="page active">
+
+            <div class="hero">
+
+                <h2>
+                    Bangun Channel YouTube Anda
+                    Dengan Lebih Terarah
+                </h2>
+
+                <p>
+                    Layanan bantuan dan pendampingan untuk channel
+                    YouTube yang ingin mempersiapkan dan mengembangkan
+                    channel menuju monetisasi sesuai kebijakan YouTube.
+                </p>
+
+                <div class="hero-buttons">
+                    <button
+                        class="btn"
+                        onclick="openPage('pricesPage')"
+                    >
+                        Lihat Paket
+                    </button>
+
+                    <button
+                        class="btn btn-secondary"
+                        onclick="openPage('chatPage')"
+                    >
+                        💬 Hubungi Admin
+                    </button>
+                </div>
+
+            </div>
+
+
+            <div class="stats">
+
+                <div class="stat">
+                    <small>Status Member</small>
+                    <strong>Aktif</strong>
+                </div>
+
+                <div class="stat">
+                    <small>Pesanan Anda</small>
+                    <strong id="totalOrders">0</strong>
+                </div>
+
+                <div class="stat">
+                    <small>Status Sistem</small>
+                    <strong style="color:#4ade80">
+                        Online
+                    </strong>
+                </div>
+
+            </div>
+
+
+            <div class="section-title">
+                <h3>Paket Populer</h3>
+                <button
+                    class="btn btn-secondary"
+                    onclick="openPage('pricesPage')"
+                >
+                    Semua Paket
+                </button>
+            </div>
+
+            <div id="homePackages" class="packages"></div>
+
+        </section>
+
+
+        <!-- PRICE -->
+
+        <section id="pricesPage" class="page">
+
+            <div class="section-title">
+                <div>
+                    <h3>List Harga Monetisasi</h3>
+                    <p class="muted">
+                        Pilih layanan yang sesuai kebutuhan channel.
+                    </p>
+                </div>
+            </div>
+
+            <div id="packages" class="packages"></div>
+
+        </section>
+
+
+        <!-- PAYMENT -->
+
+        <section id="paymentPage" class="page">
+
+            <div class="section-title">
+                <div>
+                    <h3>Metode Pembayaran</h3>
+                    <p class="muted">
+                        Lakukan pembayaran ke rekening resmi admin.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card">
+
+                <div class="payment-box">
+                    <small class="muted">Bank</small>
+                    <strong id="bankName">
+                        BCA
+                    </strong>
+                </div>
+
+                <div class="payment-box">
+                    <small class="muted">Nomor Rekening</small>
+                    <strong id="bankNumber">
+                        0000000000
+                    </strong>
+                </div>
+
+                <div class="payment-box">
+                    <small class="muted">Atas Nama</small>
+                    <strong id="bankOwner">
+                        NAMA ANDA
+                    </strong>
+                </div>
+
+                <p class="muted" style="margin-top:15px;font-size:12px">
+                    Pastikan nama rekening tujuan sesuai dengan informasi
+                    pembayaran yang diberikan admin.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- ORDERS -->
+
+        <section id="ordersPage" class="page">
+
+            <div class="section-title">
+                <div>
+                    <h3>Pesanan Saya</h3>
+                    <p class="muted">
+                        Riwayat pesanan layanan Anda.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card">
+
+                <div class="table-wrap">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Paket</th>
+                                <th>Harga</th>
+                                <th>Channel</th>
+                                <th>Status</th>
+                                <th>Tanggal</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="ordersTable">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- CHAT -->
+
+        <section id="chatPage" class="page">
+
+            <div class="section-title">
+                <div>
+                    <h3>Live Chat Admin</h3>
+                    <p class="muted">
+                        Hubungi admin apabila mengalami kesulitan.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card chat-box">
+
+                <div id="messages" class="messages"></div>
+
+                <form
+                    id="chatForm"
+                    class="chat-form"
+                >
+
+                    <input
+                        id="chatInput"
+                        placeholder="Tulis pesan..."
+                        autocomplete="off"
+                        required
+                    >
+
+                    <button class="btn">
+                        Kirim
+                    </button>
+
+                </form>
+
+            </div>
+
+        </section>
+
+
+        <!-- PROFILE -->
+
+        <section id="profilePage" class="page">
+
+            <div class="section-title">
+                <div>
+                    <h3>Profil Member</h3>
+                    <p class="muted">
+                        Informasi akun Anda.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card">
+
+                <div class="field">
+                    <label>Nama</label>
+                    <input id="profileName" readonly>
+                </div>
+
+                <div class="field">
+                    <label>Email</label>
+                    <input id="profileEmail" readonly>
+                </div>
+
+                <button
+                    class="btn btn-danger"
+                    onclick="logout()"
+                >
+                    Keluar
+                </button>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- NAVIGATION -->
+
+    <nav class="bottom-nav">
+
+        <button
+            class="nav-btn active"
+            onclick="openPage('homePage',this)"
+        >
+            <span>⌂</span>
+            Home
+        </button>
+
+        <button
+            class="nav-btn"
+            onclick="openPage('pricesPage',this)"
+        >
+            <span>💎</span>
+            Harga
+        </button>
+
+        <button
+            class="nav-btn"
+            onclick="openPage('ordersPage',this)"
+        >
+            <span>📋</span>
+            Pesanan
+        </button>
+
+        <button
+            class="nav-btn"
+            onclick="openPage('chatPage',this)"
+        >
+            <span>💬</span>
+            Chat
+        </button>
+
+        <button
+            class="nav-btn"
+            onclick="openPage('profilePage',this)"
+        >
+            <span>👤</span>
+            Profil
+        </button>
+
+    </nav>
+
+</section>
+
+
+<!-- ORDER MODAL -->
+
+<div
+    id="orderModal"
+    class="modal hidden"
+>
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <h3>Pesan Layanan</h3>
+
+            <button
+                class="close"
+                onclick="closeOrder()"
+            >
+                ×
+            </button>
+
+        </div>
+
+        <div id="orderMessage"></div>
+
+        <form id="orderForm">
+
+            <input
+                type="hidden"
+                id="orderPackageId"
+            >
+
+            <div class="field">
+                <label>Paket</label>
+                <input id="orderPackageName" readonly>
+            </div>
+
+            <div class="field">
+                <label>Harga</label>
+                <input id="orderPackagePrice" readonly>
+            </div>
+
+            <div class="field">
+                <label>Link Channel YouTube</label>
+                <input
+                    id="channelUrl"
+                    type="url"
+                    placeholder="https://youtube.com/@channel"
+                    required
+                >
+            </div>
+
+            <div class="field">
+                <label>Catatan</label>
+                <textarea
+                    id="orderNote"
+                    rows="4"
+                    placeholder="Informasi tambahan..."
+                ></textarea>
+            </div>
+
+            <div class="field">
+                <label>Bukti Pembayaran</label>
+                <input
+                    id="paymentProof"
+                    type="file"
+                    accept="image/*,.pdf"
+                    required
+                >
+            </div>
+
+            <button class="btn btn-full">
+                Kirim Pesanan
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* ============================================================
+   SUPABASE CONFIG
+   GANTI 2 BARIS INI
+============================================================ */
+
+const SUPABASE_URL =
+"ISI_URL_SUPABASE_ANDA";
+
+const SUPABASE_ANON_KEY =
+"ISI_ANON_KEY_SUPABASE_ANDA";
+
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+    );
+
+
+/* ============================================================
+   KONFIGURASI PEMBAYARAN
+   EDIT BAGIAN INI
+============================================================ */
+
+const PAYMENT = {
+
+    bank:
+        "BCA",
+
+    number:
+        "0000000000",
+
+    owner:
+        "NAMA ANDA"
+
+};
+
+
+/* ============================================================
+   DATA PAKET
+   BISA ANDA EDIT
+============================================================ */
+
+const PACKAGES = [
+
+    {
+        id:"basic",
+        name:"Basic",
+        price:500000,
+        popular:false,
+        description:"Pendampingan dasar channel",
+        features:[
+            "Pengecekan channel",
+            "Panduan persiapan monetisasi",
+            "Pendampingan admin"
+        ]
+    },
+
+    {
+        id:"standard",
+        name:"Standard",
+        price:1000000,
+        popular:true,
+        description:"Pendampingan lebih lengkap",
+        features:[
+            "Audit channel",
+            "Optimasi dasar",
+            "Panduan persiapan YPP",
+            "Pendampingan admin"
+        ]
+    },
+
+    {
+        id:"premium",
+        name:"Premium",
+        price:2000000,
+        popular:false,
+        description:"Pendampingan channel premium",
+        features:[
+            "Audit channel",
+            "Optimasi channel",
+            "Pendampingan konten",
+            "Panduan YPP",
+            "Prioritas live chat"
+        ]
+    }
+
+];
+
+
+/* ============================================================
+   GLOBAL
+============================================================ */
+
+let currentUser = null;
+let chatChannel = null;
+
+
+/* ============================================================
+   START
+============================================================ */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    async () => {
+
+        setPayment();
+
+        renderPackages();
+
+        const {
+            data:{
+                session
+            }
+        } = await supabaseClient
+            .auth
+            .getSession();
+
+        if(session){
+
+            currentUser =
+                session.user;
+
+            await showApp();
+
+        }else{
+
+            showAuthPage();
+
+        }
+
+        supabaseClient
+            .auth
+            .onAuthStateChange(
+                async(event,session)=>{
+
+                    if(session){
+
+                        currentUser =
+                            session.user;
+
+                        await showApp();
+
+                    }else{
+
+                        currentUser =
+                            null;
+
+                        showAuthPage();
+
+                    }
+
+                }
+            );
+
+    }
+);
+
+
+/* ============================================================
+   AUTH PAGE
+============================================================ */
+
+function showAuthPage(){
+
+    document
+        .getElementById("loading")
+        .classList.add("hidden");
+
+    document
+        .getElementById("authPage")
+        .classList.remove("hidden");
+
+    document
+        .getElementById("app")
+        .classList.add("hidden");
+
+}
+
+
+function showAuth(type){
+
+    const login =
+        document.getElementById(
+            "loginForm"
+        );
+
+    const register =
+        document.getElementById(
+            "registerForm"
+        );
+
+    const loginTab =
+        document.getElementById(
+            "loginTab"
+        );
+
+    const registerTab =
+        document.getElementById(
+            "registerTab"
+        );
+
+    if(type==="login"){
+
+        login.classList.remove("hidden");
+        register.classList.add("hidden");
+
+        loginTab.classList.add("active");
+        registerTab.classList.remove("active");
+
+    }else{
+
+        login.classList.add("hidden");
+        register.classList.remove("hidden");
+
+        loginTab.classList.remove("active");
+        registerTab.classList.add("active");
+
+    }
+
+    clearAuthMessage();
+
+}
+
+
+function authMessage(
+    text,
+    type="error"
+){
+
+    document.getElementById(
+        "authMessage"
+    ).innerHTML =
+        `<div class="${type}">
+            ${escapeHtml(text)}
+        </div>`;
+
+}
+
+
+function clearAuthMessage(){
+
+    document.getElementById(
+        "authMessage"
+    ).innerHTML="";
+
+}
+
+
+/* ============================================================
+   REGISTER
+============================================================ */
+
+document
+    .getElementById("registerForm")
+    .addEventListener(
+        "submit",
+        async(e)=>{
+
+            e.preventDefault();
+
+            clearAuthMessage();
+
+            const name =
+                document
+                .getElementById("registerName")
+                .value
+                .trim();
+
+            const email =
+                document
+                .getElementById("registerEmail")
+                .value
+                .trim();
+
+            const password =
+                document
+                .getElementById("registerPassword")
+                .value;
+
+            if(password.length<6){
+
+                authMessage(
+                    "Password minimal 6 karakter."
+                );
+
+                return;
+
+            }
+
+            const {
+                data,
+                error
+            } =
+            await supabaseClient
+                .auth
+                .signUp({
+
+                    email,
+                    password,
+
+                    options:{
+                        data:{
+                            full_name:name
+                        }
+                    }
+
+                });
+
+            if(error){
+
+                authMessage(
+                    error.message
+                );
+
+                return;
+
+            }
+
+            if(data.user){
+
+                const {
+                    error:profileError
+                } =
+                await supabaseClient
+                    .from("profiles")
+                    .insert({
+
+                        id:data.user.id,
+
+                        full_name:name,
+
+                        email:email
+
+                    });
+
+                if(profileError){
+
+                    console.log(
+                        profileError
+                    );
+
+                }
+
+            }
+
+            authMessage(
+                "Pendaftaran berhasil. Silakan cek email jika verifikasi email diaktifkan.",
+                "success"
+            );
+
+        }
+    );
+
+
+/* ============================================================
+   LOGIN
+============================================================ */
+
+document
+    .getElementById("loginForm")
+    .addEventListener(
+        "submit",
+        async(e)=>{
+
+            e.preventDefault();
+
+            clearAuthMessage();
+
+            const email =
+                document
+                .getElementById("loginEmail")
+                .value
+                .trim();
+
+            const password =
+                document
+                .getElementById("loginPassword")
+                .value;
+
+            const {
+                error
+            } =
+            await supabaseClient
+                .auth
+                .signInWithPassword({
+
+                    email,
+                    password
+
+                });
+
+            if(error){
+
+                authMessage(
+                    error.message
+                );
+
+                return;
+
+            }
+
+        }
+    );
+
+
+/* ============================================================
+   SHOW APP
+============================================================ */
+
+async function showApp(){
+
+    document
+        .getElementById("loading")
+        .classList.add("hidden");
+
+    document
+        .getElementById("authPage")
+        .classList.add("hidden");
+
+    document
+        .getElementById("app")
+        .classList.remove("hidden");
+
+    await loadProfile();
+
+    await loadOrders();
+
+    await loadMessages();
+
+    subscribeChat();
+
+}
+
+
+/* ============================================================
+   PROFILE
+============================================================ */
+
+async function loadProfile(){
+
+    if(!currentUser)
+        return;
+
+    let name =
+        currentUser
+        .user_metadata
+        ?.full_name || "Member";
+
+    const {
+        data
+    } =
+    await supabaseClient
+        .from("profiles")
+        .select("*")
+        .eq("id",currentUser.id)
+        .maybeSingle();
+
+    if(data && data.full_name){
+
+        name =
+            data.full_name;
+
+    }
+
+    document
+        .getElementById("topName")
+        .textContent=name;
+
+    document
+        .getElementById("topAvatar")
+        .textContent=
+            name
+            .charAt(0)
+            .toUpperCase();
+
+    document
+        .getElementById("profileName")
+        .value=name;
+
+    document
+        .getElementById("profileEmail")
+        .value=currentUser.email;
+
+}
+
+
+/* ============================================================
+   LOGOUT
+============================================================ */
+
+async function logout(){
+
+    if(chatChannel){
+
+        await supabaseClient
+            .removeChannel(
+                chatChannel
+            );
+
+        chatChannel=null;
+
+    }
+
+    await supabaseClient
+        .auth
+        .signOut();
+
+}
+
+
+/* ============================================================
+   NAVIGATION
+============================================================ */
+
+function openPage(
+    pageId,
+    button=null
+){
+
+    document
+        .querySelectorAll(".page")
+        .forEach(
+            page=>{
+                page.classList.remove(
+                    "active"
+                );
+            }
+        );
+
+    const page =
+        document.getElementById(
+            pageId
+        );
+
+    if(page)
+        page.classList.add("active");
+
+    if(button){
+
+        document
+            .querySelectorAll(".nav-btn")
+            .forEach(
+                b=>{
+                    b.classList.remove(
+                        "active"
+                    );
+                }
+            );
+
+        button.classList.add("active");
+
+    }else{
+
+        document
+            .querySelectorAll(".nav-btn")
+            .forEach(
+                b=>{
+                    b.classList.remove(
+                        "active"
+                    );
+                }
+            );
+
+        const target =
+            Array.from(
+                document.querySelectorAll(
+                    ".nav-btn"
+                )
+            ).find(
+                b =>
+                b.getAttribute(
+                    "onclick"
+                )?.includes(pageId)
+            );
+
+        if(target)
+            target.classList.add(
+                "active"
+            );
+
+    }
+
+}
+
+
+/* ============================================================
+   PAYMENT
+============================================================ */
+
+function setPayment(){
+
+    document
+        .getElementById("bankName")
+        .textContent=
+            PAYMENT.bank;
+
+    document
+        .getElementById("bankNumber")
+        .textContent=
+            PAYMENT.number;
+
+    document
+        .getElementById("bankOwner")
+        .textContent=
+            PAYMENT.owner;
+
+}
+
+
+/* ============================================================
+   PACKAGES
+============================================================ */
+
+function formatRupiah(number){
+
+    return new Intl.NumberFormat(
+        "id-ID",
+        {
+            style:"currency",
+            currency:"IDR",
+            maximumFractionDigits:0
+        }
+    ).format(number);
+
+}
+
+
+function renderPackages(){
+
+    const html =
+        PACKAGES
+        .map(
+            item=>`
+
+            <div class="package
+                ${item.popular ? "popular":""}">
+
+                ${
+                    item.popular
+                    ?
+                    `<span class="badge">
+                        PALING POPULER
+                    </span>`
+                    :
+                    ""
+                }
+
+                <h4>
+                    ${escapeHtml(item.name)}
+                </h4>
+
+                <div class="price">
+                    ${formatRupiah(item.price)}
+                </div>
+
+                <p
+                    class="muted"
+                    style="margin-bottom:12px"
+                >
+                    ${escapeHtml(item.description)}
+                </p>
+
+                <ul>
+                    ${
+                        item.features
+                        .map(
+                            f=>`
+                            <li>
+                                ${escapeHtml(f)}
+                            </li>
+                            `
+                        )
+                        .join("")
+                    }
+                </ul>
+
+                <button
+                    class="btn btn-full"
+                    onclick="openOrder('${item.id}')"
+                >
+                    Pesan Sekarang
+                </button>
+
+            </div>
+
+            `
+        )
+        .join("");
+
+    document
+        .getElementById("packages")
+        .innerHTML=html;
+
+    document
+        .getElementById("homePackages")
+        .innerHTML=
+            PACKAGES
+            .slice(0,3)
+            .map(
+                item=>`
+
+                <div class="package">
+
+                    ${
+                        item.popular
+                        ?
+                        `<span class="badge">
+                            POPULER
+                        </span>`
+                        :
+                        ""
+                    }
+
+                    <h4>
+                        ${escapeHtml(item.name)}
+                    </h4>
+
+                    <div class="price">
+                        ${formatRupiah(item.price)}
+                    </div>
+
+                    <p class="muted">
+                        ${escapeHtml(item.description)}
+                    </p>
+
+                    <br>
+
+                    <button
+                        class="btn btn-full"
+                        onclick="openOrder('${item.id}')"
+                    >
+                        Pesan
+                    </button>
+
+                </div>
+
+                `
+            )
+            .join("");
+
+}
+
+
+/* ============================================================
+   ORDER MODAL
+============================================================ */
+
+function openOrder(packageId){
+
+    const item =
+        PACKAGES.find(
+            x=>x.id===packageId
+        );
+
+    if(!item)
+        return;
+
+    document
+        .getElementById("orderPackageId")
+        .value=item.id;
+
+    document
+        .getElementById("orderPackageName")
+        .value=item.name;
+
+    document
+        .getElementById("orderPackagePrice")
+        .value=
+            formatRupiah(item.price);
+
+    document
+        .getElementById("orderMessage")
+        .innerHTML="";
+
+    document
+        .getElementById("orderModal")
+        .classList.remove("hidden");
+
+}
+
+
+function closeOrder(){
+
+    document
+        .getElementById("orderModal")
+        .classList.add("hidden");
+
+}
+
+
+/* ============================================================
+   SUBMIT ORDER
+============================================================ */
+
+document
+    .getElementById("orderForm")
+    .addEventListener(
+        "submit",
+        async(e)=>{
+
+            e.preventDefault();
+
+            if(!currentUser)
+                return;
+
+            const packageId =
+                document
+                .getElementById("orderPackageId")
+                .value;
+
+            const item =
+                PACKAGES.find(
+                    x=>x.id===packageId
+                );
+
+            if(!item)
+                return;
+
+            const channelUrl =
+                document
+                .getElementById("channelUrl")
+                .value
+                .trim();
+
+            const note =
+                document
+                .getElementById("orderNote")
+                .value
+                .trim();
+
+            const file =
+                document
+                .getElementById("paymentProof")
+                .files[0];
+
+            if(!file){
+
+                showOrderMessage(
+                    "Bukti pembayaran wajib diupload."
+                );
+
+                return;
+
+            }
+
+            if(file.size > 5*1024*1024){
+
+                showOrderMessage(
+                    "Ukuran file maksimal 5 MB."
+                );
+
+                return;
+
+            }
+
+            showOrderMessage(
+                "Mengirim pesanan...",
+                "success"
+            );
+
+            try{
+
+                const ext =
+                    file.name
+                    .split(".")
+                    .pop()
+                    .toLowerCase();
+
+                const filePath =
+                    currentUser.id +
+                    "/" +
+                    Date.now() +
+                    "." +
+                    ext;
+
+                const {
+                    error:uploadError
+                } =
+                await supabaseClient
+                    .storage
+                    .from("payment-proofs")
+                    .upload(
+                        filePath,
+                        file
+                    );
+
+                if(uploadError)
+                    throw uploadError;
+
+                const {
+                    data,
+                    error
+                } =
+                await supabaseClient
+                    .from("orders")
+                    .insert({
+
+                        user_id:
+                            currentUser.id,
+
+                        package_id:
+                            item.id,
+
+                        package_name:
+                            item.name,
+
+                        amount:
+                            item.price,
+
+                        channel_url:
+                            channelUrl,
+
+                        note:
+                            note,
+
+                        payment_proof:
+                            filePath,
+
+                        status:
+                            "pending"
+
+                    })
+                    .select()
+                    .single();
+
+                if(error)
+                    throw error;
+
+                showOrderMessage(
+                    "Pesanan berhasil dikirim.",
+                    "success"
+                );
+
+                document
+                    .getElementById("orderForm")
+                    .reset();
+
+                setTimeout(
+                    ()=>{
+                        closeOrder();
+                        loadOrders();
+                    },
+                    1200
+                );
+
+            }catch(error){
+
+                console.error(error);
+
+                showOrderMessage(
+                    error.message ||
+                    "Gagal membuat pesanan."
+                );
+
+            }
+
+        }
+    );
+
+
+function showOrderMessage(
+    text,
+    type="error"
+){
+
+    document
+        .getElementById("orderMessage")
+        .innerHTML =
+        `<div class="${type}">
+            ${escapeHtml(text)}
+        </div>`;
+
+}
+
+
+/* ============================================================
+   ORDERS
+============================================================ */
+
+async function loadOrders(){
+
+    if(!currentUser)
+        return;
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("orders")
+        .select("*")
+        .eq(
+            "user_id",
+            currentUser.id
+        )
+        .order(
+            "created_at",
+            {
+                ascending:false
+            }
+        );
+
+    if(error){
+
+        console.error(error);
+
+        return;
+
+    }
+
+    const orders =
+        data || [];
+
+    document
+        .getElementById("totalOrders")
+        .textContent=
+            orders.length;
+
+    const tbody =
+        document
+        .getElementById("ordersTable");
+
+    if(!orders.length){
+
+        tbody.innerHTML=`
+            <tr>
+                <td
+                    colspan="5"
+                    style="text-align:center"
+                >
+                    Belum ada pesanan.
+                </td>
+            </tr>
+        `;
+
+        return;
+
+    }
+
+    tbody.innerHTML =
+        orders
+        .map(
+            order=>`
+
+            <tr>
+
+                <td>
+                    ${escapeHtml(
+                        order.package_name || "-"
+                    )}
+                </td>
+
+                <td>
+                    ${formatRupiah(
+                        order.amount || 0
+                    )}
+                </td>
+
+                <td>
+                    <a
+                        href="${escapeAttribute(
+                            order.channel_url || "#"
+                        )}"
+                        target="_blank"
+                        style="color:#a78bfa"
+                    >
+                        Channel
+                    </a>
+                </td>
+
+                <td>
+                    ${statusBadge(
+                        order.status
+                    )}
+                </td>
+
+                <td>
+                    ${formatDate(
+                        order.created_at
+                    )}
+                </td>
+
+            </tr>
+
+            `
+        )
+        .join("");
+
+}
+
+
+function statusBadge(status){
+
+    let cls="pending";
+
+    let text="Menunggu";
+
+    if(status==="processing"){
+
+        cls="process";
+        text="Diproses";
+
+    }
+
+    if(status==="completed"){
+
+        cls="done";
+        text="Selesai";
+
+    }
+
+    if(status==="cancelled"){
+
+        cls="cancel";
+        text="Dibatalkan";
+
+    }
+
+    return `
+        <span class="status ${cls}">
+            ${text}
+        </span>
+    `;
+
+}
+
+
+/* ============================================================
+   CHAT
+============================================================ */
+
+async function loadMessages(){
+
+    if(!currentUser)
+        return;
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("messages")
+        .select("*")
+        .eq(
+            "user_id",
+            currentUser.id
+        )
+        .order(
+            "created_at",
+            {
+                ascending:true
+            }
+        );
+
+    if(error){
+
+        console.error(error);
+
+        return;
+
+    }
+
+    renderMessages(
+        data || []
+    );
+
+}
+
+
+function renderMessages(messages){
+
+    const box =
+        document
+        .getElementById("messages");
+
+    if(!messages.length){
+
+        box.innerHTML=`
+            <div
+                style="
+                    text-align:center;
+                    color:#777;
+                    padding:30px;
+                "
+            >
+                Belum ada percakapan.<br>
+                Silakan kirim pesan kepada admin.
+            </div>
+        `;
+
+        return;
+
+    }
+
+    box.innerHTML =
+        messages
+        .map(
+            msg=>`
+
+            <div
+                class="message
+                ${
+                    msg.sender_type==="member"
+                    ?
+                    "me"
+                    :
+                    "admin"
+                }"
+            >
+
+                ${escapeHtml(
+                    msg.message
+                )}
+
+                <small>
+                    ${
+                        msg.sender_type==="member"
+                        ?
+                        "Anda"
+                        :
+                        "Admin"
+                    }
+                    •
+                    ${formatDate(
+                        msg.created_at
+                    )}
+                </small>
+
+            </div>
+
+            `
+        )
+        .join("");
+
+    box.scrollTop =
+        box.scrollHeight;
+
+}
+
+
+/* ============================================================
+   REALTIME CHAT
+============================================================ */
+
+function subscribeChat(){
+
+    if(!currentUser)
+        return;
+
+    if(chatChannel){
+
+        supabaseClient
+            .removeChannel(
+                chatChannel
+            );
+
+    }
+
+    chatChannel =
+        supabaseClient
+        .channel(
+            "chat-" +
+            currentUser.id
+        )
+        .on(
+            "postgres_changes",
+            {
+                event:"INSERT",
+                schema:"public",
+                table:"messages",
+                filter:
+                    "user_id=eq."+
+                    currentUser.id
+            },
+            payload=>{
+
+                loadMessages();
+
+            }
+        )
+        .subscribe();
+
+}
+
+
+/* ============================================================
+   SEND CHAT
+============================================================ */
+
+document
+    .getElementById("chatForm")
+    .addEventListener(
+        "submit",
+        async(e)=>{
+
+            e.preventDefault();
+
+            if(!currentUser)
+                return;
+
+            const input =
+                document
+                .getElementById("chatInput");
+
+            const message =
+                input
+                .value
+                .trim();
+
+            if(!message)
+                return;
+
+            const {
+                error
+            } =
+            await supabaseClient
+                .from("messages")
+                .insert({
+
+                    user_id:
+                        currentUser.id,
+
+                    sender_type:
+                        "member",
+
+                    message:
+                        message
+
+                });
+
+            if(error){
+
+                alert(
+                    error.message
+                );
+
+                return;
+
+            }
+
+            input.value="";
+
+            loadMessages();
+
+        }
+    );
+
+
+/* ============================================================
+   UTILITIES
+============================================================ */
+
+function formatDate(date){
+
+    if(!date)
+        return "-";
+
+    return new Date(date)
+        .toLocaleString(
+            "id-ID",
+            {
+                dateStyle:"short",
+                timeStyle:"short"
+            }
+        );
+
+}
+
+
+function escapeHtml(value){
+
+    return String(value ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+
+}
+
+
+function escapeAttribute(value){
+
+    return escapeHtml(value);
+
+}
+
+</script>
+
+</body>
+</html>
