@@ -1,21 +1,12 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
-
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
+<title>Admin Panel - YouTube Service</title>
 
-<title>Admin - YT Monetize Service</title>
-
-<script
-    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
-></script>
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 
@@ -23,998 +14,479 @@
     box-sizing:border-box;
     margin:0;
     padding:0;
-    font-family:Arial,Helvetica,sans-serif;
-}
-
-:root{
-
-    --bg:#06060a;
-    --panel:#11111a;
-    --panel2:#181823;
-    --border:#29293a;
-
-    --primary:#8b5cf6;
-    --secondary:#06b6d4;
-
-    --text:#ffffff;
-    --muted:#9292a5;
-
-    --green:#22c55e;
-    --yellow:#facc15;
-    --red:#ef4444;
-    --blue:#38bdf8;
-
 }
 
 body{
-
-    background:
-
-    radial-gradient(
-        circle at top right,
-        rgba(139,92,246,.13),
-        transparent 30%
-    ),
-
-    var(--bg);
-
-    color:var(--text);
-
+    background:#07070b;
+    color:#fff;
+    font-family:Arial,sans-serif;
     min-height:100vh;
-
 }
 
 button,
-input,
-textarea,
-select{
-
+input{
     font:inherit;
-
 }
 
 button{
-
     cursor:pointer;
-
 }
 
 .hidden{
-
     display:none!important;
-
 }
 
 
-/* =====================================================
-   LOADING
-===================================================== */
+/* LOGIN */
 
-#loading{
-
-    position:fixed;
-    inset:0;
-
-    background:#050507;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    flex-direction:column;
-
-    gap:15px;
-
-    z-index:9999;
-
-}
-
-.loader{
-
-    width:45px;
-    height:45px;
-
-    border:4px solid #222;
-
-    border-top-color:var(--primary);
-
-    border-radius:50%;
-
-    animation:spin 1s linear infinite;
-
-}
-
-@keyframes spin{
-
-    to{
-        transform:rotate(360deg);
-    }
-
-}
-
-
-/* =====================================================
-   LOGIN
-===================================================== */
-
-.login-page{
-
+#loginPage{
     min-height:100vh;
-
     display:flex;
-
     align-items:center;
-
     justify-content:center;
-
     padding:20px;
-
 }
 
 .login-box{
-
     width:100%;
-    max-width:420px;
-
-    background:rgba(17,17,26,.96);
-
-    border:1px solid var(--border);
-
-    border-radius:25px;
-
-    padding:35px;
-
-    box-shadow:
-        0 0 70px
-        rgba(139,92,246,.12);
-
+    max-width:400px;
+    background:#12121a;
+    border:1px solid #292938;
+    border-radius:20px;
+    padding:30px;
 }
 
 .logo{
-
     text-align:center;
-
     margin-bottom:25px;
-
 }
 
 .logo-icon{
-
-    width:70px;
-    height:70px;
-
-    border-radius:20px;
-
+    width:65px;
+    height:65px;
     margin:auto;
-
+    border-radius:18px;
     display:flex;
-
     align-items:center;
     justify-content:center;
-
-    font-size:25px;
+    font-size:22px;
     font-weight:bold;
-
-    background:
-        linear-gradient(
-            135deg,
-            var(--primary),
-            var(--secondary)
-        );
-
+    background:linear-gradient(
+        135deg,
+        #8b5cf6,
+        #06b6d4
+    );
 }
 
 .logo h1{
-
-    font-size:23px;
-
     margin-top:15px;
-
+    font-size:23px;
 }
 
 .logo p{
-
-    color:var(--muted);
-
+    color:#888;
+    margin-top:6px;
     font-size:13px;
-
-    margin-top:7px;
-
 }
 
 .field{
-
     margin-bottom:15px;
-
 }
 
 .field label{
-
     display:block;
-
+    color:#bbb;
     font-size:13px;
-
-    color:#ccc;
-
     margin-bottom:7px;
-
 }
 
-.field input,
-.field textarea,
-.field select{
-
+.field input{
     width:100%;
-
     padding:13px;
-
-    background:#09090f;
-
-    border:1px solid var(--border);
-
-    border-radius:11px;
-
-    color:white;
-
+    border-radius:10px;
+    border:1px solid #30303e;
+    background:#09090d;
+    color:#fff;
     outline:none;
-
 }
 
-.field input:focus,
-.field textarea:focus,
-.field select:focus{
-
-    border-color:var(--primary);
-
+.field input:focus{
+    border-color:#8b5cf6;
 }
 
 .btn{
-
-    border:0;
-
-    padding:12px 16px;
-
-    border-radius:10px;
-
-    color:white;
-
-    font-weight:bold;
-
-    background:
-        linear-gradient(
-            135deg,
-            var(--primary),
-            #6d28d9
-        );
-
-}
-
-.btn-full{
-
     width:100%;
-
+    padding:13px;
+    border:0;
+    border-radius:10px;
+    color:#fff;
+    font-weight:bold;
+    background:linear-gradient(
+        135deg,
+        #8b5cf6,
+        #6d28d9
+    );
 }
 
-.btn-secondary{
-
-    background:#22222e;
-
-}
-
-.btn-green{
-
-    background:#15803d;
-
-}
-
-.btn-red{
-
-    background:#b91c1c;
-
+.message{
+    padding:12px;
+    border-radius:10px;
+    margin-bottom:15px;
+    font-size:13px;
+    line-height:1.5;
 }
 
 .error{
-
-    padding:11px;
-
-    border-radius:10px;
-
-    margin-bottom:15px;
-
     color:#fca5a5;
+    background:#2a1115;
+    border:1px solid #5b2027;
+}
 
-    background:rgba(239,68,68,.1);
-
-    border:1px solid
-        rgba(239,68,68,.3);
-
+.success{
+    color:#86efac;
+    background:#0c2115;
+    border:1px solid #164b28;
 }
 
 
-/* =====================================================
-   ADMIN APP
-===================================================== */
+/* ADMIN */
 
-.admin-app{
-
+#adminPage{
     min-height:100vh;
-
 }
 
 .topbar{
-
-    height:70px;
-
-    padding:0 25px;
-
+    height:65px;
+    padding:0 20px;
+    border-bottom:1px solid #292938;
+    background:#0d0d13;
     display:flex;
-
-    align-items:center;
-
     justify-content:space-between;
-
-    position:sticky;
-
-    top:0;
-
-    z-index:100;
-
-    background:rgba(7,7,11,.9);
-
-    backdrop-filter:blur(15px);
-
-    border-bottom:1px solid var(--border);
-
+    align-items:center;
 }
 
 .brand{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:10px;
-
     font-weight:bold;
-
 }
 
-.brand-icon{
-
-    width:38px;
-    height:38px;
-
+.admin-info{
     display:flex;
-
-    align-items:center;
-    justify-content:center;
-
-    border-radius:11px;
-
-    background:
-        linear-gradient(
-            135deg,
-            var(--primary),
-            var(--secondary)
-        );
-
-}
-
-.admin-user{
-
-    display:flex;
-
-    align-items:center;
-
     gap:10px;
-
+    align-items:center;
 }
 
-.admin-badge{
-
-    background:rgba(139,92,246,.15);
-
-    color:#c4b5fd;
-
-    border:1px solid
-        rgba(139,92,246,.3);
-
-    border-radius:20px;
-
+.badge{
     padding:6px 10px;
-
+    border-radius:20px;
+    background:#241547;
+    color:#c4b5fd;
     font-size:11px;
-
 }
 
-.avatar{
-
-    width:38px;
-    height:38px;
-
-    border-radius:50%;
-
-    display:flex;
-
-    align-items:center;
-    justify-content:center;
-
-    font-weight:bold;
-
-    background:
-        linear-gradient(
-            135deg,
-            var(--primary),
-            var(--secondary)
-        );
-
+.logout{
+    width:auto;
+    padding:8px 13px;
+    background:#29202a;
 }
-
-
-/* =====================================================
-   LAYOUT
-===================================================== */
 
 .layout{
-
     display:flex;
-
 }
 
 .sidebar{
-
-    width:230px;
-
-    min-height:calc(100vh - 70px);
-
-    background:#0a0a10;
-
-    border-right:1px solid var(--border);
-
-    padding:20px;
-
-    position:fixed;
-
-    top:70px;
-    bottom:0;
-    left:0;
-
+    width:220px;
+    min-height:calc(100vh - 65px);
+    border-right:1px solid #292938;
+    padding:15px;
+    background:#0a0a0f;
 }
 
-.menu-title{
-
-    color:#666;
-
-    font-size:10px;
-
-    margin:10px 10px;
-
-    text-transform:uppercase;
-
-}
-
-.menu-btn{
-
+.menu{
     width:100%;
-
-    border:0;
-
-    background:transparent;
-
-    color:#888;
-
-    padding:12px;
-
     text-align:left;
-
-    border-radius:10px;
-
+    border:0;
+    padding:12px;
+    border-radius:9px;
     margin-bottom:5px;
-
+    color:#aaa;
+    background:transparent;
 }
 
-.menu-btn:hover,
-.menu-btn.active{
-
-    background:
-        rgba(139,92,246,.15);
-
-    color:white;
-
+.menu:hover,
+.menu.active{
+    background:#201534;
+    color:#fff;
 }
 
 .content{
-
-    margin-left:230px;
-
-    width:calc(100% - 230px);
-
+    flex:1;
     padding:25px;
-
 }
 
 .page{
-
     display:none;
-
 }
 
 .page.active{
-
     display:block;
-
 }
 
+h2{
+    margin-bottom:5px;
+}
 
-/* =====================================================
-   DASHBOARD
-===================================================== */
-
-.page-title{
-
+.subtitle{
+    color:#777;
     margin-bottom:20px;
-
 }
 
-.page-title h2{
-
-    font-size:25px;
-
-}
-
-.page-title p{
-
-    color:var(--muted);
-
-    margin-top:5px;
-
-}
-
-.stats{
-
+.cards{
     display:grid;
-
     grid-template-columns:
         repeat(4,1fr);
-
     gap:15px;
-
-    margin-bottom:20px;
-
-}
-
-.stat{
-
-    background:var(--panel);
-
-    border:1px solid var(--border);
-
-    border-radius:17px;
-
-    padding:20px;
-
-}
-
-.stat small{
-
-    color:var(--muted);
-
-}
-
-.stat strong{
-
-    display:block;
-
-    margin-top:8px;
-
-    font-size:25px;
-
 }
 
 .card{
-
-    background:var(--panel);
-
-    border:1px solid var(--border);
-
-    border-radius:18px;
-
+    background:#12121a;
+    border:1px solid #292938;
+    border-radius:15px;
     padding:20px;
-
-    margin-bottom:20px;
-
 }
 
+.card small{
+    color:#777;
+}
 
-/* =====================================================
-   TABLE
-===================================================== */
+.card strong{
+    display:block;
+    font-size:27px;
+    margin-top:8px;
+}
 
-.table-wrap{
-
+.table-card{
+    margin-top:20px;
     overflow:auto;
-
 }
 
 table{
-
     width:100%;
-
     border-collapse:collapse;
-
-    min-width:800px;
-
+    min-width:700px;
 }
 
 th,
 td{
-
     text-align:left;
-
     padding:13px;
-
-    border-bottom:1px solid var(--border);
-
+    border-bottom:1px solid #292938;
 }
 
 th{
-
     color:#777;
-
     font-size:11px;
-
-    text-transform:uppercase;
-
 }
 
 td{
-
     font-size:13px;
+}
 
+select{
+    background:#09090d;
+    color:#fff;
+    border:1px solid #333;
+    border-radius:7px;
+    padding:7px;
+}
+
+.small-btn{
+    border:0;
+    border-radius:7px;
+    padding:7px 10px;
+    color:#fff;
+    background:#29202f;
 }
 
 .status{
-
-    display:inline-block;
-
-    padding:5px 9px;
-
-    border-radius:20px;
-
+    padding:5px 8px;
+    border-radius:15px;
     font-size:11px;
-
 }
 
 .pending{
-
+    background:#30270b;
     color:#facc15;
-
-    background:
-        rgba(250,204,21,.1);
-
 }
 
 .processing{
-
+    background:#092734;
     color:#38bdf8;
-
-    background:
-        rgba(56,189,248,.1);
-
 }
 
 .completed{
-
+    background:#092b18;
     color:#4ade80;
-
-    background:
-        rgba(74,222,128,.1);
-
 }
 
 .cancelled{
-
+    background:#321014;
     color:#f87171;
-
-    background:
-        rgba(248,113,113,.1);
-
 }
 
 
-/* =====================================================
-   CHAT
-===================================================== */
+/* CHAT */
 
-.chat-layout{
-
+.chat{
     display:grid;
-
-    grid-template-columns:
-        280px 1fr;
-
+    grid-template-columns:250px 1fr;
     gap:15px;
-
 }
 
-.member-list{
-
-    background:var(--panel);
-
-    border:1px solid var(--border);
-
-    border-radius:18px;
-
+.members{
+    background:#12121a;
+    border:1px solid #292938;
+    border-radius:15px;
     overflow:hidden;
-
 }
 
-.member-item{
-
+.member{
     width:100%;
-
-    border:0;
-
-    border-bottom:1px solid var(--border);
-
-    background:transparent;
-
-    color:white;
-
+    padding:13px;
     text-align:left;
-
-    padding:14px;
-
+    color:#fff;
+    background:transparent;
+    border:0;
+    border-bottom:1px solid #292938;
 }
 
-.member-item:hover,
-.member-item.active{
-
-    background:
-        rgba(139,92,246,.12);
-
+.member:hover{
+    background:#201534;
 }
 
-.member-item strong{
-
+.member small{
     display:block;
-
+    color:#777;
+    margin-top:4px;
 }
 
-.member-item small{
-
-    color:var(--muted);
-
-}
-
-.chat-panel{
-
+.chatbox{
     height:600px;
-
-    background:var(--panel);
-
-    border:1px solid var(--border);
-
-    border-radius:18px;
-
+    background:#12121a;
+    border:1px solid #292938;
+    border-radius:15px;
     padding:15px;
-
     display:flex;
-
     flex-direction:column;
-
 }
 
-.chat-header{
-
+.chat-title{
     padding:10px;
-
-    border-bottom:1px solid var(--border);
-
-    margin-bottom:10px;
-
+    border-bottom:1px solid #292938;
 }
 
 .messages{
-
     flex:1;
-
     overflow:auto;
-
-    padding:10px;
-
-    background:#09090e;
-
-    border-radius:12px;
-
+    padding:15px;
+    margin-top:10px;
+    background:#09090d;
+    border-radius:10px;
 }
 
-.message{
-
+.msg{
     max-width:75%;
-
-    padding:10px 13px;
-
-    border-radius:13px;
-
+    padding:10px;
     margin-bottom:10px;
-
+    border-radius:10px;
     font-size:13px;
-
     line-height:1.5;
-
 }
 
-.message.member{
-
+.msg.member{
     background:#22222e;
-
 }
 
-.message.admin{
-
-    background:
-        linear-gradient(
-            135deg,
-            #6d28d9,
-            #4c1d95
-        );
-
+.msg.admin{
+    background:#5726a3;
     margin-left:auto;
-
-}
-
-.message small{
-
-    display:block;
-
-    color:#aaa;
-
-    font-size:9px;
-
-    margin-top:5px;
-
 }
 
 .chat-form{
-
     display:flex;
-
     gap:8px;
-
     margin-top:10px;
-
 }
 
 .chat-form input{
-
     flex:1;
-
-    background:#09090f;
-
-    color:white;
-
-    border:1px solid var(--border);
-
-    border-radius:10px;
-
     padding:12px;
+    border-radius:9px;
+    border:1px solid #333;
+    background:#09090d;
+    color:#fff;
+}
 
+.chat-form button{
+    width:auto;
 }
 
 
-/* =====================================================
-   MOBILE
-===================================================== */
+/* MOBILE */
 
-@media(max-width:900px){
+@media(max-width:800px){
 
     .sidebar{
-
-        width:70px;
-
-        padding:10px;
-
+        width:65px;
+        padding:8px;
     }
 
-    .menu-title{
-
-        display:none;
-
-    }
-
-    .menu-btn{
-
-        text-align:center;
-
+    .menu{
         font-size:0;
-
+        text-align:center;
     }
 
-    .menu-btn::first-letter{
-
+    .menu::first-letter{
         font-size:20px;
-
     }
 
     .content{
-
-        margin-left:70px;
-
-        width:calc(100% - 70px);
-
         padding:15px;
-
     }
 
-    .stats{
-
+    .cards{
         grid-template-columns:
             repeat(2,1fr);
-
     }
 
-    .chat-layout{
-
+    .chat{
         grid-template-columns:1fr;
-
     }
 
 }
 
-@media(max-width:600px){
+@media(max-width:500px){
 
-    .stats{
-
+    .cards{
         grid-template-columns:1fr;
-
     }
 
-    .brand-text{
-
+    .brand{
         display:none;
-
-    }
-
-    .topbar{
-
-        padding:0 12px;
-
     }
 
 }
 
 </style>
-
 </head>
-
 
 <body>
 
 
 <!-- =====================================================
-     LOADING
+LOGIN
 ===================================================== -->
 
-<div id="loading">
-
-    <div class="loader"></div>
-
-    <div>
-        Memeriksa akses admin...
-    </div>
-
-</div>
-
-
-<!-- =====================================================
-     LOGIN
-===================================================== -->
-
-<section
-    id="loginPage"
-    class="login-page hidden"
->
+<section id="loginPage">
 
     <div class="login-box">
 
@@ -1029,16 +501,19 @@ td{
             </h1>
 
             <p>
-                YT Monetize Service
+                YouTube Monetize Service
             </p>
 
         </div>
 
 
-        <div id="loginMessage"></div>
+        <div
+            id="loginMessage"
+            class="hidden"
+        ></div>
 
 
-        <form id="adminLoginForm">
+        <form id="loginForm">
 
             <div class="field">
 
@@ -1047,7 +522,7 @@ td{
                 </label>
 
                 <input
-                    id="adminEmail"
+                    id="email"
                     type="email"
                     placeholder="admin@email.com"
                     required
@@ -1063,7 +538,7 @@ td{
                 </label>
 
                 <input
-                    id="adminPassword"
+                    id="password"
                     type="password"
                     placeholder="Password"
                     required
@@ -1073,10 +548,10 @@ td{
 
 
             <button
-                class="btn btn-full"
+                class="btn"
                 type="submit"
             >
-                Masuk Admin
+                LOGIN ADMIN
             </button>
 
         </form>
@@ -1087,484 +562,349 @@ td{
 
 
 <!-- =====================================================
-     ADMIN APP
+ADMIN PAGE
 ===================================================== -->
 
 <section
-    id="adminApp"
-    class="admin-app hidden"
+    id="adminPage"
+    class="hidden"
 >
 
+    <header class="topbar">
 
-<header class="topbar">
-
-    <div class="brand">
-
-        <div class="brand-icon">
-            AD
+        <div class="brand">
+            🎬 YT MONETIZE ADMIN
         </div>
 
-        <span class="brand-text">
-            ADMIN PANEL
-        </span>
+        <div class="admin-info">
 
-    </div>
+            <span class="badge">
+                ADMIN
+            </span>
 
+            <span id="adminEmail">
+                -
+            </span>
 
-    <div class="admin-user">
-
-        <span class="admin-badge">
-            ADMIN
-        </span>
-
-        <span id="adminName">
-            Admin
-        </span>
-
-        <div
-            id="adminAvatar"
-            class="avatar"
-        >
-            A
-        </div>
-
-    </div>
-
-</header>
-
-
-<div class="layout">
-
-
-<!-- =====================================================
-     SIDEBAR
-===================================================== -->
-
-<aside class="sidebar">
-
-    <div class="menu-title">
-        Dashboard
-    </div>
-
-    <button
-        class="menu-btn active"
-        onclick="openAdminPage('dashboardPage',this)"
-    >
-        📊 Dashboard
-    </button>
-
-
-    <div class="menu-title">
-        Management
-    </div>
-
-    <button
-        class="menu-btn"
-        onclick="openAdminPage('ordersPage',this)"
-    >
-        📋 Pesanan
-    </button>
-
-    <button
-        class="menu-btn"
-        onclick="openAdminPage('membersPage',this)"
-    >
-        👥 Member
-    </button>
-
-    <button
-        class="menu-btn"
-        onclick="openAdminPage('chatPage',this)"
-    >
-        💬 Live Chat
-    </button>
-
-
-    <div class="menu-title">
-        Account
-    </div>
-
-    <button
-        class="menu-btn"
-        onclick="adminLogout()"
-    >
-        🚪 Logout
-    </button>
-
-</aside>
-
-
-<!-- =====================================================
-     CONTENT
-===================================================== -->
-
-<main class="content">
-
-
-<!-- =====================================================
-     DASHBOARD
-===================================================== -->
-
-<section
-    id="dashboardPage"
-    class="page active"
->
-
-    <div class="page-title">
-
-        <h2>
-            Dashboard
-        </h2>
-
-        <p>
-            Ringkasan aktivitas layanan Anda.
-        </p>
-
-    </div>
-
-
-    <div class="stats">
-
-        <div class="stat">
-
-            <small>
-                Total Member
-            </small>
-
-            <strong id="statMembers">
-                0
-            </strong>
+            <button
+                id="logoutBtn"
+                class="small-btn logout"
+            >
+                Logout
+            </button>
 
         </div>
 
+    </header>
 
-        <div class="stat">
 
-            <small>
-                Total Pesanan
-            </small>
+    <div class="layout">
 
-            <strong id="statOrders">
-                0
-            </strong>
 
-        </div>
+        <aside class="sidebar">
 
+            <button
+                class="menu active"
+                data-page="dashboard"
+            >
+                📊 Dashboard
+            </button>
 
-        <div class="stat">
+            <button
+                class="menu"
+                data-page="orders"
+            >
+                📋 Pesanan
+            </button>
 
-            <small>
-                Menunggu
-            </small>
+            <button
+                class="menu"
+                data-page="members"
+            >
+                👥 Member
+            </button>
 
-            <strong id="statPending">
-                0
-            </strong>
+            <button
+                class="menu"
+                data-page="chat"
+            >
+                💬 Live Chat
+            </button>
 
-        </div>
+        </aside>
 
 
-        <div class="stat">
+        <main class="content">
 
-            <small>
-                Selesai
-            </small>
 
-            <strong id="statCompleted">
-                0
-            </strong>
-
-        </div>
-
-    </div>
-
-
-    <div class="card">
-
-        <h3 style="margin-bottom:15px">
-            Pesanan Terbaru
-        </h3>
-
-        <div class="table-wrap">
-
-            <table>
-
-                <thead>
-
-                    <tr>
-
-                        <th>
-                            Member
-                        </th>
-
-                        <th>
-                            Paket
-                        </th>
-
-                        <th>
-                            Harga
-                        </th>
-
-                        <th>
-                            Status
-                        </th>
-
-                        <th>
-                            Tanggal
-                        </th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody
-                    id="recentOrders"
-                ></tbody>
-
-            </table>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- =====================================================
-     ORDERS
-===================================================== -->
-
-<section
-    id="ordersPage"
-    class="page"
->
-
-    <div class="page-title">
-
-        <h2>
-            Semua Pesanan
-        </h2>
-
-        <p>
-            Kelola pesanan member.
-        </p>
-
-    </div>
-
-
-    <div class="card">
-
-        <div class="table-wrap">
-
-            <table>
-
-                <thead>
-
-                    <tr>
-
-                        <th>
-                            Member
-                        </th>
-
-                        <th>
-                            Paket
-                        </th>
-
-                        <th>
-                            Harga
-                        </th>
-
-                        <th>
-                            Channel
-                        </th>
-
-                        <th>
-                            Bukti
-                        </th>
-
-                        <th>
-                            Status
-                        </th>
-
-                        <th>
-                            Aksi
-                        </th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody
-                    id="ordersTable"
-                ></tbody>
-
-            </table>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- =====================================================
-     MEMBERS
-===================================================== -->
-
-<section
-    id="membersPage"
-    class="page"
->
-
-    <div class="page-title">
-
-        <h2>
-            Member
-        </h2>
-
-        <p>
-            Daftar pengguna yang terdaftar.
-        </p>
-
-    </div>
-
-
-    <div class="card">
-
-        <div class="table-wrap">
-
-            <table>
-
-                <thead>
-
-                    <tr>
-
-                        <th>
-                            Nama
-                        </th>
-
-                        <th>
-                            Email
-                        </th>
-
-                        <th>
-                            Role
-                        </th>
-
-                        <th>
-                            Bergabung
-                        </th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody
-                    id="membersTable"
-                ></tbody>
-
-            </table>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- =====================================================
-     CHAT
-===================================================== -->
-
-<section
-    id="chatPage"
-    class="page"
->
-
-    <div class="page-title">
-
-        <h2>
-            Live Chat
-        </h2>
-
-        <p>
-            Balas pertanyaan member.
-        </p>
-
-    </div>
-
-
-    <div class="chat-layout">
-
-
-        <div
-            id="memberList"
-            class="member-list"
-        >
-
-        </div>
-
-
-        <div class="chat-panel">
+            <!-- DASHBOARD -->
 
             <div
-                id="chatHeader"
-                class="chat-header"
-            >
-                Pilih member
-            </div>
-
-
-            <div
-                id="adminMessages"
-                class="messages"
+                id="dashboard"
+                class="page active"
             >
 
-                <div
-                    style="
-                        text-align:center;
-                        color:#666;
-                        padding:30px;
-                    "
-                >
-                    Pilih member untuk membuka chat.
+                <h2>
+                    Dashboard
+                </h2>
+
+                <p class="subtitle">
+                    Ringkasan sistem.
+                </p>
+
+
+                <div class="cards">
+
+                    <div class="card">
+
+                        <small>
+                            Member
+                        </small>
+
+                        <strong id="totalMembers">
+                            0
+                        </strong>
+
+                    </div>
+
+
+                    <div class="card">
+
+                        <small>
+                            Pesanan
+                        </small>
+
+                        <strong id="totalOrders">
+                            0
+                        </strong>
+
+                    </div>
+
+
+                    <div class="card">
+
+                        <small>
+                            Menunggu
+                        </small>
+
+                        <strong id="totalPending">
+                            0
+                        </strong>
+
+                    </div>
+
+
+                    <div class="card">
+
+                        <small>
+                            Selesai
+                        </small>
+
+                        <strong id="totalCompleted">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="card table-card">
+
+                    <h3 style="margin-bottom:15px">
+                        Pesanan Terbaru
+                    </h3>
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>Member</th>
+                                <th>Paket</th>
+                                <th>Harga</th>
+                                <th>Status</th>
+                                <th>Tanggal</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="recentOrders">
+                        </tbody>
+
+                    </table>
+
                 </div>
 
             </div>
 
 
-            <form
-                id="adminChatForm"
-                class="chat-form"
+            <!-- ORDERS -->
+
+            <div
+                id="orders"
+                class="page"
             >
 
-                <input
-                    id="adminChatInput"
-                    placeholder="Tulis balasan..."
-                    autocomplete="off"
-                    disabled
-                >
+                <h2>
+                    Pesanan
+                </h2>
 
-                <button
-                    id="adminChatButton"
-                    class="btn"
-                    disabled
-                >
-                    Kirim
-                </button>
+                <p class="subtitle">
+                    Kelola semua pesanan member.
+                </p>
 
-            </form>
 
-        </div>
+                <div class="card table-card">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>Member</th>
+                                <th>Paket</th>
+                                <th>Harga</th>
+                                <th>Channel</th>
+                                <th>Status</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="ordersTable">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+            <!-- MEMBERS -->
+
+            <div
+                id="members"
+                class="page"
+            >
+
+                <h2>
+                    Member
+                </h2>
+
+                <p class="subtitle">
+                    Semua member yang terdaftar.
+                </p>
+
+
+                <div class="card table-card">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>Nama</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Tanggal</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="membersTable">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+            <!-- CHAT -->
+
+            <div
+                id="chat"
+                class="page"
+            >
+
+                <h2>
+                    Live Chat
+                </h2>
+
+                <p class="subtitle">
+                    Hubungi member.
+                </p>
+
+
+                <div class="chat">
+
+
+                    <div
+                        id="memberList"
+                        class="members"
+                    >
+                    </div>
+
+
+                    <div class="chatbox">
+
+                        <div
+                            id="chatTitle"
+                            class="chat-title"
+                        >
+                            Pilih member
+                        </div>
+
+
+                        <div
+                            id="messages"
+                            class="messages"
+                        >
+                            <div
+                                style="
+                                    text-align:center;
+                                    color:#666;
+                                    padding:30px;
+                                "
+                            >
+                                Pilih member.
+                            </div>
+                        </div>
+
+
+                        <form
+                            id="chatForm"
+                            class="chat-form"
+                        >
+
+                            <input
+                                id="chatInput"
+                                placeholder="Tulis pesan..."
+                                disabled
+                            >
+
+                            <button
+                                id="chatSend"
+                                class="btn"
+                                disabled
+                            >
+                                Kirim
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </main>
 
     </div>
-
-</section>
-
-
-</main>
-
-</div>
 
 </section>
 
@@ -1572,16 +912,36 @@ td{
 <script>
 
 /* ============================================================
-   SUPABASE CONFIG
-   GANTI 2 BAGIAN INI
+   SUPABASE
+   GANTI 2 NILAI INI
 ============================================================ */
 
 const SUPABASE_URL =
-"https://qnvptfefmbxiaynuhfcx.supabase.co";
+    "https://qnvptfefmbxiaynuhfcx.supabase.co";
 
 const SUPABASE_ANON_KEY =
-"sb_publishable_67asK3gfVhUIpNeEs2uOPQ_2kF4AMQf";
+    "sb_publishable_67asK3gfVhUIpNeEs2uOPQ_2kF4AMQf";
 
+
+/* ============================================================
+   CEK LIBRARY
+============================================================ */
+
+if(
+    typeof window.supabase ===
+    "undefined"
+){
+
+    showLoginError(
+        "Library Supabase tidak berhasil dimuat. Periksa koneksi internet."
+    );
+
+}
+
+
+/* ============================================================
+   CLIENT
+============================================================ */
 
 const supabaseClient =
     window.supabase.createClient(
@@ -1590,485 +950,91 @@ const supabaseClient =
     );
 
 
-/* ============================================================
-   GLOBAL
-============================================================ */
-
-let currentAdmin = null;
+let currentUser = null;
 
 let selectedMember = null;
-
-let chatChannel = null;
-
-/* ============================================================
-   START SYSTEM - VERSI AMAN
-============================================================ */
-
-document.addEventListener("DOMContentLoaded", function () {
-
-    startAdminSystem();
-
-});
-
-
-async function startAdminSystem() {
-
-    const loading =
-        document.getElementById("loading");
-
-    try {
-
-        /* -----------------------------------------
-           CEK KONFIGURASI
-        ----------------------------------------- */
-
-        if (
-            !SUPABASE_URL ||
-            SUPABASE_URL.includes("ISI_URL")
-        ) {
-
-            throw new Error(
-                "SUPABASE_URL belum diisi."
-            );
-
-        }
-
-
-        if (
-            !SUPABASE_ANON_KEY ||
-            SUPABASE_ANON_KEY.includes("ISI_ANON")
-        ) {
-
-            throw new Error(
-                "SUPABASE_ANON_KEY belum diisi."
-            );
-
-        }
-
-
-        /* -----------------------------------------
-           CEK SUPABASE
-        ----------------------------------------- */
-
-        if (
-            typeof window.supabase ===
-            "undefined"
-        ) {
-
-            throw new Error(
-                "Library Supabase gagal dimuat."
-            );
-
-        }
-
-
-        /* -----------------------------------------
-           AMBIL SESSION
-        ----------------------------------------- */
-
-        const sessionResult =
-            await Promise.race([
-
-                supabaseClient
-                    .auth
-                    .getSession(),
-
-                new Promise(
-                    (_, reject) =>
-                        setTimeout(
-                            () =>
-                                reject(
-                                    new Error(
-                                        "Koneksi ke Supabase timeout. Periksa URL dan ANON KEY."
-                                    )
-                                ),
-                            10000
-                        )
-                )
-
-            ]);
-
-
-        const session =
-            sessionResult
-            ?.data
-            ?.session;
-
-
-        /* -----------------------------------------
-           BELUM LOGIN
-        ----------------------------------------- */
-
-        if (!session) {
-
-            loading.classList.add(
-                "hidden"
-            );
-
-            showLogin();
-
-            return;
-
-        }
-
-
-        /* -----------------------------------------
-           SIMPAN ADMIN
-        ----------------------------------------- */
-
-        currentAdmin =
-            session.user;
-
-
-        /* -----------------------------------------
-           CEK ROLE ADMIN
-        ----------------------------------------- */
-
-        await verifyAdminSafe();
-
-
-    } catch (error) {
-
-        console.error(
-            "ADMIN SYSTEM ERROR:",
-            error
-        );
-
-
-        loading.innerHTML = `
-
-            <div
-                style="
-                    max-width:420px;
-                    padding:25px;
-                    text-align:center;
-                "
-            >
-
-                <div
-                    style="
-                        font-size:45px;
-                        margin-bottom:15px;
-                    "
-                >
-                    ⚠️
-                </div>
-
-                <h2
-                    style="
-                        margin-bottom:10px;
-                    "
-                >
-                    Gagal Memuat Admin
-                </h2>
-
-                <p
-                    style="
-                        color:#aaa;
-                        line-height:1.6;
-                        font-size:14px;
-                    "
-                >
-                    ${escapeHtml(
-                        error.message ||
-                        "Terjadi kesalahan."
-                    )}
-                </p>
-
-                <button
-                    onclick="location.reload()"
-                    style="
-                        margin-top:20px;
-                        padding:12px 20px;
-                        border:0;
-                        border-radius:10px;
-                        color:white;
-                        background:#7c3aed;
-                        font-weight:bold;
-                    "
-                >
-                    Coba Lagi
-                </button>
-
-            </div>
-
-        `;
-
-    }
-
-}
-
-
-/* ============================================================
-   VERIFY ADMIN
-============================================================ */
-
-async function verifyAdminSafe() {
-
-    if (!currentAdmin) {
-
-        showLogin();
-
-        return;
-
-    }
-
-
-    const result =
-        await Promise.race([
-
-            supabaseClient
-                .from("profiles")
-                .select(
-                    "id,full_name,email,role"
-                )
-                .eq(
-                    "id",
-                    currentAdmin.id
-                )
-                .maybeSingle(),
-
-            new Promise(
-                (_, reject) =>
-                    setTimeout(
-                        () =>
-                            reject(
-                                new Error(
-                                    "Supabase tidak merespons saat memeriksa profile."
-                                )
-                            ),
-                        10000
-                    )
-            )
-
-        ]);
-
-
-    const {
-        data,
-        error
-    } = result;
-
-
-    if (error) {
-
-        throw new Error(
-            "Gagal membaca profile: " +
-            error.message
-        );
-
-    }
-
-
-    if (!data) {
-
-        throw new Error(
-            "Profile akun tidak ditemukan di tabel profiles."
-        );
-
-    }
-
-
-    if (data.role !== "admin") {
-
-        await supabaseClient
-            .auth
-            .signOut();
-
-        throw new Error(
-            "Akun ini belum memiliki role admin."
-        );
-
-    }
-
-
-    /* -----------------------------------------
-       TAMPILKAN DATA ADMIN
-    ----------------------------------------- */
-
-    document
-        .getElementById("adminName")
-        .textContent =
-            data.full_name ||
-            data.email ||
-            "Admin";
-
-
-    document
-        .getElementById("adminAvatar")
-        .textContent =
-            (
-                data.full_name ||
-                data.email ||
-                "A"
-            )
-            .charAt(0)
-            .toUpperCase();
-
-
-    /* -----------------------------------------
-       TAMPILKAN ADMIN PANEL
-    ----------------------------------------- */
-
-    document
-        .getElementById("loading")
-        .classList.add("hidden");
-
-
-    document
-        .getElementById("loginPage")
-        .classList.add("hidden");
-
-
-    document
-        .getElementById("adminApp")
-        .classList.remove("hidden");
-
-
-    /* -----------------------------------------
-       LOAD DATA
-    ----------------------------------------- */
-
-    await loadDashboard();
-
-    await loadOrders();
-
-    await loadMembers();
-
-    await loadChatMembers();
-
-
-    /* -----------------------------------------
-       REALTIME
-    ----------------------------------------- */
-
-    subscribeRealtime();
-
-}
-
-
-/* ============================================================
-   AUTH STATE
-============================================================ */
-
-supabaseClient
-    .auth
-    .onAuthStateChange(
-        async function (
-            event,
-            session
-        ) {
-
-            console.log(
-                "AUTH EVENT:",
-                event
-            );
-
-
-            if (
-                event ===
-                "SIGNED_OUT"
-            ) {
-
-                currentAdmin = null;
-
-                showLogin();
-
-                return;
-
-            }
-
-
-            if (
-                session &&
-                !currentAdmin
-            ) {
-
-                currentAdmin =
-                    session.user;
-
-            }
-
-        }
-    );
 
 
 /* ============================================================
    LOGIN
 ============================================================ */
 
-function showLogin(message=""){
-
-    document
-        .getElementById("loading")
-        .classList.add("hidden");
-
-
-    document
-        .getElementById("adminApp")
-        .classList.add("hidden");
-
-
-    document
-        .getElementById("loginPage")
-        .classList.remove("hidden");
-
-
-    if(message){
-
-        document
-            .getElementById("loginMessage")
-            .innerHTML =
-                `
-                <div class="error">
-                    ${escapeHtml(message)}
-                </div>
-                `;
-
-    }
-
-}
-
-
 document
-    .getElementById("adminLoginForm")
+    .getElementById("loginForm")
     .addEventListener(
         "submit",
-        async(e)=>{
+        async function(e){
 
             e.preventDefault();
 
 
             const email =
                 document
-                .getElementById("adminEmail")
+                .getElementById("email")
                 .value
                 .trim();
 
 
             const password =
                 document
-                .getElementById("adminPassword")
+                .getElementById("password")
                 .value;
 
 
-            const {
-                error
-            } =
-            await supabaseClient
-                .auth
-                .signInWithPassword({
-
-                    email,
-                    password
-
-                });
+            showLoginMessage(
+                "Memeriksa akun...",
+                "success"
+            );
 
 
-            if(error){
+            try{
 
-                showLogin(
-                    error.message
+                const {
+                    data,
+                    error
+                } =
+                await supabaseClient
+                    .auth
+                    .signInWithPassword({
+
+                        email:email,
+
+                        password:password
+
+                    });
+
+
+                if(error){
+
+                    throw error;
+
+                }
+
+
+                if(!data.user){
+
+                    throw new Error(
+                        "Login gagal."
+                    );
+
+                }
+
+
+                currentUser =
+                    data.user;
+
+
+                await checkAdmin();
+
+
+            }catch(error){
+
+                console.error(error);
+
+                showLoginMessage(
+                    error.message ||
+                    "Login gagal.",
+                    "error"
                 );
 
             }
@@ -2078,86 +1044,232 @@ document
 
 
 /* ============================================================
-   LOGOUT
+   CHECK ADMIN
 ============================================================ */
 
-async function adminLogout(){
+async function checkAdmin(){
 
-    if(chatChannel){
+    try{
 
+        const {
+            data,
+            error
+        } =
         await supabaseClient
-            .removeChannel(
-                chatChannel
+            .from("profiles")
+            .select(
+                "id,full_name,email,role"
+            )
+            .eq(
+                "id",
+                currentUser.id
+            )
+            .single();
+
+
+        if(error){
+
+            throw new Error(
+                "Tidak dapat membaca profile: " +
+                error.message
             );
 
-        chatChannel=null;
+        }
+
+
+        if(data.role !== "admin"){
+
+            await supabaseClient
+                .auth
+                .signOut();
+
+            throw new Error(
+                "Akun ini bukan admin. Role saat ini: " +
+                data.role
+            );
+
+        }
+
+
+        /* LOGIN BERHASIL */
+
+        document
+            .getElementById(
+                "loginPage"
+            )
+            .classList.add("hidden");
+
+
+        document
+            .getElementById(
+                "adminPage"
+            )
+            .classList.remove("hidden");
+
+
+        document
+            .getElementById(
+                "adminEmail"
+            )
+            .textContent =
+                data.email ||
+                currentUser.email;
+
+
+        await loadDashboard();
+
+        await loadOrders();
+
+        await loadMembers();
+
+        await loadChatMembers();
+
+
+    }catch(error){
+
+        console.error(error);
+
+        showLoginMessage(
+            error.message ||
+            "Gagal memeriksa admin.",
+            "error"
+        );
 
     }
 
-
-    await supabaseClient
-        .auth
-        .signOut();
-
 }
+
+
+/* ============================================================
+   CEK SESSION SAAT HALAMAN DIBUKA
+============================================================ */
+
+(async function(){
+
+    try{
+
+        const {
+            data,
+            error
+        } =
+        await supabaseClient
+            .auth
+            .getSession();
+
+
+        if(error){
+
+            console.error(error);
+
+            return;
+
+        }
+
+
+        if(data.session){
+
+            currentUser =
+                data.session.user;
+
+            await checkAdmin();
+
+        }
+
+    }catch(error){
+
+        console.error(error);
+
+        showLoginMessage(
+            error.message,
+            "error"
+        );
+
+    }
+
+})();
+
+
+/* ============================================================
+   LOGOUT
+============================================================ */
+
+document
+    .getElementById("logoutBtn")
+    .addEventListener(
+        "click",
+        async function(){
+
+            await supabaseClient
+                .auth
+                .signOut();
+
+            location.reload();
+
+        }
+    );
 
 
 /* ============================================================
    NAVIGATION
 ============================================================ */
 
-function openAdminPage(
-    pageId,
-    button
-){
+document
+    .querySelectorAll(".menu")
+    .forEach(
+        button=>{
 
-    document
-        .querySelectorAll(".page")
-        .forEach(
-            p=>{
-                p.classList.remove(
-                    "active"
-                );
-            }
-        );
+            button.addEventListener(
+                "click",
+                function(){
+
+                    const page =
+                        this.dataset.page;
 
 
-    document
-        .getElementById(pageId)
-        .classList.add("active");
+                    document
+                        .querySelectorAll(
+                            ".page"
+                        )
+                        .forEach(
+                            p=>{
+                                p.classList.remove(
+                                    "active"
+                                );
+                            }
+                        );
 
 
-    document
-        .querySelectorAll(".menu-btn")
-        .forEach(
-            b=>{
-                b.classList.remove(
-                    "active"
-                );
-            }
-        );
+                    document
+                        .getElementById(
+                            page
+                        )
+                        .classList.add(
+                            "active"
+                        );
 
 
-    if(button)
-        button.classList.add("active");
+                    document
+                        .querySelectorAll(
+                            ".menu"
+                        )
+                        .forEach(
+                            b=>{
+                                b.classList.remove(
+                                    "active"
+                                );
+                            }
+                        );
 
 
-    if(pageId==="dashboardPage")
-        loadDashboard();
+                    this.classList.add(
+                        "active"
+                    );
 
+                }
+            );
 
-    if(pageId==="ordersPage")
-        loadOrders();
-
-
-    if(pageId==="membersPage")
-        loadMembers();
-
-
-    if(pageId==="chatPage")
-        loadChatMembers();
-
-}
+        }
+    );
 
 
 /* ============================================================
@@ -2166,481 +1278,288 @@ function openAdminPage(
 
 async function loadDashboard(){
 
-    const {
-        count:members
-    } =
-    await supabaseClient
-        .from("profiles")
-        .select(
-            "id",
-            {
-                count:"exact",
-                head:true
-            }
-        )
-        .eq(
-            "role",
-            "member"
-        );
+    try{
+
+        const memberResult =
+            await supabaseClient
+                .from("profiles")
+                .select(
+                    "id",
+                    {
+                        count:"exact",
+                        head:true
+                    }
+                )
+                .eq(
+                    "role",
+                    "member"
+                );
 
 
-    const {
-        data:orders
-    } =
-    await supabaseClient
-        .from("orders")
-        .select(
-            "id,status,package_name,amount,user_id,created_at"
-        )
-        .order(
-            "created_at",
-            {
-                ascending:false
-            }
-        );
+        const orderResult =
+            await supabaseClient
+                .from("orders")
+                .select(
+                    "id,status,package_name,amount,user_id,created_at"
+                )
+                .order(
+                    "created_at",
+                    {
+                        ascending:false
+                    }
+                );
 
 
-    const allOrders =
-        orders || [];
+        if(memberResult.error)
+            throw memberResult.error;
 
 
-    document
-        .getElementById("statMembers")
-        .textContent =
-            members || 0;
+        if(orderResult.error)
+            throw orderResult.error;
 
 
-    document
-        .getElementById("statOrders")
-        .textContent =
-            allOrders.length;
+        const orders =
+            orderResult.data || [];
 
 
-    document
-        .getElementById("statPending")
-        .textContent =
-            allOrders.filter(
-                x=>x.status==="pending"
-            ).length;
-
-
-    document
-        .getElementById("statCompleted")
-        .textContent =
-            allOrders.filter(
-                x=>x.status==="completed"
-            ).length;
-
-
-    const recent =
-        allOrders.slice(0,10);
-
-
-    const tbody =
         document
-        .getElementById("recentOrders");
+            .getElementById(
+                "totalMembers"
+            )
+            .textContent =
+                memberResult.count || 0;
 
 
-    if(!recent.length){
+        document
+            .getElementById(
+                "totalOrders"
+            )
+            .textContent =
+                orders.length;
 
-        tbody.innerHTML=`
-            <tr>
-                <td colspan="5">
-                    Belum ada pesanan.
-                </td>
-            </tr>
-        `;
 
-        return;
+        document
+            .getElementById(
+                "totalPending"
+            )
+            .textContent =
+                orders.filter(
+                    x=>x.status==="pending"
+                ).length;
+
+
+        document
+            .getElementById(
+                "totalCompleted"
+            )
+            .textContent =
+                orders.filter(
+                    x=>x.status==="completed"
+                ).length;
+
+
+        document
+            .getElementById(
+                "recentOrders"
+            )
+            .innerHTML =
+                orders
+                .slice(0,10)
+                .map(
+                    order=>`
+
+                    <tr>
+
+                        <td>
+                            ${escapeHtml(
+                                order.user_id
+                            )}
+                        </td>
+
+                        <td>
+                            ${escapeHtml(
+                                order.package_name
+                            )}
+                        </td>
+
+                        <td>
+                            ${rupiah(
+                                order.amount
+                            )}
+                        </td>
+
+                        <td>
+                            ${status(
+                                order.status
+                            )}
+                        </td>
+
+                        <td>
+                            ${date(
+                                order.created_at
+                            )}
+                        </td>
+
+                    </tr>
+
+                    `
+                )
+                .join("");
+
+
+    }catch(error){
+
+        console.error(
+            "Dashboard:",
+            error
+        );
 
     }
-
-
-    const userIds =
-        [
-            ...new Set(
-                recent.map(
-                    x=>x.user_id
-                )
-            )
-        ];
-
-
-    const {
-        data:profiles
-    } =
-    await supabaseClient
-        .from("profiles")
-        .select(
-            "id,full_name,email"
-        )
-        .in(
-            "id",
-            userIds
-        );
-
-
-    const profileMap =
-        {};
-
-
-    (profiles || [])
-    .forEach(
-        p=>{
-            profileMap[p.id]=p;
-        }
-    );
-
-
-    tbody.innerHTML =
-        recent
-        .map(
-            order=>{
-
-                const profile =
-                    profileMap[
-                        order.user_id
-                    ];
-
-
-                return `
-
-                <tr>
-
-                    <td>
-                        ${
-                            escapeHtml(
-                                profile?.full_name ||
-                                profile?.email ||
-                                "-"
-                            )
-                        }
-                    </td>
-
-                    <td>
-                        ${escapeHtml(
-                            order.package_name
-                        )}
-                    </td>
-
-                    <td>
-                        ${formatRupiah(
-                            order.amount
-                        )}
-                    </td>
-
-                    <td>
-                        ${statusBadge(
-                            order.status
-                        )}
-                    </td>
-
-                    <td>
-                        ${formatDate(
-                            order.created_at
-                        )}
-                    </td>
-
-                </tr>
-
-                `;
-
-            }
-        )
-        .join("");
 
 }
 
 
 /* ============================================================
-   LOAD ORDERS
+   ORDERS
 ============================================================ */
 
 async function loadOrders(){
 
-    const {
-        data,
-        error
-    } =
-    await supabaseClient
-        .from("orders")
-        .select("*")
-        .order(
-            "created_at",
-            {
-                ascending:false
-            }
-        );
+    try{
+
+        const {
+            data,
+            error
+        } =
+        await supabaseClient
+            .from("orders")
+            .select("*")
+            .order(
+                "created_at",
+                {
+                    ascending:false
+                }
+            );
 
 
-    if(error){
-
-        console.error(error);
-
-        return;
-
-    }
+        if(error)
+            throw error;
 
 
-    const orders =
-        data || [];
+        const orders =
+            data || [];
 
 
-    const userIds =
-        [
-            ...new Set(
-                orders.map(
-                    x=>x.user_id
-                )
-            )
-        ];
-
-
-    let profiles=[];
-
-
-    if(userIds.length){
-
-        const result =
-            await supabaseClient
-                .from("profiles")
-                .select(
-                    "id,full_name,email"
-                )
-                .in(
-                    "id",
-                    userIds
-                );
-
-
-        profiles =
-            result.data || [];
-
-    }
-
-
-    const profileMap={};
-
-
-    profiles.forEach(
-        p=>{
-            profileMap[p.id]=p;
-        }
-    );
-
-
-    const tbody =
         document
-        .getElementById("ordersTable");
+            .getElementById(
+                "ordersTable"
+            )
+            .innerHTML =
+                orders
+                .map(
+                    order=>`
 
+                    <tr>
 
-    if(!orders.length){
+                        <td>
+                            ${escapeHtml(
+                                order.user_id
+                            )}
+                        </td>
 
-        tbody.innerHTML=`
-            <tr>
-                <td colspan="7">
-                    Belum ada pesanan.
-                </td>
-            </tr>
-        `;
+                        <td>
+                            ${escapeHtml(
+                                order.package_name
+                            )}
+                        </td>
 
-        return;
+                        <td>
+                            ${rupiah(
+                                order.amount
+                            )}
+                        </td>
 
-    }
-
-
-    tbody.innerHTML =
-        orders
-        .map(
-            order=>{
-
-                const profile =
-                    profileMap[
-                        order.user_id
-                    ];
-
-
-                return `
-
-                <tr>
-
-                    <td>
-
-                        <strong>
-                            ${
-                                escapeHtml(
-                                    profile?.full_name ||
-                                    "Member"
-                                )
-                            }
-                        </strong>
-
-                        <br>
-
-                        <small
-                            style="color:#777"
-                        >
-                            ${
-                                escapeHtml(
-                                    profile?.email ||
-                                    ""
-                                )
-                            }
-                        </small>
-
-                    </td>
-
-
-                    <td>
-                        ${escapeHtml(
-                            order.package_name
-                        )}
-                    </td>
-
-
-                    <td>
-                        ${formatRupiah(
-                            order.amount
-                        )}
-                    </td>
-
-
-                    <td>
-
-                        <a
-                            href="${escapeAttribute(
-                                order.channel_url
-                            )}"
-                            target="_blank"
-                            style="
-                                color:#a78bfa
-                            "
-                        >
-                            Buka Channel
-                        </a>
-
-                    </td>
-
-
-                    <td>
-
-                        ${
-                            order.payment_proof
-                            ?
-                            `
-                            <button
-                                class="btn btn-secondary"
-                                onclick="viewProof(
-                                    '${escapeJs(
-                                        order.payment_proof
-                                    )}'
-                                )"
+                        <td>
+                            <a
+                                href="${escapeHtml(
+                                    order.channel_url
+                                )}"
+                                target="_blank"
+                                style="color:#a78bfa"
                             >
-                                Lihat
-                            </button>
-                            `
-                            :
-                            "-"
-                        }
+                                Buka
+                            </a>
+                        </td>
 
-                    </td>
+                        <td>
 
-
-                    <td>
-
-                        <select
-                            onchange="
-                                updateOrderStatus(
+                            <select
+                                onchange="
+                                updateOrder(
                                     ${order.id},
                                     this.value
-                                )
-                            "
-                        >
-
-                            <option
-                                value="pending"
-                                ${
-                                    order.status==="pending"
-                                    ?
-                                    "selected"
-                                    :
-                                    ""
-                                }
+                                )"
                             >
-                                Menunggu
-                            </option>
+
+                                <option
+                                    value="pending"
+                                    ${
+                                        order.status==="pending"
+                                        ?"selected":""
+                                    }
+                                >
+                                    Menunggu
+                                </option>
+
+                                <option
+                                    value="processing"
+                                    ${
+                                        order.status==="processing"
+                                        ?"selected":""
+                                    }
+                                >
+                                    Diproses
+                                </option>
+
+                                <option
+                                    value="completed"
+                                    ${
+                                        order.status==="completed"
+                                        ?"selected":""
+                                    }
+                                >
+                                    Selesai
+                                </option>
+
+                                <option
+                                    value="cancelled"
+                                    ${
+                                        order.status==="cancelled"
+                                        ?"selected":""
+                                    }
+                                >
+                                    Dibatalkan
+                                </option>
+
+                            </select>
+
+                        </td>
+
+                    </tr>
+
+                    `
+                )
+                .join("");
 
 
-                            <option
-                                value="processing"
-                                ${
-                                    order.status==="processing"
-                                    ?
-                                    "selected"
-                                    :
-                                    ""
-                                }
-                            >
-                                Diproses
-                            </option>
+    }catch(error){
 
+        console.error(
+            "Orders:",
+            error
+        );
 
-                            <option
-                                value="completed"
-                                ${
-                                    order.status==="completed"
-                                    ?
-                                    "selected"
-                                    :
-                                    ""
-                                }
-                            >
-                                Selesai
-                            </option>
-
-
-                            <option
-                                value="cancelled"
-                                ${
-                                    order.status==="cancelled"
-                                    ?
-                                    "selected"
-                                    :
-                                    ""
-                                }
-                            >
-                                Dibatalkan
-                            </option>
-
-                        </select>
-
-                    </td>
-
-
-                    <td>
-
-                        <button
-                            class="btn btn-secondary"
-                            onclick="
-                                openMemberChat(
-                                    '${escapeJs(
-                                        order.user_id
-                                    )}'
-                                )
-                            "
-                        >
-                            Chat
-                        </button>
-
-                    </td>
-
-                </tr>
-
-                `;
-
-            }
-        )
-        .join("");
+    }
 
 }
 
@@ -2649,9 +1568,9 @@ async function loadOrders(){
    UPDATE ORDER
 ============================================================ */
 
-async function updateOrderStatus(
-    orderId,
-    status
+async function updateOrder(
+    id,
+    newStatus
 ){
 
     const {
@@ -2660,20 +1579,18 @@ async function updateOrderStatus(
     await supabaseClient
         .from("orders")
         .update({
-
-            status:status
-
+            status:newStatus
         })
         .eq(
             "id",
-            orderId
+            id
         );
 
 
     if(error){
 
         alert(
-            "Gagal mengubah status: " +
+            "Gagal: " +
             error.message
         );
 
@@ -2685,48 +1602,6 @@ async function updateOrderStatus(
     await loadOrders();
 
     await loadDashboard();
-
-}
-
-
-/* ============================================================
-   PAYMENT PROOF
-============================================================ */
-
-async function viewProof(
-    filePath
-){
-
-    const {
-        data,
-        error
-    } =
-    await supabaseClient
-        .storage
-        .from("payment-proofs")
-        .createSignedUrl(
-            filePath,
-            300
-        );
-
-
-    if(error){
-
-        alert(
-            "Gagal membuka bukti pembayaran."
-        );
-
-        console.error(error);
-
-        return;
-
-    }
-
-
-    window.open(
-        data.signedUrl,
-        "_blank"
-    );
 
 }
 
@@ -2737,88 +1612,81 @@ async function viewProof(
 
 async function loadMembers(){
 
-    const {
-        data,
-        error
-    } =
-    await supabaseClient
-        .from("profiles")
-        .select(
-            "id,full_name,email,role,created_at"
-        )
-        .order(
-            "created_at",
-            {
-                ascending:false
-            }
+    try{
+
+        const {
+            data,
+            error
+        } =
+        await supabaseClient
+            .from("profiles")
+            .select(
+                "id,full_name,email,role,created_at"
+            )
+            .order(
+                "created_at",
+                {
+                    ascending:false
+                }
+            );
+
+
+        if(error)
+            throw error;
+
+
+        document
+            .getElementById(
+                "membersTable"
+            )
+            .innerHTML =
+                (data || [])
+                .map(
+                    member=>`
+
+                    <tr>
+
+                        <td>
+                            ${escapeHtml(
+                                member.full_name ||
+                                "-"
+                            )}
+                        </td>
+
+                        <td>
+                            ${escapeHtml(
+                                member.email ||
+                                "-"
+                            )}
+                        </td>
+
+                        <td>
+                            ${escapeHtml(
+                                member.role
+                            )}
+                        </td>
+
+                        <td>
+                            ${date(
+                                member.created_at
+                            )}
+                        </td>
+
+                    </tr>
+
+                    `
+                )
+                .join("");
+
+
+    }catch(error){
+
+        console.error(
+            "Members:",
+            error
         );
 
-
-    if(error){
-
-        console.error(error);
-
-        return;
-
     }
-
-
-    const tbody =
-        document
-        .getElementById("membersTable");
-
-
-    tbody.innerHTML =
-        (data || [])
-        .map(
-            member=>`
-
-            <tr>
-
-                <td>
-                    ${escapeHtml(
-                        member.full_name ||
-                        "-"
-                    )}
-                </td>
-
-                <td>
-                    ${escapeHtml(
-                        member.email ||
-                        "-"
-                    )}
-                </td>
-
-                <td>
-
-                    <span
-                        class="status
-                        ${
-                            member.role==="admin"
-                            ?
-                            "completed"
-                            :
-                            "processing"
-                        }"
-                    >
-                        ${escapeHtml(
-                            member.role
-                        )}
-                    </span>
-
-                </td>
-
-                <td>
-                    ${formatDate(
-                        member.created_at
-                    )}
-                </td>
-
-            </tr>
-
-            `
-        )
-        .join("");
 
 }
 
@@ -2829,84 +1697,89 @@ async function loadMembers(){
 
 async function loadChatMembers(){
 
-    const {
-        data:profiles,
-        error
-    } =
-    await supabaseClient
-        .from("profiles")
-        .select(
-            "id,full_name,email"
-        )
-        .eq(
-            "role",
-            "member"
-        )
-        .order(
-            "created_at",
-            {
-                ascending:false
-            }
+    try{
+
+        const {
+            data,
+            error
+        } =
+        await supabaseClient
+            .from("profiles")
+            .select(
+                "id,full_name,email"
+            )
+            .eq(
+                "role",
+                "member"
+            )
+            .order(
+                "created_at",
+                {
+                    ascending:false
+                }
+            );
+
+
+        if(error)
+            throw error;
+
+
+        document
+            .getElementById(
+                "memberList"
+            )
+            .innerHTML =
+                (data || [])
+                .map(
+                    member=>`
+
+                    <button
+                        class="member"
+                        onclick="
+                        openChat(
+                            '${member.id}'
+                        )
+                        "
+                    >
+
+                        <strong>
+                            ${escapeHtml(
+                                member.full_name ||
+                                "Member"
+                            )}
+                        </strong>
+
+                        <small>
+                            ${escapeHtml(
+                                member.email ||
+                                ""
+                            )}
+                        </small>
+
+                    </button>
+
+                    `
+                )
+                .join("");
+
+
+    }catch(error){
+
+        console.error(
+            "Chat members:",
+            error
         );
 
-
-    if(error){
-
-        console.error(error);
-
-        return;
-
     }
-
-
-    const memberList =
-        document
-        .getElementById("memberList");
-
-
-    memberList.innerHTML =
-        (profiles || [])
-        .map(
-            member=>`
-
-            <button
-                class="member-item"
-                onclick="
-                    openMemberChat(
-                        '${escapeJs(member.id)}'
-                    )
-                "
-            >
-
-                <strong>
-                    ${escapeHtml(
-                        member.full_name ||
-                        "Member"
-                    )}
-                </strong>
-
-                <small>
-                    ${escapeHtml(
-                        member.email ||
-                        ""
-                    )}
-                </small>
-
-            </button>
-
-            `
-        )
-        .join("");
-
 
 }
 
 
 /* ============================================================
-   OPEN MEMBER CHAT
+   OPEN CHAT
 ============================================================ */
 
-async function openMemberChat(
+async function openChat(
     userId
 ){
 
@@ -2915,82 +1788,31 @@ async function openMemberChat(
 
 
     document
-        .getElementById("adminChatInput")
+        .getElementById(
+            "chatInput"
+        )
         .disabled=false;
 
 
     document
-        .getElementById("adminChatButton")
+        .getElementById(
+            "chatSend"
+        )
         .disabled=false;
 
 
-    const {
-        data:profile
-    } =
-    await supabaseClient
-        .from("profiles")
-        .select(
-            "full_name,email"
-        )
-        .eq(
-            "id",
-            userId
-        )
-        .maybeSingle();
-
-
-    document
-        .getElementById("chatHeader")
-        .innerHTML = `
-
-            <strong>
-                ${escapeHtml(
-                    profile?.full_name ||
-                    "Member"
-                )}
-            </strong>
-
-            <br>
-
-            <small
-                style="color:#777"
-            >
-                ${escapeHtml(
-                    profile?.email ||
-                    ""
-                )}
-            </small>
-
-        `;
-
-
-    await loadMemberMessages(
+    await loadMessages(
         userId
     );
-
-
-    document
-        .querySelectorAll(
-            ".member-item"
-        )
-        .forEach(
-            button=>{
-
-                button.classList.remove(
-                    "active"
-                );
-
-            }
-        );
 
 }
 
 
 /* ============================================================
-   LOAD MEMBER MESSAGES
+   LOAD MESSAGES
 ============================================================ */
 
-async function loadMemberMessages(
+async function loadMessages(
     userId
 ){
 
@@ -3022,94 +1844,71 @@ async function loadMemberMessages(
     }
 
 
-    const box =
-        document
+    document
         .getElementById(
-            "adminMessages"
-        );
+            "messages"
+        )
+        .innerHTML =
+            (data || [])
+            .map(
+                msg=>`
 
+                <div
+                    class="msg ${
+                        msg.sender_type==="admin"
+                        ?"admin"
+                        :"member"
+                    }"
+                >
 
-    if(!data?.length){
-
-        box.innerHTML=`
-
-            <div
-                style="
-                    text-align:center;
-                    color:#666;
-                    padding:30px;
-                "
-            >
-                Belum ada pesan.
-            </div>
-
-        `;
-
-        return;
-
-    }
-
-
-    box.innerHTML =
-        data
-        .map(
-            message=>`
-
-            <div
-                class="message
-                ${
-                    message.sender_type==="admin"
-                    ?
-                    "admin"
-                    :
-                    "member"
-                }"
-            >
-
-                ${escapeHtml(
-                    message.message
-                )}
-
-                <small>
-
-                    ${
-                        message.sender_type==="admin"
-                        ?
-                        "Anda"
-                        :
-                        "Member"
-                    }
-
-                    •
-
-                    ${formatDate(
-                        message.created_at
+                    ${escapeHtml(
+                        msg.message
                     )}
 
-                </small>
+                    <div
+                        style="
+                            color:#aaa;
+                            font-size:9px;
+                            margin-top:5px;
+                        "
+                    >
+                        ${date(
+                            msg.created_at
+                        )}
+                    </div>
 
-            </div>
+                </div>
 
-            `
+                `
+            )
+            .join("");
+
+
+    document
+        .getElementById(
+            "messages"
         )
-        .join("");
-
-
-    box.scrollTop =
-        box.scrollHeight;
+        .scrollTop =
+            document
+            .getElementById(
+                "messages"
+            )
+            .scrollHeight;
 
 }
 
 
 /* ============================================================
-   SEND ADMIN MESSAGE
+   SEND CHAT
 ============================================================ */
 
 document
-    .getElementById("adminChatForm")
+    .getElementById(
+        "chatForm"
+    )
     .addEventListener(
         "submit",
-        async(e)=>{
+        async function(e){
 
             e.preventDefault();
 
@@ -3121,7 +1920,7 @@ document
             const input =
                 document
                 .getElementById(
-                    "adminChatInput"
+                    "chatInput"
                 );
 
 
@@ -3166,7 +1965,7 @@ document
             input.value="";
 
 
-            await loadMemberMessages(
+            await loadMessages(
                 selectedMember
             );
 
@@ -3175,74 +1974,48 @@ document
 
 
 /* ============================================================
-   REALTIME
+   HELPERS
 ============================================================ */
 
-function subscribeRealtime(){
+function showLoginMessage(
+    text,
+    type
+){
 
-    if(chatChannel){
-
-        supabaseClient
-            .removeChannel(
-                chatChannel
-            );
-
-    }
+    const box =
+        document.getElementById(
+            "loginMessage"
+        );
 
 
-    chatChannel =
-        supabaseClient
-        .channel(
-            "admin-live-chat"
-        )
-        .on(
-            "postgres_changes",
-            {
-                event:"INSERT",
-                schema:"public",
-                table:"messages"
-            },
-            payload=>{
+    box.className =
+        "message " +
+        (
+            type==="error"
+            ?"error"
+            :"success"
+        );
 
-                if(
-                    selectedMember &&
-                    payload.new.user_id ===
-                    selectedMember
-                ){
 
-                    loadMemberMessages(
-                        selectedMember
-                    );
-
-                }
-
-            }
-        )
-        .on(
-            "postgres_changes",
-            {
-                event:"UPDATE",
-                schema:"public",
-                table:"orders"
-            },
-            ()=>{
-
-                loadOrders();
-
-                loadDashboard();
-
-            }
-        )
-        .subscribe();
+    box.textContent =
+        text;
 
 }
 
 
-/* ============================================================
-   HELPERS
-============================================================ */
+function showLoginError(
+    text
+){
 
-function formatRupiah(number){
+    showLoginMessage(
+        text,
+        "error"
+    );
+
+}
+
+
+function rupiah(value){
 
     return new Intl.NumberFormat(
         "id-ID",
@@ -3252,33 +2025,29 @@ function formatRupiah(number){
             maximumFractionDigits:0
         }
     ).format(
-        Number(number || 0)
+        Number(value || 0)
     );
 
 }
 
 
-function formatDate(date){
+function date(value){
 
-    if(!date)
+    if(!value)
         return "-";
 
 
-    return new Date(date)
+    return new Date(value)
         .toLocaleString(
-            "id-ID",
-            {
-                dateStyle:"short",
-                timeStyle:"short"
-            }
+            "id-ID"
         );
 
 }
 
 
-function statusBadge(status){
+function status(value){
 
-    const names={
+    const name = {
 
         pending:"Menunggu",
 
@@ -3292,17 +2061,14 @@ function statusBadge(status){
 
 
     return `
-
         <span
-            class="status ${status}"
+            class="status ${value}"
         >
             ${
-                names[status] ||
-                status ||
-                "-"
+                name[value] ||
+                value
             }
         </span>
-
     `;
 
 }
@@ -3336,40 +2102,7 @@ function escapeHtml(value){
 
 }
 
-
-function escapeAttribute(value){
-
-    return escapeHtml(value);
-
-}
-
-
-function escapeJs(value){
-
-    return String(
-        value ?? ""
-    )
-    .replaceAll(
-        "\\",
-        "\\\\"
-    )
-    .replaceAll(
-        "'",
-        "\\'"
-    )
-    .replaceAll(
-        "\n",
-        "\\n"
-    )
-    .replaceAll(
-        "\r",
-        "\\r"
-    );
-
-}
-
 </script>
 
 </body>
-
 </html>
