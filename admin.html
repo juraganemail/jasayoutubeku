@@ -2,73 +2,99 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Admin Panel</title>
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<title>Admin YouTube</title>
+
+<!-- SUPABASE -->
+<script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"
+></script>
 
 <style>
+
 *{
     box-sizing:border-box;
 }
 
+html,
 body{
     margin:0;
-    min-height:100vh;
+    padding:0;
+    min-height:100%;
     background:#07070a;
-    color:white;
-    font-family:Arial,sans-serif;
+    color:#fff;
+    font-family:Arial,Helvetica,sans-serif;
 }
 
-.container{
-    width:100%;
-    max-width:430px;
-    margin:auto;
-    padding:25px;
+body{
+    min-height:100vh;
+}
+
+/* =========================
+   LOGIN
+========================= */
+
+#loginPage{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
 }
 
 .login-box{
-    margin-top:100px;
-    padding:28px;
+    width:100%;
+    max-width:430px;
     background:#111116;
     border:1px solid #30303b;
-    border-radius:20px;
+    border-radius:22px;
+    padding:30px;
+    box-shadow:0 20px 60px rgba(0,0,0,.45);
 }
 
 .logo{
     text-align:center;
     font-size:70px;
-    margin-bottom:10px;
+    margin-bottom:5px;
 }
 
-h1{
+.title{
     text-align:center;
-    margin:0 0 8px;
-    font-size:36px;
+    font-size:38px;
+    font-weight:800;
+    margin:0;
 }
 
 .subtitle{
     text-align:center;
     color:#999;
+    font-size:18px;
+    margin-top:10px;
     margin-bottom:30px;
 }
 
 label{
     display:block;
-    margin:15px 0 7px;
+    margin-bottom:8px;
     font-size:17px;
 }
 
 input{
     width:100%;
-    padding:15px;
-    background:#07070a;
-    color:white;
+    height:54px;
+    padding:0 15px;
+    border-radius:11px;
     border:1px solid #3a3a45;
-    border-radius:10px;
+    background:#07070a;
+    color:#fff;
     font-size:16px;
     outline:none;
+    margin-bottom:18px;
 }
 
 input:focus{
@@ -77,190 +103,410 @@ input:focus{
 
 button{
     width:100%;
-    margin-top:22px;
-    padding:15px;
-    background:#7c3aed;
-    color:white;
+    height:54px;
     border:0;
-    border-radius:10px;
+    border-radius:11px;
+    background:#7c3aed;
+    color:#fff;
     font-size:16px;
-    font-weight:bold;
+    font-weight:700;
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
 }
 
 button:active{
     transform:scale(.98);
 }
 
+button:disabled{
+    opacity:.55;
+    cursor:not-allowed;
+    transform:none;
+}
+
+.test-button{
+    margin-top:10px;
+    background:#20202a;
+}
+
 #status{
+    width:100%;
     margin-top:18px;
-    padding:12px;
-    border-radius:10px;
-    background:#191922;
-    color:#aaa;
-    text-align:center;
+    padding:14px;
+    border-radius:11px;
+    background:#191920;
+    color:#bbb;
+    font-size:14px;
     line-height:1.5;
+    text-align:center;
+    white-space:pre-wrap;
     word-break:break-word;
 }
 
+.status-ok{
+    color:#4ade80 !important;
+    background:#102219 !important;
+}
+
+.status-error{
+    color:#ff8d8d !important;
+    background:#291416 !important;
+}
+
+.status-info{
+    color:#c4b5fd !important;
+    background:#1b1728 !important;
+}
+
+/* =========================
+   DASHBOARD
+========================= */
+
 #dashboard{
     display:none;
+    min-height:100vh;
 }
 
-.top{
-    padding:20px;
+.header{
+    min-height:68px;
+    padding:12px 20px;
     border-bottom:1px solid #292933;
+    background:#0c0c10;
     display:flex;
-    justify-content:space-between;
     align-items:center;
+    justify-content:space-between;
+    gap:15px;
 }
 
-.content{
-    padding:20px;
+.header-title{
+    font-weight:800;
+}
+
+.logout{
+    width:auto;
+    min-width:90px;
+    height:42px;
+    padding:0 15px;
+    background:#2a1b30;
+}
+
+.main{
+    width:100%;
+    max-width:1100px;
+    margin:auto;
+    padding:25px 20px;
+}
+
+.welcome{
+    margin-bottom:20px;
+}
+
+.welcome h1{
+    margin:0 0 7px;
+}
+
+.welcome p{
+    color:#999;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:
+        repeat(auto-fit,minmax(230px,1fr));
+    gap:15px;
 }
 
 .card{
     background:#111116;
     border:1px solid #292933;
-    border-radius:15px;
+    border-radius:16px;
     padding:20px;
-    margin-bottom:15px;
 }
 
-.logout{
-    width:auto;
-    margin:0;
-    padding:9px 15px;
-    background:#2a1b30;
+.card h3{
+    margin-top:0;
 }
 
 .green{
     color:#4ade80;
 }
 
-.red{
-    color:#f87171;
+.muted{
+    color:#999;
 }
+
+pre{
+    white-space:pre-wrap;
+    word-break:break-word;
+    color:#bbb;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:500px){
+
+    #loginPage{
+        align-items:flex-start;
+        padding:50px 15px 20px;
+    }
+
+    .login-box{
+        padding:25px 20px;
+    }
+
+    .title{
+        font-size:34px;
+    }
+
+    .logo{
+        font-size:65px;
+    }
+
+}
+
 </style>
 </head>
 
 <body>
 
-<!-- LOGIN -->
 
-<div id="loginPage">
+<!-- =====================================================
+     LOGIN PAGE
+===================================================== -->
 
-<div class="container">
+<section id="loginPage">
 
-<div class="login-box">
+    <div class="login-box">
 
-<div class="logo">🎬</div>
+        <div class="logo">
+            🎬
+        </div>
 
-<h1>Admin Panel</h1>
+        <h1 class="title">
+            Admin Panel
+        </h1>
 
-<div class="subtitle">
-YouTube Monetization Service
-</div>
-
-<label>Email</label>
-
-<input
-    id="email"
-    type="email"
-    placeholder="Email admin"
-    autocomplete="username"
->
-
-<label>Password</label>
-
-<input
-    id="password"
-    type="password"
-    placeholder="Password admin"
-    autocomplete="current-password"
->
-
-<button
-    id="loginButton"
-    type="button"
->
-LOGIN ADMIN
-</button>
-
-<div id="status">
-Sistem siap. Silakan login.
-</div>
-
-</div>
-
-</div>
-
-</div>
+        <div class="subtitle">
+            YouTube Monetization Service
+        </div>
 
 
-<!-- DASHBOARD -->
+        <label for="email">
+            Email
+        </label>
 
-<div id="dashboard">
+        <input
+            id="email"
+            type="email"
+            placeholder="Email admin"
+            autocomplete="username"
+        >
 
-<div class="top">
 
-<strong>🎬 YOUTUBE ADMIN</strong>
+        <label for="password">
+            Password
+        </label>
 
-<button
-    id="logoutButton"
-    class="logout"
->
-LOGOUT
-</button>
+        <input
+            id="password"
+            type="password"
+            placeholder="Password admin"
+            autocomplete="current-password"
+        >
 
-</div>
 
-<div class="content">
+        <button
+            id="loginButton"
+            type="button"
+        >
+            LOGIN ADMIN
+        </button>
 
-<div class="card">
 
-<h2>Dashboard Admin</h2>
+        <button
+            id="testButton"
+            type="button"
+            class="test-button"
+        >
+            TES KONEKSI SUPABASE
+        </button>
 
-<p id="adminEmail"></p>
 
-<p>
-Role:
-<strong
-    id="adminRole"
-    class="green"
->
-ADMIN
-</strong>
-</p>
+        <div id="status">
+            Sistem siap.
+        </div>
 
-</div>
+    </div>
 
-<div class="card">
+</section>
 
-<h3>System Status</h3>
 
-<p class="green">
-✓ Login berhasil
-</p>
+<!-- =====================================================
+     DASHBOARD
+===================================================== -->
 
-<p>
-Supabase berhasil terhubung.
-</p>
+<section id="dashboard">
 
-</div>
+    <header class="header">
 
-</div>
+        <div class="header-title">
+            🎬 YOUTUBE ADMIN
+        </div>
 
-</div>
+        <button
+            id="logoutButton"
+            class="logout"
+            type="button"
+        >
+            LOGOUT
+        </button>
+
+    </header>
+
+
+    <main class="main">
+
+        <div class="welcome">
+
+            <h1>
+                Dashboard Admin
+            </h1>
+
+            <p>
+                Kelola layanan monetisasi YouTube.
+            </p>
+
+        </div>
+
+
+        <div class="grid">
+
+
+            <div class="card">
+
+                <h3>
+                    👤 Akun Admin
+                </h3>
+
+                <p
+                    id="adminEmail"
+                    class="muted"
+                >
+                    -
+                </p>
+
+                <p>
+                    Role:
+                    <strong
+                        id="adminRole"
+                        class="green"
+                    >
+                        admin
+                    </strong>
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>
+                    🟢 Status
+                </h3>
+
+                <p class="green">
+                    Supabase terhubung
+                </p>
+
+                <p class="muted">
+                    Authentication aktif.
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>
+                    📦 Pesanan
+                </h3>
+
+                <p>
+                    Kelola pesanan member
+                    dari tabel orders.
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>
+                    💬 Live Chat
+                </h3>
+
+                <p>
+                    Kelola pesan member
+                    dari tabel messages.
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+        <div
+            class="card"
+            style="margin-top:15px;"
+        >
+
+            <h3>
+                Informasi Profile
+            </h3>
+
+            <pre id="profileData">-</pre>
+
+        </div>
+
+    </main>
+
+</section>
 
 
 <script>
 
 /* =====================================================
-   CONFIG SUPABASE
-   ===================================================== */
+   =====================================================
+   SUPABASE CONFIG
+   =====================================================
+   
+   GANTI HANYA 2 BAGIAN DI BAWAH INI.
+
+   Gunakan:
+   - Project URL
+   - Publishable key / anon key
+
+   JANGAN gunakan service_role key.
+===================================================== */
+
+
+/*
+   CONTOH:
+
+   const SUPABASE_URL =
+   "https://abcdefghijkl.supabase.co";
+
+   const SUPABASE_KEY =
+   "eyJhbGciOiJIUzI1NiIs...";
+*/
+
 
 const SUPABASE_URL =
 "https://qnvptfefmbxiaynuhfcx.supabase.co";
+
 
 const SUPABASE_KEY =
 "sb_publishable_67asK3gfVhUIpNeEs2uOPQ_2kF4AMQf";
@@ -268,7 +514,7 @@ const SUPABASE_KEY =
 
 /* =====================================================
    ELEMENT
-   ===================================================== */
+===================================================== */
 
 const loginPage =
 document.getElementById("loginPage");
@@ -285,32 +531,57 @@ document.getElementById("password");
 const loginButton =
 document.getElementById("loginButton");
 
+const testButton =
+document.getElementById("testButton");
+
 const logoutButton =
 document.getElementById("logoutButton");
 
 const statusBox =
 document.getElementById("status");
 
+const adminEmail =
+document.getElementById("adminEmail");
+
+const profileData =
+document.getElementById("profileData");
+
 
 /* =====================================================
    STATUS
-   ===================================================== */
+===================================================== */
 
-function status(text, type){
+function setStatus(
+    text,
+    type = "info"
+){
 
-    statusBox.textContent = text;
+    statusBox.textContent =
+        text;
 
-    if(type === "success"){
+    statusBox.className = "";
 
-        statusBox.className = "green";
+    if(type === "ok"){
 
-    }else if(type === "error"){
+        statusBox.classList.add(
+            "status-ok"
+        );
 
-        statusBox.className = "red";
+    }
 
-    }else{
+    if(type === "error"){
 
-        statusBox.className = "";
+        statusBox.classList.add(
+            "status-error"
+        );
+
+    }
+
+    if(type === "info"){
+
+        statusBox.classList.add(
+            "status-info"
+        );
 
     }
 
@@ -318,65 +589,176 @@ function status(text, type){
 
 
 /* =====================================================
-   START
-   ===================================================== */
+   SUPABASE CLIENT
+===================================================== */
+
+let supabaseClient = null;
+
 
 try{
-
-    if(
-        !SUPABASE_URL ||
-        SUPABASE_URL.includes("GANTI_DENGAN")
-    ){
-
-        throw new Error(
-            "SUPABASE_URL belum diganti."
-        );
-
-    }
-
-    if(
-        !SUPABASE_KEY ||
-        SUPABASE_KEY.includes("GANTI_DENGAN")
-    ){
-
-        throw new Error(
-            "SUPABASE_KEY belum diganti."
-        );
-
-    }
 
     if(
         !window.supabase
     ){
 
         throw new Error(
-            "Library Supabase tidak termuat."
+            "Library Supabase tidak berhasil dimuat."
         );
 
     }
 
 
-    const client =
+    if(
+        SUPABASE_URL.includes(
+            "GANTI-DENGAN"
+        )
+    ){
+
+        throw new Error(
+            "SUPABASE_URL masih menggunakan placeholder."
+        );
+
+    }
+
+
+    if(
+        SUPABASE_KEY.includes(
+            "GANTI-DENGAN"
+        )
+    ){
+
+        throw new Error(
+            "SUPABASE_KEY masih menggunakan placeholder."
+        );
+
+    }
+
+
+    supabaseClient =
         window.supabase.createClient(
             SUPABASE_URL,
             SUPABASE_KEY
         );
 
 
-    status(
-        "✓ Sistem siap. Tombol login aktif."
+    setStatus(
+        "✓ Sistem siap. Tombol dapat digunakan.",
+        "ok"
     );
 
 
-    /* =================================================
-       LOGIN
-       ================================================= */
+}catch(error){
 
-    loginButton.onclick = async function(){
+    console.error(
+        "Supabase initialization:",
+        error
+    );
 
-        status(
-            "⏳ Tombol berhasil ditekan. Menghubungkan ke Supabase..."
+    setStatus(
+        "❌ Gagal memulai Supabase:\n\n" +
+        error.message,
+        "error"
+    );
+
+}
+
+
+/* =====================================================
+   TES KONEKSI
+===================================================== */
+
+testButton.addEventListener(
+    "click",
+    async function(){
+
+        if(!supabaseClient){
+
+            setStatus(
+                "Supabase belum berhasil dimulai.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        testButton.disabled =
+            true;
+
+        setStatus(
+            "⏳ Menguji koneksi ke Supabase...",
+            "info"
         );
+
+
+        try{
+
+            /*
+              Kita meminta session.
+              Ini tidak membutuhkan tabel.
+            */
+
+            const result =
+                await supabaseClient
+                .auth
+                .getSession();
+
+
+            if(result.error){
+
+                throw result.error;
+
+            }
+
+
+            setStatus(
+                "✓ Koneksi Supabase berhasil.\n\n" +
+                "Authentication dapat diakses.",
+                "ok"
+            );
+
+
+        }catch(error){
+
+            console.error(
+                error
+            );
+
+            setStatus(
+                "❌ Koneksi gagal:\n\n" +
+                error.message,
+                "error"
+            );
+
+        }
+
+
+        testButton.disabled =
+            false;
+
+    }
+);
+
+
+/* =====================================================
+   LOGIN
+===================================================== */
+
+loginButton.addEventListener(
+    "click",
+    async function(){
+
+        if(!supabaseClient){
+
+            setStatus(
+                "❌ Supabase belum siap. Periksa URL dan key.",
+                "error"
+            );
+
+            return;
+
+        }
 
 
         const email =
@@ -388,7 +770,7 @@ try{
 
         if(!email){
 
-            status(
+            setStatus(
                 "Email belum diisi.",
                 "error"
             );
@@ -402,7 +784,7 @@ try{
 
         if(!password){
 
-            status(
+            setStatus(
                 "Password belum diisi.",
                 "error"
             );
@@ -414,121 +796,137 @@ try{
         }
 
 
-        loginButton.disabled = true;
+        loginButton.disabled =
+            true;
 
         loginButton.textContent =
             "MEMPROSES...";
 
 
+        setStatus(
+            "⏳ Menghubungkan ke Supabase Auth...",
+            "info"
+        );
+
+
         try{
 
-            const response =
-                await client.auth.signInWithPassword({
+            const result =
+                await supabaseClient
+                .auth
+                .signInWithPassword({
 
-                    email:email,
+                    email: email,
 
-                    password:password
+                    password: password
 
                 });
 
 
-            if(response.error){
+            if(result.error){
 
-                throw response.error;
-
-            }
-
-
-            if(!response.data){
-
-                throw new Error(
-                    "Supabase tidak mengembalikan data login."
-                );
+                throw result.error;
 
             }
 
 
             const user =
-                response.data.user;
+                result.data.user;
 
 
             if(!user){
 
                 throw new Error(
-                    "User tidak ditemukan setelah login."
+                    "Login tidak menghasilkan user."
                 );
 
             }
 
 
-            status(
-                "✓ Login berhasil. Memeriksa akun admin..."
+            setStatus(
+                "✓ Login berhasil.\nMemeriksa role admin...",
+                "info"
             );
 
 
-            const profileResponse =
-                await client
+            /*
+              Ambil profile berdasarkan ID
+              user dari Supabase Auth.
+            */
+
+            const profileResult =
+                await supabaseClient
                 .from("profiles")
-                .select("id,email,role")
-                .eq("id",user.id)
+                .select(
+                    "id,email,role"
+                )
+                .eq(
+                    "id",
+                    user.id
+                )
                 .maybeSingle();
 
 
-            if(profileResponse.error){
+            if(profileResult.error){
 
-                throw profileResponse.error;
+                throw profileResult.error;
 
             }
 
 
             const profile =
-                profileResponse.data;
+                profileResult.data;
 
 
             if(!profile){
 
                 throw new Error(
-                    "Akun login tidak memiliki profile di tabel profiles."
+                    "User sudah login, tetapi profile tidak ditemukan di tabel profiles."
                 );
 
             }
 
 
-            if(profile.role !== "admin"){
+            if(
+                String(profile.role)
+                .toLowerCase()
+                !==
+                "admin"
+            ){
 
                 throw new Error(
-                    "Akun berhasil login tetapi role bukan admin. Role saat ini: " +
+                    "User berhasil login tetapi role bukan admin.\n\n" +
+                    "Role sekarang: " +
                     profile.role
                 );
 
             }
 
 
-            /* ==========================================
-               BERHASIL
-               ========================================== */
+            /* =========================================
+               LOGIN BERHASIL
+            ========================================= */
 
-            status(
-                "✓ LOGIN ADMIN BERHASIL",
-                "success"
-            );
+            adminEmail.textContent =
+                profile.email ||
+                user.email ||
+                "-";
 
 
-            setTimeout(function(){
+            profileData.textContent =
+                JSON.stringify(
+                    profile,
+                    null,
+                    2
+                );
 
-                loginPage.style.display =
-                    "none";
 
-                dashboard.style.display =
-                    "block";
+            loginPage.style.display =
+                "none";
 
-                document
-                .getElementById("adminEmail")
-                .textContent =
-                    profile.email ||
-                    user.email;
 
-            },500);
+            dashboard.style.display =
+                "block";
 
 
         }catch(error){
@@ -539,8 +937,8 @@ try{
             );
 
 
-            status(
-                "❌ " +
+            setStatus(
+                "❌ LOGIN GAGAL:\n\n" +
                 (
                     error.message ||
                     String(error)
@@ -548,42 +946,207 @@ try{
                 "error"
             );
 
+
+        }finally{
+
+            loginButton.disabled =
+                false;
+
+            loginButton.textContent =
+                "LOGIN ADMIN";
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   ENTER UNTUK LOGIN
+===================================================== */
+
+passwordInput.addEventListener(
+    "keydown",
+    function(event){
+
+        if(
+            event.key === "Enter"
+        ){
+
+            event.preventDefault();
+
+            loginButton.click();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+logoutButton.addEventListener(
+    "click",
+    async function(){
+
+        if(!supabaseClient){
+
+            location.reload();
+
+            return;
+
         }
 
 
-        loginButton.disabled = false;
+        try{
 
-        loginButton.textContent =
-            "LOGIN ADMIN";
+            await supabaseClient
+                .auth
+                .signOut();
 
-    };
+        }catch(error){
 
+            console.error(
+                error
+            );
 
-    /* =================================================
-       LOGOUT
-       ================================================= */
+        }
 
-    logoutButton.onclick =
-    async function(){
-
-        await client.auth.signOut();
 
         location.reload();
 
-    };
+    }
+);
 
 
-}catch(error){
+/* =====================================================
+   CEK SESSION SAAT DIBUKA
+===================================================== */
 
-    console.error(error);
+async function checkExistingSession(){
 
-    status(
-        "❌ " +
-        error.message,
-        "error"
-    );
+    if(!supabaseClient){
+
+        return;
+
+    }
+
+
+    try{
+
+        const result =
+            await supabaseClient
+            .auth
+            .getSession();
+
+
+        if(result.error){
+
+            console.error(
+                result.error
+            );
+
+            return;
+
+        }
+
+
+        const session =
+            result.data.session;
+
+
+        if(!session){
+
+            return;
+
+        }
+
+
+        /*
+          Jika session masih aktif,
+          periksa profile.
+        */
+
+        const profileResult =
+            await supabaseClient
+            .from("profiles")
+            .select(
+                "id,email,role"
+            )
+            .eq(
+                "id",
+                session.user.id
+            )
+            .maybeSingle();
+
+
+        if(
+            profileResult.error ||
+            !profileResult.data
+        ){
+
+            return;
+
+        }
+
+
+        const profile =
+            profileResult.data;
+
+
+        if(
+            String(profile.role)
+            .toLowerCase()
+            !==
+            "admin"
+        ){
+
+            return;
+
+        }
+
+
+        adminEmail.textContent =
+            profile.email ||
+            session.user.email ||
+            "-";
+
+
+        profileData.textContent =
+            JSON.stringify(
+                profile,
+                null,
+                2
+            );
+
+
+        loginPage.style.display =
+            "none";
+
+
+        dashboard.style.display =
+            "block";
+
+
+    }catch(error){
+
+        console.error(
+            "Session check:",
+            error
+        );
+
+    }
 
 }
+
+
+/* =====================================================
+   JALANKAN
+===================================================== */
+
+checkExistingSession();
 
 </script>
 
