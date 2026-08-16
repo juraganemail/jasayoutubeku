@@ -1600,74 +1600,212 @@ let selectedMember = null;
 
 let chatChannel = null;
 
-
 /* ============================================================
-   START
+   START SYSTEM - VERSI AMAN
 ============================================================ */
 
-document.addEventListener(
-    "DOMContentLoaded",
-    async()=>{
+document.addEventListener("DOMContentLoaded", function () {
 
-        const {
-            data:{
-                session
-            }
-        } =
-        await supabaseClient
-            .auth
-            .getSession();
+    startAdminSystem();
+
+});
 
 
-        if(session){
+async function startAdminSystem() {
 
-            currentAdmin =
-                session.user;
+    const loading =
+        document.getElementById("loading");
 
-            await verifyAdmin();
+    try {
 
-        }else{
+        /* -----------------------------------------
+           CEK KONFIGURASI
+        ----------------------------------------- */
 
-            showLogin();
+        if (
+            !SUPABASE_URL ||
+            SUPABASE_URL.includes("ISI_URL")
+        ) {
+
+            throw new Error(
+                "SUPABASE_URL belum diisi."
+            );
 
         }
 
 
-        supabaseClient
-            .auth
-            .onAuthStateChange(
-                async(event,session)=>{
+        if (
+            !SUPABASE_ANON_KEY ||
+            SUPABASE_ANON_KEY.includes("ISI_ANON")
+        ) {
 
-                    if(session){
-
-                        currentAdmin =
-                            session.user;
-
-                        await verifyAdmin();
-
-                    }else{
-
-                        currentAdmin =
-                            null;
-
-                        showLogin();
-
-                    }
-
-                }
+            throw new Error(
+                "SUPABASE_ANON_KEY belum diisi."
             );
 
+        }
+
+
+        /* -----------------------------------------
+           CEK SUPABASE
+        ----------------------------------------- */
+
+        if (
+            typeof window.supabase ===
+            "undefined"
+        ) {
+
+            throw new Error(
+                "Library Supabase gagal dimuat."
+            );
+
+        }
+
+
+        /* -----------------------------------------
+           AMBIL SESSION
+        ----------------------------------------- */
+
+        const sessionResult =
+            await Promise.race([
+
+                supabaseClient
+                    .auth
+                    .getSession(),
+
+                new Promise(
+                    (_, reject) =>
+                        setTimeout(
+                            () =>
+                                reject(
+                                    new Error(
+                                        "Koneksi ke Supabase timeout. Periksa URL dan ANON KEY."
+                                    )
+                                ),
+                            10000
+                        )
+                )
+
+            ]);
+
+
+        const session =
+            sessionResult
+            ?.data
+            ?.session;
+
+
+        /* -----------------------------------------
+           BELUM LOGIN
+        ----------------------------------------- */
+
+        if (!session) {
+
+            loading.classList.add(
+                "hidden"
+            );
+
+            showLogin();
+
+            return;
+
+        }
+
+
+        /* -----------------------------------------
+           SIMPAN ADMIN
+        ----------------------------------------- */
+
+        currentAdmin =
+            session.user;
+
+
+        /* -----------------------------------------
+           CEK ROLE ADMIN
+        ----------------------------------------- */
+
+        await verifyAdminSafe();
+
+
+    } catch (error) {
+
+        console.error(
+            "ADMIN SYSTEM ERROR:",
+            error
+        );
+
+
+        loading.innerHTML = `
+
+            <div
+                style="
+                    max-width:420px;
+                    padding:25px;
+                    text-align:center;
+                "
+            >
+
+                <div
+                    style="
+                        font-size:45px;
+                        margin-bottom:15px;
+                    "
+                >
+                    ⚠️
+                </div>
+
+                <h2
+                    style="
+                        margin-bottom:10px;
+                    "
+                >
+                    Gagal Memuat Admin
+                </h2>
+
+                <p
+                    style="
+                        color:#aaa;
+                        line-height:1.6;
+                        font-size:14px;
+                    "
+                >
+                    ${escapeHtml(
+                        error.message ||
+                        "Terjadi kesalahan."
+                    )}
+                </p>
+
+                <button
+                    onclick="location.reload()"
+                    style="
+                        margin-top:20px;
+                        padding:12px 20px;
+                        border:0;
+                        border-radius:10px;
+                        color:white;
+                        background:#7c3aed;
+                        font-weight:bold;
+                    "
+                >
+                    Coba Lagi
+                </button>
+
+            </div>
+
+        `;
+
     }
-);
+
+}
 
 
 /* ============================================================
    VERIFY ADMIN
 ============================================================ */
 
-async function verifyAdmin(){
+async function verifyAdminSafe() {
 
-    if(!currentAdmin){
+    if (!currentAdmin) {
 
         showLogin();
 
@@ -1676,49 +1814,77 @@ async function verifyAdmin(){
     }
 
 
+    const result =
+        await Promise.race([
+
+            supabaseClient
+                .from("profiles")
+                .select(
+                    "id,full_name,email,role"
+                )
+                .eq(
+                    "id",
+                    currentAdmin.id
+                )
+                .maybeSingle(),
+
+            new Promise(
+                (_, reject) =>
+                    setTimeout(
+                        () =>
+                            reject(
+                                new Error(
+                                    "Supabase tidak merespons saat memeriksa profile."
+                                )
+                            ),
+                        10000
+                    )
+            )
+
+        ]);
+
+
     const {
         data,
         error
-    } =
-    await supabaseClient
-        .from("profiles")
-        .select(
-            "id,full_name,email,role"
-        )
-        .eq(
-            "id",
-            currentAdmin.id
-        )
-        .maybeSingle();
+    } = result;
 
 
-    if(error){
+    if (error) {
 
-        console.error(error);
-
-        showLogin(
-            "Gagal memeriksa akun."
+        throw new Error(
+            "Gagal membaca profile: " +
+            error.message
         );
-
-        return;
 
     }
 
 
-    if(!data || data.role !== "admin"){
+    if (!data) {
+
+        throw new Error(
+            "Profile akun tidak ditemukan di tabel profiles."
+        );
+
+    }
+
+
+    if (data.role !== "admin") {
 
         await supabaseClient
             .auth
             .signOut();
 
-        showLogin(
-            "Akun ini bukan akun admin."
+        throw new Error(
+            "Akun ini belum memiliki role admin."
         );
-
-        return;
 
     }
 
+
+    /* -----------------------------------------
+       TAMPILKAN DATA ADMIN
+    ----------------------------------------- */
 
     document
         .getElementById("adminName")
@@ -1740,6 +1906,10 @@ async function verifyAdmin(){
             .toUpperCase();
 
 
+    /* -----------------------------------------
+       TAMPILKAN ADMIN PANEL
+    ----------------------------------------- */
+
     document
         .getElementById("loading")
         .classList.add("hidden");
@@ -1755,6 +1925,10 @@ async function verifyAdmin(){
         .classList.remove("hidden");
 
 
+    /* -----------------------------------------
+       LOAD DATA
+    ----------------------------------------- */
+
     await loadDashboard();
 
     await loadOrders();
@@ -1763,9 +1937,60 @@ async function verifyAdmin(){
 
     await loadChatMembers();
 
+
+    /* -----------------------------------------
+       REALTIME
+    ----------------------------------------- */
+
     subscribeRealtime();
 
 }
+
+
+/* ============================================================
+   AUTH STATE
+============================================================ */
+
+supabaseClient
+    .auth
+    .onAuthStateChange(
+        async function (
+            event,
+            session
+        ) {
+
+            console.log(
+                "AUTH EVENT:",
+                event
+            );
+
+
+            if (
+                event ===
+                "SIGNED_OUT"
+            ) {
+
+                currentAdmin = null;
+
+                showLogin();
+
+                return;
+
+            }
+
+
+            if (
+                session &&
+                !currentAdmin
+            ) {
+
+                currentAdmin =
+                    session.user;
+
+            }
+
+        }
+    );
 
 
 /* ============================================================
