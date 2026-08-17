@@ -2,2776 +2,2654 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 
-<title>YouTube Service</title>
+<title>YouTube Admin Panel</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 *{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-}
-
-html,body{
-    min-height:100%;
-    background:#07070a;
-    color:#f5f5f7;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
 }
 
 body{
-    overflow-x:hidden;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#07070a;
+  color:#fff;
+  min-height:100vh;
 }
 
 button,
 input,
+select,
 textarea{
-    font:inherit;
+  font:inherit;
 }
 
 button{
-    cursor:pointer;
-    -webkit-tap-highlight-color:transparent;
+  cursor:pointer;
 }
 
-.hidden{
-    display:none !important;
-}
-
-/* =========================
-   LOADING
-========================= */
-
-#loadingScreen{
-    position:fixed;
-    inset:0;
-    background:#07070a;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    z-index:9999;
-    padding:25px;
-}
-
-.loadingBox{
-    width:100%;
-    max-width:400px;
-    text-align:center;
-}
-
-.logoBig{
-    font-size:60px;
-    margin-bottom:20px;
-}
-
-.loadingBox h2{
-    font-size:25px;
-    margin-bottom:10px;
-}
-
-.loadingBox p{
-    color:#9999a3;
-    font-size:15px;
-}
-
-.spinner{
-    width:45px;
-    height:45px;
-    border:4px solid #292932;
-    border-top-color:#7c3aed;
-    border-radius:50%;
-    margin:25px auto;
-    animation:spin .8s linear infinite;
-}
-
-@keyframes spin{
-    to{
-        transform:rotate(360deg);
-    }
+:root{
+  --purple:#7c3aed;
+  --purple2:#9333ea;
+  --green:#22c55e;
+  --red:#ef4444;
+  --yellow:#f59e0b;
+  --card:#111116;
+  --card2:#17171f;
+  --border:#292936;
+  --muted:#a1a1aa;
 }
 
 /* =========================
-   AUTH
+   LOGIN
 ========================= */
 
-#authScreen{
-    min-height:100vh;
-    padding:30px 16px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
+#loginPage{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:25px;
 }
 
-.authCard{
-    width:100%;
-    max-width:460px;
-    background:#111116;
-    border:1px solid #30303a;
-    border-radius:25px;
-    padding:30px 24px;
-    box-shadow:0 20px 60px rgba(0,0,0,.45);
+.login-box{
+  width:100%;
+  max-width:520px;
+  background:linear-gradient(145deg,#121219,#0c0c10);
+  border:1px solid #30303d;
+  border-radius:28px;
+  padding:45px 35px;
+  box-shadow:0 25px 80px rgba(0,0,0,.55);
 }
 
-.authLogo{
-    text-align:center;
-    font-size:55px;
-    margin-bottom:8px;
+.logo{
+  text-align:center;
+  margin-bottom:35px;
 }
 
-.authTitle{
-    text-align:center;
-    font-size:34px;
-    font-weight:800;
+.logo-icon{
+  font-size:65px;
+  display:block;
+  margin-bottom:12px;
 }
 
-.authTitle span{
-    color:#8b5cf6;
+.logo h1{
+  font-size:38px;
+  margin-bottom:8px;
 }
 
-.authSubtitle{
-    text-align:center;
-    color:#9999a3;
-    margin:8px 0 28px;
-    font-size:15px;
+.logo p{
+  color:#9999a3;
+  font-size:17px;
 }
 
-.authTabs{
-    display:flex;
-    background:#08080b;
-    border:1px solid #292932;
-    border-radius:14px;
-    padding:4px;
-    margin-bottom:25px;
+.form-group{
+  margin-bottom:20px;
 }
 
-.authTab{
-    flex:1;
-    border:0;
-    padding:13px;
-    border-radius:10px;
-    background:transparent;
-    color:#9999a3;
-    font-weight:700;
+.form-group label{
+  display:block;
+  margin-bottom:9px;
+  font-size:16px;
 }
 
-.authTab.active{
-    background:#7c3aed;
-    color:#fff;
+.form-group input,
+.form-group select,
+.form-group textarea{
+  width:100%;
+  background:#07070a;
+  border:1px solid #373742;
+  color:white;
+  border-radius:13px;
+  padding:15px;
+  outline:none;
 }
 
-.field{
-    margin-bottom:17px;
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus{
+  border-color:var(--purple);
 }
 
-.field label{
-    display:block;
-    margin-bottom:8px;
-    color:#dddde3;
-    font-weight:600;
+.btn{
+  border:0;
+  border-radius:13px;
+  padding:14px 20px;
+  color:white;
+  font-weight:bold;
+  transition:.2s;
 }
 
-.field input{
-    width:100%;
-    padding:16px;
-    border-radius:14px;
-    border:1px solid #35353e;
-    background:#08080b;
-    color:#fff;
-    outline:none;
+.btn:hover{
+  transform:translateY(-1px);
 }
 
-.field input:focus{
-    border-color:#7c3aed;
-    box-shadow:0 0 0 3px rgba(124,58,237,.15);
+.btn-purple{
+  background:linear-gradient(135deg,var(--purple),var(--purple2));
 }
 
-.primaryBtn{
-    width:100%;
-    padding:16px;
-    border:0;
-    border-radius:14px;
-    background:linear-gradient(135deg,#7c3aed,#9333ea);
-    color:#fff;
-    font-weight:800;
-    font-size:16px;
+.btn-green{
+  background:#15803d;
 }
 
-.primaryBtn:disabled{
-    opacity:.55;
+.btn-red{
+  background:#991b1b;
 }
 
-.messageBox{
-    margin-top:15px;
-    padding:13px;
-    border-radius:12px;
-    background:#1a1a21;
-    border:1px solid #30303a;
-    color:#b7b7c0;
-    text-align:center;
-    display:none;
+.btn-gray{
+  background:#27272f;
 }
 
-.messageBox.error{
-    display:block;
-    color:#ff8b8b;
-    border-color:#632b2b;
+.btn-full{
+  width:100%;
 }
 
-.messageBox.success{
-    display:block;
-    color:#72e89b;
-    border-color:#285a3a;
+.message{
+  margin-top:18px;
+  padding:14px;
+  border-radius:12px;
+  display:none;
+  text-align:center;
+}
+
+.message.error{
+  display:block;
+  background:#3b1111;
+  color:#fca5a5;
+}
+
+.message.success{
+  display:block;
+  background:#0d351d;
+  color:#86efac;
 }
 
 /* =========================
-   HEADER
+   ADMIN APP
 ========================= */
 
-#memberApp{
-    min-height:100vh;
-    background:#07070a;
+#adminApp{
+  display:none;
 }
 
-.header{
-    position:sticky;
-    top:0;
-    z-index:100;
-    min-height:82px;
-    background:rgba(7,7,10,.94);
-    backdrop-filter:blur(15px);
-    border-bottom:1px solid #292932;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:14px 18px;
+.topbar{
+  height:74px;
+  border-bottom:1px solid var(--border);
+  background:#09090d;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 25px;
+  position:sticky;
+  top:0;
+  z-index:100;
 }
 
 .brand{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    font-size:22px;
-    font-weight:900;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:bold;
+  font-size:21px;
 }
 
 .brand span{
-    color:#9b6cff;
+  font-size:30px;
 }
 
-.logoutBtn{
-    border:0;
-    background:#3b1d31;
-    color:#ffb7cf;
-    border-radius:13px;
-    padding:13px 18px;
-    font-weight:700;
+.top-actions{
+  display:flex;
+  gap:10px;
 }
 
-/* =========================
-   MAIN
-========================= */
-
-.container{
-    width:100%;
-    max-width:1100px;
-    margin:auto;
-    padding:25px 16px 60px;
+.sidebar{
+  position:fixed;
+  left:0;
+  top:74px;
+  bottom:0;
+  width:250px;
+  background:#0c0c11;
+  border-right:1px solid var(--border);
+  padding:20px 14px;
+  overflow-y:auto;
 }
 
-.hero{
-    background:
-      radial-gradient(circle at top right,rgba(124,58,237,.24),transparent 40%),
-      #111116;
-    border:1px solid #30303a;
-    border-radius:25px;
-    padding:28px 22px;
-    margin-bottom:20px;
+.menu-title{
+  color:#666673;
+  font-size:11px;
+  text-transform:uppercase;
+  margin:12px 12px 8px;
+  letter-spacing:1.5px;
 }
 
-.hero h1{
-    font-size:32px;
-    line-height:1.15;
-    margin-bottom:10px;
+.menu-btn{
+  width:100%;
+  background:transparent;
+  border:0;
+  color:#b7b7c0;
+  padding:13px 14px;
+  border-radius:12px;
+  text-align:left;
+  margin-bottom:5px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-weight:600;
 }
 
-.hero h1 span{
-    color:#9b6cff;
+.menu-btn:hover{
+  background:#181820;
+  color:white;
 }
 
-.hero p{
-    color:#a3a3ad;
-    line-height:1.6;
+.menu-btn.active{
+  background:linear-gradient(135deg,#6d28d9,#8b5cf6);
+  color:white;
+  box-shadow:0 8px 25px rgba(124,58,237,.2);
 }
 
-.userEmail{
-    margin-top:18px;
-    color:#72e89b;
-    font-size:14px;
+.main{
+  margin-left:250px;
+  padding:30px;
+  min-height:calc(100vh - 74px);
 }
 
-/* =========================
-   SECTION
-========================= */
-
-.section{
-    margin-top:25px;
+.page{
+  display:none;
 }
 
-.sectionTitle{
-    font-size:25px;
-    font-weight:800;
-    margin-bottom:15px;
+.page.active{
+  display:block;
 }
 
-/* =========================
-   PRICE
-========================= */
-
-.priceGrid{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:13px;
+.page-header{
+  margin-bottom:25px;
 }
 
-.priceCard{
-    background:#111116;
-    border:1px solid #30303a;
-    border-radius:20px;
-    padding:18px;
-    position:relative;
+.page-header h1{
+  font-size:32px;
+  margin-bottom:7px;
 }
 
-.priceCard.featured{
-    border-color:#7c3aed;
-    box-shadow:0 0 25px rgba(124,58,237,.12);
-}
-
-.priceIcon{
-    font-size:30px;
-    margin-bottom:12px;
-}
-
-.priceCard h3{
-    font-size:17px;
-    margin-bottom:8px;
-}
-
-.price{
-    font-size:22px;
-    font-weight:900;
-    color:#a78bfa;
-}
-
-.priceDesc{
-    color:#8f8f99;
-    font-size:12px;
-    margin-top:8px;
-    line-height:1.5;
-}
-
-.orderBtn{
-    width:100%;
-    border:0;
-    margin-top:15px;
-    padding:12px;
-    border-radius:11px;
-    background:#29202f;
-    color:#c9a9ff;
-    font-weight:800;
+.page-header p{
+  color:var(--muted);
 }
 
 /* =========================
-   PAYMENT
+   CARDS
 ========================= */
 
-.paymentCard{
-    background:#111116;
-    border:1px solid #30303a;
-    border-radius:22px;
-    padding:20px;
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:18px;
+  margin-bottom:25px;
 }
 
-.paymentRow{
-    display:flex;
-    justify-content:space-between;
-    gap:15px;
-    padding:15px 0;
-    border-bottom:1px solid #292932;
+.stat{
+  background:linear-gradient(145deg,#131319,#0d0d11);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:22px;
 }
 
-.paymentRow:last-child{
-    border-bottom:0;
+.stat .icon{
+  font-size:27px;
+  margin-bottom:12px;
 }
 
-.paymentRow span{
-    color:#9999a3;
+.stat h3{
+  font-size:29px;
+  margin-bottom:4px;
 }
 
-.paymentRow strong{
-    text-align:right;
-    word-break:break-word;
+.stat p{
+  color:#8f8f9b;
+}
+
+.card{
+  background:linear-gradient(145deg,#131319,#0d0d11);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:22px;
+  margin-bottom:20px;
+}
+
+.card h2{
+  margin-bottom:18px;
+}
+
+.grid-2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+}
+
+.grid-3{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
 }
 
 /* =========================
-   ORDER
+   TABLE
 ========================= */
 
-.orderCard{
-    background:#111116;
-    border:1px solid #30303a;
-    border-radius:22px;
-    padding:20px;
+.table-wrap{
+  width:100%;
+  overflow-x:auto;
 }
 
-.orderCard select,
-.orderCard input{
-    width:100%;
-    padding:14px;
-    background:#08080b;
-    color:#fff;
-    border:1px solid #35353e;
-    border-radius:12px;
-    margin-bottom:12px;
-    outline:none;
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:700px;
+}
+
+th{
+  text-align:left;
+  color:#888894;
+  font-size:13px;
+  padding:13px;
+  border-bottom:1px solid var(--border);
+}
+
+td{
+  padding:14px 13px;
+  border-bottom:1px solid #202027;
+  vertical-align:middle;
+}
+
+.badge{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:30px;
+  font-size:12px;
+  font-weight:bold;
+}
+
+.badge.green{
+  background:#0b3820;
+  color:#86efac;
+}
+
+.badge.yellow{
+  background:#3c2908;
+  color:#fcd34d;
+}
+
+.badge.red{
+  background:#421111;
+  color:#fca5a5;
+}
+
+.badge.blue{
+  background:#102d4d;
+  color:#93c5fd;
+}
+
+.empty{
+  text-align:center;
+  padding:40px 15px;
+  color:#777783;
 }
 
 /* =========================
    CHAT
 ========================= */
 
-.chatCard{
-    background:#111116;
-    border:1px solid #30303a;
-    border-radius:22px;
-    overflow:hidden;
+.chat-box{
+  height:520px;
+  display:flex;
+  flex-direction:column;
 }
 
-.chatHeader{
-    padding:18px;
-    border-bottom:1px solid #30303a;
-    font-weight:800;
+.chat-list{
+  flex:1;
+  overflow-y:auto;
+  padding:10px;
+  background:#09090d;
+  border:1px solid var(--border);
+  border-radius:14px;
+  margin-bottom:12px;
 }
 
-.chatStatus{
-    font-size:12px;
-    color:#72e89b;
-    margin-top:4px;
+.chat-item{
+  margin-bottom:12px;
+  max-width:75%;
+  padding:12px 14px;
+  border-radius:14px;
+  background:#1b1b23;
 }
 
-.chatMessages{
-    height:360px;
-    overflow-y:auto;
-    padding:16px;
-    display:flex;
-    flex-direction:column;
-    gap:10px;
+.chat-item.admin{
+  margin-left:auto;
+  background:#4c1d95;
 }
 
-.emptyChat{
-    text-align:center;
-    color:#85858e;
-    margin:auto;
-    line-height:1.6;
+.chat-user{
+  font-size:11px;
+  color:#a1a1aa;
+  margin-bottom:5px;
 }
 
-.msg{
-    max-width:80%;
-    padding:11px 13px;
-    border-radius:15px;
-    line-height:1.45;
-    word-break:break-word;
+.chat-text{
+  line-height:1.45;
 }
 
-.msg.member{
-    align-self:flex-end;
-    background:#7c3aed;
-    color:#fff;
-    border-bottom-right-radius:4px;
+.chat-input{
+  display:flex;
+  gap:10px;
 }
 
-.msg.admin{
-    align-self:flex-start;
-    background:#292932;
-    color:#eee;
-    border-bottom-left-radius:4px;
-}
-
-.msgTime{
-    display:block;
-    margin-top:4px;
-    font-size:10px;
-    opacity:.65;
-}
-
-.chatForm{
-    display:flex;
-    gap:9px;
-    padding:12px;
-    border-top:1px solid #30303a;
-}
-
-.chatForm textarea{
-    flex:1;
-    resize:none;
-    min-height:50px;
-    max-height:120px;
-    padding:13px;
-    border-radius:13px;
-    border:1px solid #35353e;
-    background:#08080b;
-    color:#fff;
-    outline:none;
-}
-
-.chatSend{
-    width:90px;
-    border:0;
-    border-radius:13px;
-    background:#7c3aed;
-    color:#fff;
-    font-weight:800;
+.chat-input input{
+  flex:1;
+  background:#07070a;
+  border:1px solid var(--border);
+  color:white;
+  border-radius:12px;
+  padding:13px;
 }
 
 /* =========================
-   TOAST
+   PRICE
 ========================= */
 
-#toast{
-    position:fixed;
-    left:50%;
-    bottom:25px;
-    transform:translateX(-50%);
-    background:#24242c;
-    color:#fff;
-    padding:14px 18px;
-    border-radius:13px;
-    border:1px solid #3b3b47;
-    z-index:99999;
+.price-card{
+  background:#101017;
+  border:1px solid var(--border);
+  border-radius:17px;
+  padding:22px;
+}
+
+.price-card h3{
+  font-size:21px;
+  margin-bottom:10px;
+}
+
+.price{
+  font-size:28px;
+  font-weight:bold;
+  color:#a78bfa;
+  margin-bottom:10px;
+}
+
+.price-card p{
+  color:#9999a3;
+  margin-bottom:18px;
+  line-height:1.5;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+.mobile-menu{
+  display:none;
+}
+
+@media(max-width:900px){
+
+  .sidebar{
     display:none;
-    max-width:90%;
-    text-align:center;
+    width:280px;
+    z-index:200;
+    box-shadow:20px 0 60px rgba(0,0,0,.5);
+  }
+
+  .sidebar.open{
+    display:block;
+  }
+
+  .mobile-menu{
+    display:block;
+    background:#1a1a22;
+    border:1px solid var(--border);
+    color:white;
+    border-radius:10px;
+    padding:9px 12px;
+  }
+
+  .main{
+    margin-left:0;
+    padding:20px 15px;
+  }
+
+  .stats{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .grid-2,
+  .grid-3{
+    grid-template-columns:1fr;
+  }
+
+  .topbar{
+    padding:0 15px;
+  }
+
+  .brand{
+    font-size:17px;
+  }
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
+@media(max-width:520px){
 
-@media(max-width:600px){
+  .login-box{
+    padding:35px 22px;
+    border-radius:20px;
+  }
 
-    .authCard{
-        padding:25px 18px;
-    }
+  .logo h1{
+    font-size:30px;
+  }
 
-    .authTitle{
-        font-size:29px;
-    }
+  .stats{
+    grid-template-columns:1fr;
+  }
 
-    .header{
-        padding:13px 14px;
-    }
+  .page-header h1{
+    font-size:27px;
+  }
 
-    .brand{
-        font-size:19px;
-    }
-
-    .logoutBtn{
-        padding:11px 14px;
-    }
-
-    .hero h1{
-        font-size:27px;
-    }
-
-    .priceGrid{
-        grid-template-columns:1fr 1fr;
-    }
-
-    .priceCard{
-        padding:14px;
-    }
-
-    .price{
-        font-size:18px;
-    }
-
-    .priceCard h3{
-        font-size:15px;
-    }
-
-    .chatMessages{
-        height:340px;
-    }
-}
-
-@media(max-width:360px){
-
-    .priceGrid{
-        grid-template-columns:1fr;
-    }
-
-    .brand{
-        font-size:17px;
-    }
+  .top-actions .btn{
+    padding:10px 12px;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<!-- =====================================================
-     LOADING
-===================================================== -->
+<!-- =========================
+     LOGIN
+========================= -->
 
-<div id="loadingScreen">
+<section id="loginPage">
 
-    <div class="loadingBox">
+  <div class="login-box">
 
-        <div class="logoBig">🎬</div>
-
-        <h2>Memuat sistem...</h2>
-
-        <div class="spinner"></div>
-
-        <p id="loadingText">
-            Menghubungkan ke server
-        </p>
-
+    <div class="logo">
+      <span class="logo-icon">🎬</span>
+      <h1>Admin Panel</h1>
+      <p>YouTube Monetization Service</p>
     </div>
 
-</div>
+    <form id="loginForm">
 
+      <div class="form-group">
+        <label>Email</label>
+        <input
+          id="loginEmail"
+          type="email"
+          placeholder="Email admin"
+          autocomplete="email"
+          required
+        >
+      </div>
 
-<!-- =====================================================
-     AUTH
-===================================================== -->
+      <div class="form-group">
+        <label>Password</label>
+        <input
+          id="loginPassword"
+          type="password"
+          placeholder="Password admin"
+          autocomplete="current-password"
+          required
+        >
+      </div>
 
-<section id="authScreen" class="hidden">
+      <button
+        type="submit"
+        class="btn btn-purple btn-full"
+        id="loginButton"
+      >
+        LOGIN ADMIN
+      </button>
 
-    <div class="authCard">
+      <div id="loginMessage" class="message"></div>
 
-        <div class="authLogo">🎬</div>
+    </form>
 
-        <div class="authTitle">
-            YOUTUBE <span>SERVICE</span>
-        </div>
-
-        <div class="authSubtitle">
-            Jasa Monetisasi YouTube
-        </div>
-
-
-        <div class="authTabs">
-
-            <button
-                id="loginTab"
-                class="authTab active"
-                type="button">
-                LOGIN
-            </button>
-
-            <button
-                id="registerTab"
-                class="authTab"
-                type="button">
-                DAFTAR
-            </button>
-
-        </div>
-
-
-        <!-- LOGIN -->
-
-        <form id="loginForm">
-
-            <div class="field">
-
-                <label>Email</label>
-
-                <input
-                    id="loginEmail"
-                    type="email"
-                    placeholder="Email Anda"
-                    autocomplete="email"
-                    required>
-
-            </div>
-
-
-            <div class="field">
-
-                <label>Password</label>
-
-                <input
-                    id="loginPassword"
-                    type="password"
-                    placeholder="Password"
-                    autocomplete="current-password"
-                    required>
-
-            </div>
-
-
-            <button
-                id="loginBtn"
-                class="primaryBtn"
-                type="submit">
-
-                LOGIN
-
-            </button>
-
-        </form>
-
-
-        <!-- REGISTER -->
-
-        <form id="registerForm" class="hidden">
-
-            <div class="field">
-
-                <label>Nama</label>
-
-                <input
-                    id="registerName"
-                    type="text"
-                    placeholder="Nama Anda"
-                    autocomplete="name"
-                    required>
-
-            </div>
-
-
-            <div class="field">
-
-                <label>Email</label>
-
-                <input
-                    id="registerEmail"
-                    type="email"
-                    placeholder="Email Anda"
-                    autocomplete="email"
-                    required>
-
-            </div>
-
-
-            <div class="field">
-
-                <label>Password</label>
-
-                <input
-                    id="registerPassword"
-                    type="password"
-                    placeholder="Minimal 6 karakter"
-                    autocomplete="new-password"
-                    minlength="6"
-                    required>
-
-            </div>
-
-
-            <button
-                id="registerBtn"
-                class="primaryBtn"
-                type="submit">
-
-                DAFTAR MEMBER
-
-            </button>
-
-        </form>
-
-
-        <div id="authMessage" class="messageBox"></div>
-
-    </div>
+  </div>
 
 </section>
 
 
-<!-- =====================================================
-     MEMBER APP
-===================================================== -->
+<!-- =========================
+     ADMIN APP
+========================= -->
 
-<div id="memberApp" class="hidden">
+<div id="adminApp">
+
+  <header class="topbar">
+
+    <div class="brand">
+      <button
+        class="mobile-menu"
+        onclick="toggleSidebar()"
+      >☰</button>
+
+      <span>🎬</span>
+      YOUTUBE ADMIN
+    </div>
+
+    <div class="top-actions">
+      <button
+        class="btn btn-gray"
+        onclick="refreshCurrentPage()"
+      >
+        ↻ Refresh
+      </button>
+
+      <button
+        class="btn btn-red"
+        onclick="logout()"
+      >
+        LOGOUT
+      </button>
+    </div>
+
+  </header>
 
 
-    <!-- HEADER -->
+  <!-- SIDEBAR -->
 
-    <header class="header">
+  <aside class="sidebar" id="sidebar">
 
-        <div class="brand">
-            🎬 YOUTUBE <span>SERVICE</span>
+    <div class="menu-title">Menu Utama</div>
+
+    <button
+      class="menu-btn active"
+      data-page="dashboard"
+      onclick="showPage('dashboard')"
+    >
+      🏠 Dashboard
+    </button>
+
+    <button
+      class="menu-btn"
+      data-page="members"
+      onclick="showPage('members')"
+    >
+      👥 Member
+    </button>
+
+    <button
+      class="menu-btn"
+      data-page="orders"
+      onclick="showPage('orders')"
+    >
+      📦 Pesanan
+    </button>
+
+    <div class="menu-title">Layanan</div>
+
+    <button
+      class="menu-btn"
+      data-page="prices"
+      onclick="showPage('prices')"
+    >
+      💰 Harga Monetisasi
+    </button>
+
+    <button
+      class="menu-btn"
+      data-page="payment"
+      onclick="showPage('payment')"
+    >
+      💳 Pembayaran
+    </button>
+
+    <button
+      class="menu-btn"
+      data-page="chat"
+      onclick="showPage('chat')"
+    >
+      💬 Live Chat
+    </button>
+
+    <div class="menu-title">Sistem</div>
+
+    <button
+      class="menu-btn"
+      data-page="settings"
+      onclick="showPage('settings')"
+    >
+      ⚙️ Pengaturan
+    </button>
+
+  </aside>
+
+
+  <main class="main">
+
+    <!-- =====================
+         DASHBOARD
+    ====================== -->
+
+    <section
+      id="page-dashboard"
+      class="page active"
+    >
+
+      <div class="page-header">
+        <h1>Dashboard Admin</h1>
+        <p>Kelola layanan YouTube Monetization dari satu tempat.</p>
+      </div>
+
+      <div class="stats">
+
+        <div class="stat">
+          <div class="icon">👥</div>
+          <h3 id="statMembers">0</h3>
+          <p>Total Member</p>
         </div>
 
+        <div class="stat">
+          <div class="icon">📦</div>
+          <h3 id="statOrders">0</h3>
+          <p>Total Pesanan</p>
+        </div>
+
+        <div class="stat">
+          <div class="icon">⏳</div>
+          <h3 id="statPending">0</h3>
+          <p>Pesanan Pending</p>
+        </div>
+
+        <div class="stat">
+          <div class="icon">💬</div>
+          <h3 id="statMessages">0</h3>
+          <p>Pesan Member</p>
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>System Status</h2>
+
+        <p id="systemStatus">
+          Memeriksa koneksi Supabase...
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Pesanan Terbaru</h2>
+
+        <div
+          id="recentOrders"
+          class="table-wrap"
+        ></div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================
+         MEMBERS
+    ====================== -->
+
+    <section
+      id="page-members"
+      class="page"
+    >
+
+      <div class="page-header">
+        <h1>👥 Data Member</h1>
+        <p>Daftar member yang terdaftar pada sistem.</p>
+      </div>
+
+      <div class="card">
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>Email</th>
+                <th>Role</th>
+                <th>ID</th>
+              </tr>
+            </thead>
+
+            <tbody id="membersTable">
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================
+         ORDERS
+    ====================== -->
+
+    <section
+      id="page-orders"
+      class="page"
+    >
+
+      <div class="page-header">
+        <h1>📦 Pesanan Monetisasi</h1>
+        <p>Kelola pesanan layanan monetisasi member.</p>
+      </div>
+
+      <div class="card">
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+
+              <tr>
+                <th>ID</th>
+                <th>Member</th>
+                <th>Paket</th>
+                <th>Harga</th>
+                <th>Status</th>
+                <th>Tanggal</th>
+              </tr>
+
+            </thead>
+
+            <tbody id="ordersTable">
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================
+         PRICES
+    ====================== -->
+
+    <section
+      id="page-prices"
+      class="page"
+    >
+
+      <div class="page-header">
+
+        <h1>💰 Harga Monetisasi</h1>
+
+        <p>
+          Daftar layanan yang dapat ditampilkan kepada member.
+        </p>
+
+      </div>
+
+
+      <div class="grid-3">
+
+        <div class="price-card">
+
+          <h3>Starter</h3>
+
+          <div class="price">
+            Rp 500.000
+          </div>
+
+          <p>
+            Paket layanan dasar monetisasi YouTube.
+          </p>
+
+          <button
+            class="btn btn-purple"
+            onclick="editPrice('Starter')"
+          >
+            EDIT
+          </button>
+
+        </div>
+
+
+        <div class="price-card">
+
+          <h3>Professional</h3>
+
+          <div class="price">
+            Rp 1.000.000
+          </div>
+
+          <p>
+            Paket layanan monetisasi untuk channel berkembang.
+          </p>
+
+          <button
+            class="btn btn-purple"
+            onclick="editPrice('Professional')"
+          >
+            EDIT
+          </button>
+
+        </div>
+
+
+        <div class="price-card">
+
+          <h3>Premium</h3>
+
+          <div class="price">
+            Rp 1.500.000
+          </div>
+
+          <p>
+            Paket layanan premium untuk kebutuhan channel.
+          </p>
+
+          <button
+            class="btn btn-purple"
+            onclick="editPrice('Premium')"
+          >
+            EDIT
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Catatan</h2>
+
+        <p style="color:#9999a3;line-height:1.6">
+          Harga di atas adalah tampilan awal pada panel admin.
+          Silakan ubah sesuai harga jasa Anda.
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================
+         PAYMENT
+    ====================== -->
+
+    <section
+      id="page-payment"
+      class="page"
+    >
+
+      <div class="page-header">
+
+        <h1>💳 Pembayaran</h1>
+
+        <p>
+          Informasi rekening pembayaran yang ditampilkan kepada member.
+        </p>
+
+      </div>
+
+
+      <div class="grid-2">
+
+        <div class="card">
+
+          <h2>Rekening Bank</h2>
+
+          <div class="form-group">
+
+            <label>Nama Bank</label>
+
+            <input
+              id="bankName"
+              value="BANK ANDA"
+            >
+
+          </div>
+
+          <div class="form-group">
+
+            <label>Nomor Rekening</label>
+
+            <input
+              id="bankNumber"
+              value="0000000000"
+            >
+
+          </div>
+
+          <div class="form-group">
+
+            <label>Nama Pemilik</label>
+
+            <input
+              id="bankOwner"
+              value="NAMA ANDA"
+            >
+
+          </div>
+
+          <button
+            class="btn btn-purple"
+            onclick="savePayment()"
+          >
+            SIMPAN
+          </button>
+
+        </div>
+
+
+        <div class="card">
+
+          <h2>Petunjuk Pembayaran</h2>
+
+          <div class="form-group">
+
+            <textarea
+              id="paymentNote"
+              rows="8"
+            >Silakan transfer sesuai nominal pesanan. Setelah melakukan pembayaran, kirim bukti pembayaran melalui chat.</textarea>
+
+          </div>
+
+          <button
+            class="btn btn-purple"
+            onclick="savePayment()"
+          >
+            SIMPAN PETUNJUK
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================
+         CHAT
+    ====================== -->
+
+    <section
+      id="page-chat"
+      class="page"
+    >
+
+      <div class="page-header">
+
+        <h1>💬 Live Chat Member</h1>
+
+        <p>
+          Lihat pesan member dan balas dari panel admin.
+        </p>
+
+      </div>
+
+
+      <div class="card chat-box">
+
+        <div
+          id="chatList"
+          class="chat-list"
+        >
+          <div class="empty">
+            Belum ada pesan.
+          </div>
+        </div>
+
+
+        <div class="chat-input">
+
+          <input
+            id="chatInput"
+            placeholder="Tulis balasan..."
+          >
+
+          <button
+            class="btn btn-purple"
+            onclick="sendAdminMessage()"
+          >
+            KIRIM
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================
+         SETTINGS
+    ====================== -->
+
+    <section
+      id="page-settings"
+      class="page"
+    >
+
+      <div class="page-header">
+
+        <h1>⚙️ Pengaturan</h1>
+
+        <p>
+          Informasi akun admin dan sistem.
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Akun Admin</h2>
+
+        <p style="margin-bottom:10px">
+          Email:
+          <strong id="adminEmail">
+            -
+          </strong>
+        </p>
+
+        <p>
+          Role:
+          <strong style="color:#4ade80">
+            ADMIN
+          </strong>
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Supabase</h2>
+
+        <p id="supabaseStatus">
+          Memeriksa...
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Keluar</h2>
+
         <button
-            id="logoutBtn"
-            class="logoutBtn"
-            type="button">
-
-            Logout
-
+          class="btn btn-red"
+          onclick="logout()"
+        >
+          LOGOUT ADMIN
         </button>
 
-    </header>
+      </div>
 
+    </section>
 
-    <!-- MAIN -->
-
-    <main class="container">
-
-
-        <!-- HERO -->
-
-        <section class="hero">
-
-            <h1>
-                Selamat Datang di
-                <span>YouTube Service</span>
-            </h1>
-
-            <p>
-                Pilih layanan monetisasi YouTube yang Anda butuhkan.
-                Silakan lakukan pemesanan dan hubungi admin melalui
-                live chat apabila membutuhkan bantuan.
-            </p>
-
-            <div
-                id="memberEmail"
-                class="userEmail">
-                -
-            </div>
-
-        </section>
-
-
-        <!-- =================================================
-             PRICE LIST
-        ================================================== -->
-
-        <section class="section">
-
-            <div class="sectionTitle">
-                🔥 List Harga Monetisasi
-            </div>
-
-            <div
-                id="priceGrid"
-                class="priceGrid">
-
-                <div class="priceCard featured">
-
-                    <div class="priceIcon">💰</div>
-
-                    <h3>Monetisasi YouTube</h3>
-
-                    <div class="price">
-                        Rp 500.000
-                    </div>
-
-                    <div class="priceDesc">
-                        Layanan monetisasi channel YouTube.
-                    </div>
-
-                    <button
-                        class="orderBtn"
-                        onclick="selectService('Monetisasi YouTube')">
-
-                        Pesan
-
-                    </button>
-
-                </div>
-
-
-                <div class="priceCard">
-
-                    <div class="priceIcon">🚀</div>
-
-                    <h3>Monetisasi Premium</h3>
-
-                    <div class="price">
-                        Rp 750.000
-                    </div>
-
-                    <div class="priceDesc">
-                        Paket layanan premium.
-                    </div>
-
-                    <button
-                        class="orderBtn"
-                        onclick="selectService('Monetisasi Premium')">
-
-                        Pesan
-
-                    </button>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =================================================
-             PAYMENT
-        ================================================== -->
-
-        <section class="section">
-
-            <div class="sectionTitle">
-                💳 Metode Pembayaran
-            </div>
-
-            <div class="paymentCard">
-
-                <div class="paymentRow">
-
-                    <span>Bank</span>
-
-                    <strong id="bankName">
-                        Memuat...
-                    </strong>
-
-                </div>
-
-
-                <div class="paymentRow">
-
-                    <span>Nama Rekening</span>
-
-                    <strong id="accountName">
-                        Memuat...
-                    </strong>
-
-                </div>
-
-
-                <div class="paymentRow">
-
-                    <span>Nomor Rekening</span>
-
-                    <strong id="accountNumber">
-                        Memuat...
-                    </strong>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =================================================
-             ORDER
-        ================================================== -->
-
-        <section class="section">
-
-            <div class="sectionTitle">
-                📦 Buat Pesanan
-            </div>
-
-            <div class="orderCard">
-
-                <select id="serviceSelect">
-
-                    <option value="">
-                        Pilih layanan
-                    </option>
-
-                    <option value="Monetisasi YouTube">
-                        Monetisasi YouTube
-                    </option>
-
-                    <option value="Monetisasi Premium">
-                        Monetisasi Premium
-                    </option>
-
-                </select>
-
-
-                <input
-                    id="channelUrl"
-                    type="url"
-                    placeholder="URL Channel YouTube">
-
-
-                <button
-                    id="orderBtn"
-                    class="primaryBtn"
-                    type="button">
-
-                    BUAT PESANAN
-
-                </button>
-
-            </div>
-
-        </section>
-
-
-        <!-- =================================================
-             CHAT
-        ================================================== -->
-
-        <section class="section">
-
-            <div class="sectionTitle">
-                💬 Live Chat Admin
-            </div>
-
-
-            <div class="chatCard">
-
-
-                <div class="chatHeader">
-
-                    Chat dengan Admin
-
-                    <div class="chatStatus">
-                        ● Online / cek pesan otomatis
-                    </div>
-
-                </div>
-
-
-                <div
-                    id="chatMessages"
-                    class="chatMessages">
-
-                    <div class="emptyChat">
-                        Belum ada pesan.<br>
-                        Silakan kirim pesan kepada admin.
-                    </div>
-
-                </div>
-
-
-                <form
-                    id="chatForm"
-                    class="chatForm">
-
-                    <textarea
-                        id="chatInput"
-                        placeholder="Tulis pesan..."
-                        maxlength="1000"
-                        required></textarea>
-
-
-                    <button
-                        id="chatSend"
-                        class="chatSend"
-                        type="submit">
-
-                        Kirim
-
-                    </button>
-
-                </form>
-
-            </div>
-
-        </section>
-
-
-    </main>
+  </main>
 
 </div>
 
 
-<div id="toast"></div>
-
-
 <script>
-/* =========================================================
+
+/* =====================================================
    SUPABASE CONFIG
-   GANTI 2 BAGIAN INI SAJA
-========================================================= */
+   =====================================================
 
-const SUPABASE_URL =
-    "https://qnvptfefmbxiaynuhfcx.supabase.co";
+   GANTI 2 BARIS INI DENGAN DATA PROJECT SUPABASE ANDA.
 
-const SUPABASE_ANON_KEY =
-    "sb_publishable_67asK3gfVhUIpNeEs2uOPQ_2kF4AMQf";
+   JANGAN menggunakan service_role key.
+   Gunakan anon/public key.
+===================================================== */
 
+const SUPABASE_URL = "https://qnvptfefmbxiaynuhfcx.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_67asK3gfVhUIpNeEs2uOPQ_2kF4AMQf";
 
-/* =========================================================
-   SUPABASE CLIENT
-========================================================= */
 
 let supabaseClient = null;
-
 let currentUser = null;
-let currentProfile = null;
-
-let chatTimer = null;
+let currentPage = "dashboard";
 
 
-/* =========================================================
+/* =====================================================
    ELEMENT
-========================================================= */
+===================================================== */
 
-const loadingScreen =
-    document.getElementById("loadingScreen");
+const loginPage =
+  document.getElementById("loginPage");
 
-const loadingText =
-    document.getElementById("loadingText");
+const adminApp =
+  document.getElementById("adminApp");
 
-const authScreen =
-    document.getElementById("authScreen");
+const loginForm =
+  document.getElementById("loginForm");
 
-const memberApp =
-    document.getElementById("memberApp");
-
-const authMessage =
-    document.getElementById("authMessage");
+const loginMessage =
+  document.getElementById("loginMessage");
 
 
-/* =========================================================
-   UTILITY
-========================================================= */
-
-function showToast(message){
-
-    const toast =
-        document.getElementById("toast");
-
-    toast.textContent = message;
-
-    toast.style.display = "block";
-
-    clearTimeout(window.toastTimer);
-
-    window.toastTimer =
-        setTimeout(() => {
-            toast.style.display = "none";
-        }, 3000);
-}
-
-
-function showAuthMessage(message,type="error"){
-
-    authMessage.textContent = message;
-
-    authMessage.className =
-        "messageBox " + type;
-}
-
-
-function hideLoading(){
-
-    loadingScreen.classList.add("hidden");
-
-}
-
-
-function showAuth(){
-
-    hideLoading();
-
-    memberApp.classList.add("hidden");
-
-    authScreen.classList.remove("hidden");
-
-}
-
-
-function showMember(){
-
-    hideLoading();
-
-    authScreen.classList.add("hidden");
-
-    memberApp.classList.remove("hidden");
-
-}
-
-
-/* =========================================================
-   SUPABASE CONFIG CHECK
-========================================================= */
-
-function configIsValid(){
-
-    if(!SUPABASE_URL ||
-       !SUPABASE_ANON_KEY){
-
-        return false;
-    }
-
-    if(SUPABASE_URL.includes("MASUKKAN_")){
-
-        return false;
-    }
-
-    if(SUPABASE_ANON_KEY.includes("MASUKKAN_")){
-
-        return false;
-    }
-
-    return true;
-}
-
-
-/* =========================================================
+/* =====================================================
    INIT
-========================================================= */
+===================================================== */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  init
+);
+
 
 async function init(){
 
-    try{
+  if(
+    !SUPABASE_URL ||
+    !SUPABASE_ANON_KEY ||
+    SUPABASE_URL.includes("MASUKKAN_") ||
+    SUPABASE_ANON_KEY.includes("MASUKKAN_")
+  ){
 
-        loadingText.textContent =
-            "Memeriksa konfigurasi...";
+    showLoginMessage(
+      "Supabase URL / ANON KEY belum diisi.",
+      "error"
+    );
 
-
-        if(!configIsValid()){
-
-            hideLoading();
-
-            showAuth();
-
-            showAuthMessage(
-                "SUPABASE_URL atau SUPABASE_ANON_KEY belum diisi.",
-                "error"
-            );
-
-            return;
-        }
+    return;
+  }
 
 
-        loadingText.textContent =
-            "Menghubungkan ke Supabase...";
+  try{
 
-
-        supabaseClient =
-            window.supabase.createClient(
-                SUPABASE_URL,
-                SUPABASE_ANON_KEY,
-                {
-                    auth:{
-                        persistSession:true,
-                        autoRefreshToken:true,
-                        detectSessionInUrl:true
-                    }
-                }
-            );
-
-
-        /*
-         * Ambil session yang sedang aktif.
-         */
-
-        const {
-            data,
-            error
-        } =
-        await supabaseClient.auth.getSession();
-
-
-        if(error){
-
-            console.error(error);
-
-            showAuth();
-
-            showAuthMessage(
-                "Gagal membaca session Supabase.",
-                "error"
-            );
-
-            return;
-        }
-
-
-        currentUser =
-            data.session
-            ? data.session.user
-            : null;
-
-
-        if(!currentUser){
-
-            showAuth();
-
-            return;
-        }
-
-
-        loadingText.textContent =
-            "Memeriksa akun...";
-
-
-        await loadCurrentProfile();
-
-
-    }catch(error){
-
-        console.error(
-            "INIT ERROR:",
-            error
-        );
-
-        showAuth();
-
-        showAuthMessage(
-            "Sistem gagal dimuat: " +
-            error.message,
-            "error"
-        );
-    }
-}
-
-
-/* =========================================================
-   LOAD PROFILE
-========================================================= */
-
-async function loadCurrentProfile(){
-
-    if(!currentUser){
-
-        showAuth();
-
-        return;
-    }
+    supabaseClient =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+      );
 
 
     const {
-        data,
-        error
+      data,
+      error
     } =
-    await supabaseClient
-        .from("profiles")
-        .select(
-            "id,email,full_name,role"
-        )
-        .eq(
-            "id",
-            currentUser.id
-        )
-        .maybeSingle();
+      await supabaseClient.auth.getSession();
 
 
     if(error){
-
-        console.error(
-            "PROFILE ERROR:",
-            error
-        );
-
-        showAuth();
-
-        showAuthMessage(
-            "Profil akun tidak bisa dibaca. Pastikan tabel profiles dan policy Supabase sudah benar.",
-            "error"
-        );
-
-        return;
+      throw error;
     }
 
 
-    if(!data){
+    if(data.session){
 
-        /*
-         * Jika profile belum dibuat oleh trigger,
-         * buat profile member.
-         */
-
-        const {
-            data: createdProfile,
-            error: createError
-        } =
-        await supabaseClient
-            .from("profiles")
-            .insert({
-                id:currentUser.id,
-                email:currentUser.email,
-                full_name:
-                    currentUser.user_metadata?.full_name
-                    || "Member",
-                role:"member"
-            })
-            .select()
-            .single();
-
-
-        if(createError){
-
-            console.error(
-                "CREATE PROFILE ERROR:",
-                createError
-            );
-
-            showAuth();
-
-            showAuthMessage(
-                "Akun berhasil login tetapi profil belum tersedia. Hubungi admin.",
-                "error"
-            );
-
-            return;
-        }
-
-
-        currentProfile =
-            createdProfile;
+      await checkAdmin(
+        data.session.user
+      );
 
     }else{
 
-        currentProfile =
-            data;
+      showLogin();
+
+    }
+
+  }catch(error){
+
+    console.error(error);
+
+    showLoginMessage(
+      "Gagal terhubung ke Supabase: " +
+      error.message,
+      "error"
+    );
+
+  }
+}
+
+
+/* =====================================================
+   LOGIN
+===================================================== */
+
+loginForm.addEventListener(
+  "submit",
+  async function(e){
+
+    e.preventDefault();
+
+    if(!supabaseClient){
+
+      showLoginMessage(
+        "Supabase belum terhubung.",
+        "error"
+      );
+
+      return;
     }
 
 
-    /*
-     * PEMISAHAN ADMIN DAN MEMBER.
-     */
+    const email =
+      document.getElementById(
+        "loginEmail"
+      ).value.trim();
 
-    if(
-        String(currentProfile.role)
-            .toLowerCase()
-        === "admin"
-    ){
 
-        /*
-         * Admin jangan menggunakan dashboard member.
-         */
+    const password =
+      document.getElementById(
+        "loginPassword"
+      ).value;
 
-        window.location.href =
-            "admin.html";
 
-        return;
+    const button =
+      document.getElementById(
+        "loginButton"
+      );
+
+
+    button.disabled = true;
+    button.textContent = "MEMPROSES...";
+
+
+    try{
+
+      const {
+        data,
+        error
+      } =
+      await supabaseClient.auth.signInWithPassword({
+        email,
+        password
+      });
+
+
+      if(error){
+        throw error;
+      }
+
+
+      await checkAdmin(
+        data.user
+      );
+
+
+    }catch(error){
+
+      console.error(error);
+
+      showLoginMessage(
+        "Login gagal: " +
+        error.message,
+        "error"
+      );
+
+      button.disabled = false;
+      button.textContent = "LOGIN ADMIN";
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   CHECK ADMIN
+===================================================== */
+
+async function checkAdmin(user){
+
+  try{
+
+    const {
+      data:profile,
+      error
+    } =
+    await supabaseClient
+      .from("profiles")
+      .select("*")
+      .eq("id", user.id)
+      .maybeSingle();
+
+
+    if(error){
+      throw error;
     }
 
 
-    if(
-        String(currentProfile.role)
-            .toLowerCase()
-        !== "member"
-    ){
+    if(!profile){
 
-        await supabaseClient.auth.signOut();
+      await supabaseClient.auth.signOut();
 
-        showAuth();
+      showLoginMessage(
+        "Profil admin tidak ditemukan.",
+        "error"
+      );
 
-        showAuthMessage(
-            "Role akun tidak valid.",
-            "error"
-        );
-
-        return;
+      return;
     }
 
 
-    /*
-     * BENAR-BENAR MEMBER
-     */
+    const role =
+      String(
+        profile.role || ""
+      ).toLowerCase();
+
+
+    if(role !== "admin"){
+
+      await supabaseClient.auth.signOut();
+
+      showLoginMessage(
+        "Akun ini bukan admin.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    currentUser = user;
+
+    openAdmin(profile);
+
+
+  }catch(error){
+
+    console.error(error);
+
+    showLoginMessage(
+      "Gagal memeriksa admin: " +
+      error.message,
+      "error"
+    );
+
+  }
+}
+
+
+/* =====================================================
+   OPEN ADMIN
+===================================================== */
+
+function openAdmin(profile){
+
+  loginPage.style.display =
+    "none";
+
+  adminApp.style.display =
+    "block";
+
+
+  document.getElementById(
+    "adminEmail"
+  ).textContent =
+    currentUser.email;
+
+
+  document.getElementById(
+    "systemStatus"
+  ).innerHTML =
+    '<span style="color:#4ade80">✓ Supabase berhasil terhubung.</span>';
+
+
+  document.getElementById(
+    "supabaseStatus"
+  ).innerHTML =
+    '<span style="color:#4ade80">✓ Terhubung</span>';
+
+
+  loadDashboard();
+
+}
+
+
+/* =====================================================
+   SHOW LOGIN
+===================================================== */
+
+function showLogin(){
+
+  loginPage.style.display =
+    "flex";
+
+  adminApp.style.display =
+    "none";
+
+}
+
+
+/* =====================================================
+   LOGIN MESSAGE
+===================================================== */
+
+function showLoginMessage(
+  text,
+  type
+){
+
+  loginMessage.textContent =
+    text;
+
+  loginMessage.className =
+    "message " + type;
+
+}
+
+
+/* =====================================================
+   MENU
+===================================================== */
+
+function showPage(page){
+
+  currentPage = page;
+
+
+  document.querySelectorAll(
+    ".page"
+  ).forEach(
+    el => el.classList.remove(
+      "active"
+    )
+  );
+
+
+  const selected =
+    document.getElementById(
+      "page-" + page
+    );
+
+
+  if(selected){
+    selected.classList.add(
+      "active"
+    );
+  }
+
+
+  document.querySelectorAll(
+    ".menu-btn"
+  ).forEach(
+    btn => {
+
+      btn.classList.toggle(
+        "active",
+        btn.dataset.page === page
+      );
+
+    }
+  );
+
+
+  document.getElementById(
+    "sidebar"
+  ).classList.remove(
+    "open"
+  );
+
+
+  if(page === "dashboard"){
+    loadDashboard();
+  }
+
+  if(page === "members"){
+    loadMembers();
+  }
+
+  if(page === "orders"){
+    loadOrders();
+  }
+
+  if(page === "chat"){
+    loadMessages();
+  }
+
+}
+
+
+/* =====================================================
+   MOBILE SIDEBAR
+===================================================== */
+
+function toggleSidebar(){
+
+  document
+    .getElementById("sidebar")
+    .classList.toggle("open");
+
+}
+
+
+/* =====================================================
+   DASHBOARD
+===================================================== */
+
+async function loadDashboard(){
+
+  try{
+
+    const members =
+      await safeCount("profiles");
+
+    const orders =
+      await safeCount("orders");
+
+    const messages =
+      await safeCount("messages");
+
 
     document.getElementById(
-        "memberEmail"
+      "statMembers"
     ).textContent =
-        currentProfile.email
-        || currentUser.email;
+      members;
 
 
-    showMember();
+    document.getElementById(
+      "statOrders"
+    ).textContent =
+      orders;
 
 
-    /*
-     * Muat semua data member.
-     */
+    document.getElementById(
+      "statMessages"
+    ).textContent =
+      messages;
 
-    await loadPaymentSettings();
 
-    await loadPrices();
+    const pending =
+      await getPendingOrders();
 
-    await loadChat();
 
+    document.getElementById(
+      "statPending"
+    ).textContent =
+      pending;
 
-    /*
-     * Polling chat setiap 3 detik.
-     * Tidak membutuhkan Supabase Realtime.
-     */
 
-    clearInterval(chatTimer);
+    await loadRecentOrders();
 
-    chatTimer =
-        setInterval(
-            loadChat,
-            3000
-        );
-}
 
+  }catch(error){
 
-/* =========================================================
-   LOGIN
-========================================================= */
-
-document
-.getElementById("loginForm")
-.addEventListener(
-    "submit",
-    async function(event){
-
-        event.preventDefault();
-
-
-        const email =
-            document
-            .getElementById("loginEmail")
-            .value
-            .trim();
-
-
-        const password =
-            document
-            .getElementById("loginPassword")
-            .value;
-
-
-        const button =
-            document
-            .getElementById("loginBtn");
-
-
-        button.disabled = true;
-
-        button.textContent =
-            "MEMERIKSA...";
-
-
-        showAuthMessage(
-            "",
-            "success"
-        );
-
-        authMessage.style.display =
-            "none";
-
-
-        try{
-
-            /*
-             * Login dengan akun yang dimasukkan.
-             * Tidak ada email admin yang ditanam di sini.
-             */
-
-            const {
-                data,
-                error
-            } =
-            await supabaseClient.auth
-                .signInWithPassword({
-                    email,
-                    password
-                });
-
-
-            if(error){
-
-                throw error;
-            }
-
-
-            currentUser =
-                data.user;
-
-
-            if(!currentUser){
-
-                throw new Error(
-                    "Session login tidak ditemukan."
-                );
-            }
-
-
-            await loadCurrentProfile();
-
-
-        }catch(error){
-
-            console.error(
-                "LOGIN ERROR:",
-                error
-            );
-
-            showAuthMessage(
-                error.message
-                || "Login gagal.",
-                "error"
-            );
-
-        }finally{
-
-            button.disabled = false;
-
-            button.textContent =
-                "LOGIN";
-        }
-
-    }
-);
-
-
-/* =========================================================
-   REGISTER
-========================================================= */
-
-document
-.getElementById("registerForm")
-.addEventListener(
-    "submit",
-    async function(event){
-
-        event.preventDefault();
-
-
-        const name =
-            document
-            .getElementById("registerName")
-            .value
-            .trim();
-
-
-        const email =
-            document
-            .getElementById("registerEmail")
-            .value
-            .trim();
-
-
-        const password =
-            document
-            .getElementById("registerPassword")
-            .value;
-
-
-        const button =
-            document
-            .getElementById("registerBtn");
-
-
-        if(password.length < 6){
-
-            showAuthMessage(
-                "Password minimal 6 karakter.",
-                "error"
-            );
-
-            return;
-        }
-
-
-        button.disabled = true;
-
-        button.textContent =
-            "MENDAFTARKAN...";
-
-
-        try{
-
-            const {
-                data,
-                error
-            } =
-            await supabaseClient.auth
-                .signUp({
-
-                    email,
-
-                    password,
-
-                    options:{
-                        data:{
-                            full_name:name
-                        }
-                    }
-
-                });
-
-
-            if(error){
-
-                throw error;
-            }
-
-
-            /*
-             * Jika Supabase meminta verifikasi email,
-             * session bisa null.
-             */
-
-            if(!data.session){
-
-                showAuthMessage(
-                    "Pendaftaran berhasil. Silakan cek email untuk verifikasi akun.",
-                    "success"
-                );
-
-                return;
-            }
-
-
-            currentUser =
-                data.user;
-
-
-            /*
-             * Buat profile sebagai MEMBER.
-             */
-
-            const {
-                error:profileError
-            } =
-            await supabaseClient
-                .from("profiles")
-                .upsert({
-
-                    id:currentUser.id,
-
-                    email:currentUser.email,
-
-                    full_name:name,
-
-                    role:"member"
-
-                });
-
-
-            if(profileError){
-
-                console.error(
-                    profileError
-                );
-
-                throw new Error(
-                    "Akun berhasil dibuat tetapi profil gagal dibuat."
-                );
-            }
-
-
-            showAuthMessage(
-                "Pendaftaran berhasil. Membuka dashboard...",
-                "success"
-            );
-
-
-            await loadCurrentProfile();
-
-
-        }catch(error){
-
-            console.error(
-                "REGISTER ERROR:",
-                error
-            );
-
-            showAuthMessage(
-                error.message
-                || "Pendaftaran gagal.",
-                "error"
-            );
-
-        }finally{
-
-            button.disabled = false;
-
-            button.textContent =
-                "DAFTAR MEMBER";
-        }
-
-    }
-);
-
-
-/* =========================================================
-   TAB LOGIN
-========================================================= */
-
-document
-.getElementById("loginTab")
-.addEventListener(
-    "click",
-    function(){
-
-        document
-        .getElementById("loginTab")
-        .classList.add("active");
-
-        document
-        .getElementById("registerTab")
-        .classList.remove("active");
-
-
-        document
-        .getElementById("loginForm")
-        .classList.remove("hidden");
-
-        document
-        .getElementById("registerForm")
-        .classList.add("hidden");
-
-
-        authMessage.style.display =
-            "none";
-    }
-);
-
-
-/* =========================================================
-   TAB REGISTER
-========================================================= */
-
-document
-.getElementById("registerTab")
-.addEventListener(
-    "click",
-    function(){
-
-        document
-        .getElementById("registerTab")
-        .classList.add("active");
-
-        document
-        .getElementById("loginTab")
-        .classList.remove("active");
-
-
-        document
-        .getElementById("registerForm")
-        .classList.remove("hidden");
-
-        document
-        .getElementById("loginForm")
-        .classList.add("hidden");
-
-
-        authMessage.style.display =
-            "none";
-    }
-);
-
-
-/* =========================================================
-   LOGOUT
-========================================================= */
-
-document
-.getElementById("logoutBtn")
-.addEventListener(
-    "click",
-    async function(){
-
-        try{
-
-            clearInterval(chatTimer);
-
-
-            await supabaseClient
-                .auth
-                .signOut();
-
-
-            currentUser = null;
-
-            currentProfile = null;
-
-
-            memberApp
-                .classList
-                .add("hidden");
-
-
-            authScreen
-                .classList
-                .remove("hidden");
-
-
-            document
-            .getElementById("loginPassword")
-            .value = "";
-
-
-            showToast(
-                "Anda berhasil logout."
-            );
-
-        }catch(error){
-
-            console.error(
-                error
-            );
-
-            showToast(
-                "Logout gagal."
-            );
-        }
-    }
-);
-
-
-/* =========================================================
-   PAYMENT
-========================================================= */
-
-async function loadPaymentSettings(){
-
-    try{
-
-        const {
-            data,
-            error
-        } =
-        await supabaseClient
-            .from("payment_settings")
-            .select(
-                "bank_name,account_name,account_number"
-            )
-            .order(
-                "id",
-                {
-                    ascending:false
-                }
-            )
-            .limit(1)
-            .maybeSingle();
-
-
-        if(error){
-
-            console.error(
-                "PAYMENT ERROR:",
-                error
-            );
-
-            document.getElementById(
-                "bankName"
-            ).textContent =
-                "Belum tersedia";
-
-            document.getElementById(
-                "accountName"
-            ).textContent =
-                "Belum tersedia";
-
-            document.getElementById(
-                "accountNumber"
-            ).textContent =
-                "Belum tersedia";
-
-            return;
-        }
-
-
-        if(!data){
-
-            document.getElementById(
-                "bankName"
-            ).textContent =
-                "Belum diatur";
-
-            document.getElementById(
-                "accountName"
-            ).textContent =
-                "Belum diatur";
-
-            document.getElementById(
-                "accountNumber"
-            ).textContent =
-                "Belum diatur";
-
-            return;
-        }
-
-
-        document.getElementById(
-            "bankName"
-        ).textContent =
-            data.bank_name
-            || "-";
-
-
-        document.getElementById(
-            "accountName"
-        ).textContent =
-            data.account_name
-            || "-";
-
-
-        document.getElementById(
-            "accountNumber"
-        ).textContent =
-            data.account_number
-            || "-";
-
-
-    }catch(error){
-
-        console.error(
-            error
-        );
-    }
-}
-
-
-/* =========================================================
-   PRICE LIST
-========================================================= */
-
-async function loadPrices(){
-
-    /*
-     * Kita coba membaca tabel services.
-     *
-     * Kalau tabel belum ada / error,
-     * harga default tetap ditampilkan.
-     */
-
-    try{
-
-        const {
-            data,
-            error
-        } =
-        await supabaseClient
-            .from("services")
-            .select(
-                "id,name,price,description,active"
-            )
-            .eq(
-                "active",
-                true
-            )
-            .order(
-                "id",
-                {
-                    ascending:true
-                }
-            );
-
-
-        if(error){
-
-            console.log(
-                "Tabel services belum tersedia. Menggunakan harga default."
-            );
-
-            return;
-        }
-
-
-        if(!data || data.length === 0){
-
-            return;
-        }
-
-
-        const grid =
-            document.getElementById(
-                "priceGrid"
-            );
-
-
-        grid.innerHTML = "";
-
-
-        data.forEach(
-            (service,index) => {
-
-                const card =
-                    document.createElement(
-                        "div"
-                    );
-
-                card.className =
-                    "priceCard" +
-                    (
-                        index === 0
-                        ? " featured"
-                        : ""
-                    );
-
-
-                const price =
-                    Number(
-                        service.price
-                    );
-
-
-                card.innerHTML = `
-
-                    <div class="priceIcon">
-                        ${index === 0 ? "💰" : "🚀"}
-                    </div>
-
-                    <h3>
-                        ${escapeHtml(service.name)}
-                    </h3>
-
-                    <div class="price">
-                        ${formatRupiah(price)}
-                    </div>
-
-                    <div class="priceDesc">
-                        ${escapeHtml(service.description || "Layanan YouTube.")}
-                    </div>
-
-                    <button
-                        class="orderBtn"
-                        type="button"
-                        onclick="selectService('${escapeJs(service.name)}')">
-
-                        Pesan
-
-                    </button>
-                `;
-
-
-                grid.appendChild(card);
-
-            }
-        );
-
-
-        /*
-         * Isi dropdown order.
-         */
-
-        const select =
-            document.getElementById(
-                "serviceSelect"
-            );
-
-
-        select.innerHTML =
-            '<option value="">Pilih layanan</option>';
-
-
-        data.forEach(
-            service => {
-
-                const option =
-                    document.createElement(
-                        "option"
-                    );
-
-                option.value =
-                    service.name;
-
-                option.textContent =
-                    service.name;
-
-                select.appendChild(
-                    option
-                );
-            }
-        );
-
-
-    }catch(error){
-
-        console.error(
-            error
-        );
-    }
-}
-
-
-/* =========================================================
-   FORMAT RUPIAH
-========================================================= */
-
-function formatRupiah(number){
-
-    if(
-        isNaN(number)
-    ){
-
-        return "Rp 0";
-    }
-
-
-    return new Intl.NumberFormat(
-        "id-ID",
-        {
-            style:"currency",
-            currency:"IDR",
-            maximumFractionDigits:0
-        }
-    ).format(number);
-}
-
-
-/* =========================================================
-   SELECT SERVICE
-========================================================= */
-
-function selectService(name){
-
-    const select =
-        document.getElementById(
-            "serviceSelect"
-        );
-
-    select.value =
-        name;
-
-
-    document
-    .getElementById("channelUrl")
-    .scrollIntoView({
-        behavior:"smooth",
-        block:"center"
-    });
-
-
-    showToast(
-        "Layanan dipilih: " + name
+    console.error(
+      "Dashboard error:",
+      error
     );
+
+  }
+
 }
 
 
-/* =========================================================
-   ORDER
-========================================================= */
+/* =====================================================
+   SAFE COUNT
+===================================================== */
 
-document
-.getElementById("orderBtn")
-.addEventListener(
-    "click",
-    async function(){
+async function safeCount(table){
 
-        const service =
-            document
-            .getElementById(
-                "serviceSelect"
-            )
-            .value;
+  try{
 
-
-        const channelUrl =
-            document
-            .getElementById(
-                "channelUrl"
-            )
-            .value
-            .trim();
+    const {
+      count,
+      error
+    } =
+    await supabaseClient
+      .from(table)
+      .select("*",{
+        count:"exact",
+        head:true
+      });
 
 
-        if(!service){
+    if(error){
+      console.warn(
+        table,
+        error.message
+      );
 
-            showToast(
-                "Pilih layanan terlebih dahulu."
-            );
-
-            return;
-        }
-
-
-        if(!channelUrl){
-
-            showToast(
-                "Masukkan URL channel YouTube."
-            );
-
-            return;
-        }
-
-
-        const button =
-            document.getElementById(
-                "orderBtn"
-            );
-
-
-        button.disabled = true;
-
-        button.textContent =
-            "MEMPROSES...";
-
-
-        try{
-
-            /*
-             * Jika tabel orders tersedia,
-             * simpan pesanan.
-             */
-
-            const {
-                error
-            } =
-            await supabaseClient
-                .from("orders")
-                .insert({
-
-                    user_id:
-                        currentUser.id,
-
-                    service_name:
-                        service,
-
-                    channel_url:
-                        channelUrl,
-
-                    status:
-                        "pending"
-
-                });
-
-
-            if(error){
-
-                console.error(
-                    "ORDER ERROR:",
-                    error
-                );
-
-                throw new Error(
-                    "Pesanan gagal dibuat. Pastikan tabel orders sudah tersedia."
-                );
-            }
-
-
-            showToast(
-                "Pesanan berhasil dibuat."
-            );
-
-
-            document
-            .getElementById(
-                "channelUrl"
-            )
-            .value = "";
-
-
-        }catch(error){
-
-            showToast(
-                error.message
-            );
-
-        }finally{
-
-            button.disabled = false;
-
-            button.textContent =
-                "BUAT PESANAN";
-        }
-
-    }
-);
-
-
-/* =========================================================
-   CHAT LOAD
-========================================================= */
-
-async function loadChat(){
-
-    if(!currentUser){
-
-        return;
+      return 0;
     }
 
 
-    try{
+    return count || 0;
 
-        const {
-            data,
-            error
-        } =
-        await supabaseClient
-            .from("messages")
-            .select(
-                "id,user_id,sender_type,message,created_at"
-            )
-            .eq(
-                "user_id",
-                currentUser.id
-            )
-            .order(
-                "created_at",
-                {
-                    ascending:true
-                }
-            );
+  }catch(e){
 
+    return 0;
 
-        if(error){
+  }
 
-            console.error(
-                "CHAT LOAD ERROR:",
-                error
-            );
-
-            return;
-        }
-
-
-        renderMessages(
-            data || []
-        );
-
-
-    }catch(error){
-
-        console.error(
-            error
-        );
-    }
 }
 
 
-/* =========================================================
-   RENDER CHAT
-========================================================= */
+/* =====================================================
+   PENDING
+===================================================== */
 
-function renderMessages(messages){
+async function getPendingOrders(){
 
-    const box =
-        document.getElementById(
-            "chatMessages"
-        );
+  try{
+
+    const {
+      count,
+      error
+    } =
+    await supabaseClient
+      .from("orders")
+      .select("*",{
+        count:"exact",
+        head:true
+      })
+      .eq("status","pending");
 
 
-    if(!messages.length){
+    if(error){
+      return 0;
+    }
 
-        box.innerHTML = `
 
-            <div class="emptyChat">
+    return count || 0;
 
-                Belum ada pesan.<br>
+  }catch(e){
 
-                Silakan kirim pesan kepada admin.
+    return 0;
+
+  }
+
+}
+
+
+/* =====================================================
+   MEMBERS
+===================================================== */
+
+async function loadMembers(){
+
+  const tbody =
+    document.getElementById(
+      "membersTable"
+    );
+
+
+  tbody.innerHTML =
+    '<tr><td colspan="3" class="empty">Memuat...</td></tr>';
+
+
+  try{
+
+    const {
+      data,
+      error
+    } =
+    await supabaseClient
+      .from("profiles")
+      .select("*")
+      .order("id",{
+        ascending:false
+      })
+      .limit(100);
+
+
+    if(error){
+      throw error;
+    }
+
+
+    if(!data || data.length === 0){
+
+      tbody.innerHTML =
+        '<tr><td colspan="3" class="empty">Belum ada member.</td></tr>';
+
+      return;
+    }
+
+
+    tbody.innerHTML =
+      data.map(
+        row => {
+
+          const email =
+            row.email ||
+            "-";
+
+          const role =
+            row.role ||
+            "member";
+
+          const id =
+            row.id ||
+            "-";
+
+
+          return `
+            <tr>
+              <td>${escapeHtml(email)}</td>
+
+              <td>
+                <span class="badge ${
+                  role.toLowerCase() === "admin"
+                  ? "green"
+                  : "blue"
+                }">
+                  ${escapeHtml(role)}
+                </span>
+              </td>
+
+              <td>
+                <small>
+                  ${escapeHtml(String(id))}
+                </small>
+              </td>
+            </tr>
+          `;
+
+        }
+      ).join("");
+
+
+  }catch(error){
+
+    console.error(error);
+
+    tbody.innerHTML =
+      `<tr>
+        <td colspan="3" class="empty">
+          Gagal memuat member.<br>
+          ${escapeHtml(error.message)}
+        </td>
+      </tr>`;
+
+  }
+
+}
+
+
+/* =====================================================
+   ORDERS
+===================================================== */
+
+async function loadOrders(){
+
+  const tbody =
+    document.getElementById(
+      "ordersTable"
+    );
+
+
+  tbody.innerHTML =
+    '<tr><td colspan="6" class="empty">Memuat pesanan...</td></tr>';
+
+
+  try{
+
+    const {
+      data,
+      error
+    } =
+    await supabaseClient
+      .from("orders")
+      .select("*")
+      .order("created_at",{
+        ascending:false
+      })
+      .limit(100);
+
+
+    if(error){
+      throw error;
+    }
+
+
+    if(!data || data.length === 0){
+
+      tbody.innerHTML =
+        '<tr><td colspan="6" class="empty">Belum ada pesanan.</td></tr>';
+
+      return;
+    }
+
+
+    tbody.innerHTML =
+      data.map(
+        row => {
+
+          const id =
+            row.id || "-";
+
+          const user =
+            row.email ||
+            row.user_email ||
+            row.user_id ||
+            "-";
+
+          const packageName =
+            row.package_name ||
+            row.package ||
+            row.service ||
+            row.product ||
+            "-";
+
+          const amount =
+            row.amount ??
+            row.price ??
+            row.total ??
+            0;
+
+          const status =
+            row.status ||
+            "pending";
+
+          const date =
+            row.created_at ||
+            row.createdAt ||
+            "-";
+
+
+          return `
+            <tr>
+
+              <td>
+                <small>
+                  ${escapeHtml(String(id))}
+                </small>
+              </td>
+
+              <td>
+                ${escapeHtml(String(user))}
+              </td>
+
+              <td>
+                ${escapeHtml(String(packageName))}
+              </td>
+
+              <td>
+                ${formatRupiah(amount)}
+              </td>
+
+              <td>
+                ${statusBadge(status)}
+              </td>
+
+              <td>
+                ${formatDate(date)}
+              </td>
+
+            </tr>
+          `;
+
+        }
+      ).join("");
+
+
+  }catch(error){
+
+    console.error(error);
+
+    tbody.innerHTML =
+      `<tr>
+        <td colspan="6" class="empty">
+          Gagal memuat pesanan.<br>
+          ${escapeHtml(error.message)}
+        </td>
+      </tr>`;
+
+  }
+
+}
+
+
+/* =====================================================
+   RECENT ORDERS
+===================================================== */
+
+async function loadRecentOrders(){
+
+  const box =
+    document.getElementById(
+      "recentOrders"
+    );
+
+
+  try{
+
+    const {
+      data,
+      error
+    } =
+    await supabaseClient
+      .from("orders")
+      .select("*")
+      .order("created_at",{
+        ascending:false
+      })
+      .limit(5);
+
+
+    if(error){
+      throw error;
+    }
+
+
+    if(!data || data.length === 0){
+
+      box.innerHTML =
+        '<div class="empty">Belum ada pesanan.</div>';
+
+      return;
+    }
+
+
+    box.innerHTML = `
+      <table>
+
+        <thead>
+          <tr>
+            <th>Member</th>
+            <th>Paket</th>
+            <th>Harga</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          ${
+            data.map(row => {
+
+              const user =
+                row.email ||
+                row.user_email ||
+                row.user_id ||
+                "-";
+
+              const pack =
+                row.package_name ||
+                row.package ||
+                row.service ||
+                "-";
+
+              const amount =
+                row.amount ??
+                row.price ??
+                row.total ??
+                0;
+
+              const status =
+                row.status ||
+                "pending";
+
+
+              return `
+                <tr>
+
+                  <td>
+                    ${escapeHtml(String(user))}
+                  </td>
+
+                  <td>
+                    ${escapeHtml(String(pack))}
+                  </td>
+
+                  <td>
+                    ${formatRupiah(amount)}
+                  </td>
+
+                  <td>
+                    ${statusBadge(status)}
+                  </td>
+
+                </tr>
+              `;
+
+            }).join("")
+          }
+
+        </tbody>
+
+      </table>
+    `;
+
+
+  }catch(error){
+
+    box.innerHTML =
+      `<div class="empty">
+        Pesanan belum tersedia.
+      </div>`;
+
+  }
+
+}
+
+
+/* =====================================================
+   CHAT
+===================================================== */
+
+async function loadMessages(){
+
+  const box =
+    document.getElementById(
+      "chatList"
+    );
+
+
+  box.innerHTML =
+    '<div class="empty">Memuat pesan...</div>';
+
+
+  try{
+
+    const {
+      data,
+      error
+    } =
+    await supabaseClient
+      .from("messages")
+      .select("*")
+      .order("created_at",{
+        ascending:true
+      })
+      .limit(100);
+
+
+    if(error){
+      throw error;
+    }
+
+
+    if(!data || data.length === 0){
+
+      box.innerHTML =
+        '<div class="empty">Belum ada pesan member.</div>';
+
+      return;
+    }
+
+
+    box.innerHTML =
+      data.map(
+        row => {
+
+          const text =
+            row.message ||
+            row.content ||
+            row.text ||
+            "";
+
+          const sender =
+            row.sender ||
+            row.sender_type ||
+            row.role ||
+            "member";
+
+
+          const isAdmin =
+            String(sender)
+              .toLowerCase()
+              .includes("admin");
+
+
+          const email =
+            row.email ||
+            row.user_email ||
+            row.user_id ||
+            "Member";
+
+
+          return `
+            <div class="chat-item ${
+              isAdmin ? "admin" : ""
+            }">
+
+              <div class="chat-user">
+                ${escapeHtml(String(email))}
+              </div>
+
+              <div class="chat-text">
+                ${escapeHtml(String(text))}
+              </div>
 
             </div>
-
-        `;
-
-        return;
-    }
-
-
-    box.innerHTML = "";
-
-
-    messages.forEach(
-        msg => {
-
-            const div =
-                document.createElement(
-                    "div"
-                );
-
-
-            const sender =
-                String(
-                    msg.sender_type
-                    || "member"
-                ).toLowerCase();
-
-
-            div.className =
-                "msg " +
-                (
-                    sender === "admin"
-                    ? "admin"
-                    : "member"
-                );
-
-
-            const time =
-                msg.created_at
-                ? new Date(
-                    msg.created_at
-                  ).toLocaleString(
-                    "id-ID",
-                    {
-                        day:"2-digit",
-                        month:"2-digit",
-                        hour:"2-digit",
-                        minute:"2-digit"
-                    }
-                  )
-                : "";
-
-
-            div.innerHTML = `
-
-                ${escapeHtml(msg.message)}
-
-                <span class="msgTime">
-                    ${time}
-                </span>
-
-            `;
-
-
-            box.appendChild(
-                div
-            );
+          `;
 
         }
-    );
+      ).join("");
 
 
     box.scrollTop =
-        box.scrollHeight;
+      box.scrollHeight;
+
+
+  }catch(error){
+
+    console.error(error);
+
+    box.innerHTML =
+      `<div class="empty">
+        Tabel messages belum bisa dibaca.<br><br>
+        ${escapeHtml(error.message)}
+      </div>`;
+
+  }
+
 }
 
 
-/* =========================================================
-   SEND CHAT
-========================================================= */
+/* =====================================================
+   SEND ADMIN MESSAGE
+===================================================== */
 
-document
-.getElementById("chatForm")
-.addEventListener(
-    "submit",
-    async function(event){
+async function sendAdminMessage(){
 
-        event.preventDefault();
-
-
-        if(!currentUser){
-
-            showToast(
-                "Session login tidak ditemukan."
-            );
-
-            return;
-        }
+  const input =
+    document.getElementById(
+      "chatInput"
+    );
 
 
-        const input =
-            document.getElementById(
-                "chatInput"
-            );
+  const message =
+    input.value.trim();
 
 
-        const button =
-            document.getElementById(
-                "chatSend"
-            );
+  if(!message){
+    return;
+  }
 
 
-        const message =
-            input.value.trim();
+  if(!currentUser){
+    alert("Admin belum login.");
+    return;
+  }
 
 
-        if(!message){
+  try{
 
-            return;
-        }
+    const {
+      error
+    } =
+    await supabaseClient
+      .from("messages")
+      .insert({
 
+        user_id: currentUser.id,
 
-        button.disabled = true;
+        message: message,
 
-        button.textContent =
-            "...";
+        sender: "admin"
 
-
-        try{
-
-            const {
-                error
-            } =
-            await supabaseClient
-                .from("messages")
-                .insert({
-
-                    user_id:
-                        currentUser.id,
-
-                    sender_type:
-                        "member",
-
-                    message:
-                        message
-
-                });
+      });
 
 
-            if(error){
-
-                console.error(
-                    "CHAT SEND ERROR:",
-                    error
-                );
-
-                throw new Error(
-                    "Pesan gagal dikirim."
-                );
-            }
-
-
-            input.value = "";
-
-
-            await loadChat();
-
-
-        }catch(error){
-
-            showToast(
-                error.message
-            );
-
-        }finally{
-
-            button.disabled = false;
-
-            button.textContent =
-                "Kirim";
-        }
-
+    if(error){
+      throw error;
     }
-);
 
 
-/* =========================================================
-   ESCAPE HTML
-========================================================= */
+    input.value = "";
+
+    await loadMessages();
+
+
+  }catch(error){
+
+    console.error(error);
+
+    alert(
+      "Pesan gagal dikirim: " +
+      error.message
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   PAYMENT
+===================================================== */
+
+function savePayment(){
+
+  const data = {
+
+    bank:
+      document.getElementById(
+        "bankName"
+      ).value,
+
+    number:
+      document.getElementById(
+        "bankNumber"
+      ).value,
+
+    owner:
+      document.getElementById(
+        "bankOwner"
+      ).value,
+
+    note:
+      document.getElementById(
+        "paymentNote"
+      ).value
+
+  };
+
+
+  localStorage.setItem(
+    "youtube_payment",
+    JSON.stringify(data)
+  );
+
+
+  alert(
+    "Informasi pembayaran berhasil disimpan pada browser admin."
+  );
+
+}
+
+
+function loadPayment(){
+
+  try{
+
+    const saved =
+      localStorage.getItem(
+        "youtube_payment"
+      );
+
+
+    if(!saved){
+      return;
+    }
+
+
+    const data =
+      JSON.parse(saved);
+
+
+    if(data.bank)
+      document.getElementById(
+        "bankName"
+      ).value = data.bank;
+
+
+    if(data.number)
+      document.getElementById(
+        "bankNumber"
+      ).value = data.number;
+
+
+    if(data.owner)
+      document.getElementById(
+        "bankOwner"
+      ).value = data.owner;
+
+
+    if(data.note)
+      document.getElementById(
+        "paymentNote"
+      ).value = data.note;
+
+  }catch(e){
+
+    console.error(e);
+
+  }
+
+}
+
+
+/* =====================================================
+   PRICE
+===================================================== */
+
+function editPrice(name){
+
+  const newPrice =
+    prompt(
+      "Masukkan harga baru untuk " +
+      name
+    );
+
+
+  if(newPrice === null){
+    return;
+  }
+
+
+  if(!newPrice.trim()){
+    return;
+  }
+
+
+  alert(
+    "Harga " +
+    name +
+    " diubah menjadi Rp " +
+    newPrice
+  );
+
+}
+
+
+/* =====================================================
+   REFRESH
+===================================================== */
+
+function refreshCurrentPage(){
+
+  if(currentPage === "dashboard")
+    loadDashboard();
+
+  if(currentPage === "members")
+    loadMembers();
+
+  if(currentPage === "orders")
+    loadOrders();
+
+  if(currentPage === "chat")
+    loadMessages();
+
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+async function logout(){
+
+  if(!supabaseClient){
+    return;
+  }
+
+
+  try{
+
+    await supabaseClient.auth.signOut();
+
+  }catch(error){
+
+    console.error(error);
+
+  }
+
+
+  currentUser = null;
+
+  adminApp.style.display =
+    "none";
+
+  loginPage.style.display =
+    "flex";
+
+
+  document.getElementById(
+    "loginPassword"
+  ).value = "";
+
+
+  showLoginMessage(
+    "Anda sudah logout.",
+    "success"
+  );
+
+}
+
+
+/* =====================================================
+   HELPERS
+===================================================== */
 
 function escapeHtml(value){
 
-    return String(
-        value ?? ""
-    )
-    .replace(
-        /&/g,
-        "&amp;"
-    )
-    .replace(
-        /</g,
-        "&lt;"
-    )
-    .replace(
-        />/g,
-        "&gt;"
-    )
-    .replace(
-        /"/g,
-        "&quot;"
-    )
-    .replace(
-        /'/g,
-        "&#039;"
-    );
+  return String(value)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
 }
 
 
-function escapeJs(value){
+function formatRupiah(value){
 
-    return String(
-        value ?? ""
-    )
-    .replace(
-        /\\/g,
-        "\\\\"
-    )
-    .replace(
-        /'/g,
-        "\\'"
-    )
-    .replace(
-        /"/g,
-        "&quot;"
+  const number =
+    Number(value) || 0;
+
+
+  return "Rp " +
+    number.toLocaleString(
+      "id-ID"
     );
+
 }
 
 
-/* =========================================================
-   AUTH STATE CHANGE
-========================================================= */
+function formatDate(value){
 
-if(
-    window.supabase
-){
+  if(!value || value === "-"){
+    return "-";
+  }
 
-    /*
-     * Jangan melakukan redirect berulang-ulang.
-     * Session hanya diperiksa ketika status berubah.
-     */
 
-    setTimeout(() => {
+  try{
 
-        if(!supabaseClient){
-
-            return;
+    return new Date(value)
+      .toLocaleString(
+        "id-ID",
+        {
+          dateStyle:"short",
+          timeStyle:"short"
         }
+      );
 
+  }catch(e){
 
-        supabaseClient
-            .auth
-            .onAuthStateChange(
-                async (
-                    event,
-                    session
-                ) => {
+    return String(value);
 
-                    console.log(
-                        "AUTH EVENT:",
-                        event
-                    );
+  }
 
-
-                    if(
-                        event ===
-                        "SIGNED_OUT"
-                    ){
-
-                        currentUser =
-                            null;
-
-                        currentProfile =
-                            null;
-
-                        clearInterval(
-                            chatTimer
-                        );
-
-                        showAuth();
-
-                        return;
-                    }
-
-
-                    if(
-                        event ===
-                        "SIGNED_IN"
-                        &&
-                        session
-                    ){
-
-                        currentUser =
-                            session.user;
-
-                    }
-
-                }
-            );
-
-    },1000);
 }
 
 
-/* =========================================================
-   START
-========================================================= */
+function statusBadge(status){
 
-window.addEventListener(
-    "load",
-    init
-);
+  const s =
+    String(status)
+      .toLowerCase();
+
+
+  let cls =
+    "yellow";
+
+
+  if(
+    s === "completed" ||
+    s === "success" ||
+    s === "selesai" ||
+    s === "paid"
+  ){
+    cls = "green";
+  }
+
+
+  if(
+    s === "cancelled" ||
+    s === "canceled" ||
+    s === "failed" ||
+    s === "ditolak"
+  ){
+    cls = "red";
+  }
+
+
+  if(
+    s === "processing" ||
+    s === "proses"
+  ){
+    cls = "blue";
+  }
+
+
+  return `
+    <span class="badge ${cls}">
+      ${escapeHtml(status)}
+    </span>
+  `;
+
+}
+
+
+/* =====================================================
+   ENTER TO SEND CHAT
+===================================================== */
+
+document
+  .getElementById("chatInput")
+  .addEventListener(
+    "keydown",
+    function(e){
+
+      if(
+        e.key === "Enter" &&
+        !e.shiftKey
+      ){
+
+        e.preventDefault();
+
+        sendAdminMessage();
+
+      }
+
+    }
+  );
+
+
+/* =====================================================
+   LOAD PAYMENT
+===================================================== */
+
+loadPayment();
+
 
 </script>
 
 </body>
-  </html>
+      </html>
