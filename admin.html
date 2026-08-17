@@ -9,21 +9,29 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+
 *{
     box-sizing:border-box;
     margin:0;
     padding:0;
 }
 
+html{
+    scroll-behavior:smooth;
+}
+
 body{
     font-family:Arial,Helvetica,sans-serif;
-    background:#090b12;
+    background:#080a10;
     color:#fff;
     min-height:100vh;
 }
 
-button,input,textarea,select{
-    font:inherit;
+button,
+input,
+textarea,
+select{
+    font-family:inherit;
 }
 
 button{
@@ -31,7 +39,7 @@ button{
 }
 
 .hidden{
-    display:none!important;
+    display:none !important;
 }
 
 .container{
@@ -39,7 +47,9 @@ button{
     margin:auto;
 }
 
-/* LOGIN */
+/* =====================================================
+LOGIN
+===================================================== */
 
 #loginPage{
     min-height:100vh;
@@ -47,71 +57,127 @@ button{
     justify-content:center;
     align-items:center;
     padding:20px;
+
     background:
-        radial-gradient(circle at top,#242c51,#090b12 55%);
+        radial-gradient(
+            circle at top,
+            #2b315c 0%,
+            #111523 40%,
+            #080a10 75%
+        );
 }
 
 .login-box{
     width:100%;
     max-width:420px;
+
+    padding:30px;
+
     background:#111522;
-    border:1px solid #30374f;
-    border-radius:20px;
-    padding:28px;
-    box-shadow:0 20px 60px rgba(0,0,0,.5);
+
+    border:1px solid #30374d;
+
+    border-radius:22px;
+
+    box-shadow:
+        0 25px 70px rgba(0,0,0,.55);
 }
 
 .logo{
     text-align:center;
-    font-size:27px;
+
+    font-size:29px;
+
     font-weight:900;
-    margin-bottom:7px;
+
+    margin-bottom:8px;
 }
 
 .logo span{
     color:#ff1744;
 }
 
-.subtitle{
+.login-subtitle{
     text-align:center;
-    color:#969fb5;
+
+    color:#929bb0;
+
     margin-bottom:25px;
 }
 
 .login-box input{
     width:100%;
+
     padding:14px;
+
     margin-bottom:13px;
-    background:#0b0e17;
-    border:1px solid #363d55;
-    color:#fff;
+
     border-radius:10px;
+
+    border:1px solid #343b53;
+
+    background:#090c14;
+
+    color:#fff;
+
     outline:none;
 }
 
-.primary{
+.login-box input:focus{
+    border-color:#ff1744;
+}
+
+.primary-btn{
     width:100%;
-    border:0;
+
     padding:14px;
+
+    border:0;
+
     border-radius:10px;
-    background:linear-gradient(135deg,#ff1744,#d50000);
+
     color:#fff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff1744,
+            #c4002c
+        );
+
     font-weight:800;
 }
 
+.primary-btn:disabled{
+    opacity:.6;
+
+    cursor:not-allowed;
+}
+
 .error{
-    color:#ff6a82;
+    color:#ff6d83;
+
     font-size:14px;
+
+    line-height:1.5;
+
     padding:8px 0;
 }
 
 .success{
-    color:#51dc88;
+    color:#55df8c;
+
     font-size:14px;
+
+    line-height:1.5;
+
     padding:8px 0;
 }
 
-/* APP */
+
+/* =====================================================
+TOPBAR
+===================================================== */
 
 #adminApp{
     min-height:100vh;
@@ -119,23 +185,33 @@ button{
 
 .topbar{
     position:sticky;
+
     top:0;
-    z-index:50;
-    background:rgba(9,11,18,.95);
-    backdrop-filter:blur(12px);
-    border-bottom:1px solid #2b3145;
+
+    z-index:100;
+
+    background:rgba(8,10,16,.96);
+
+    border-bottom:1px solid #282f42;
+
+    backdrop-filter:blur(14px);
 }
 
 .nav{
     min-height:68px;
+
     display:flex;
+
     align-items:center;
+
     justify-content:space-between;
+
     gap:15px;
 }
 
 .brand{
-    font-size:20px;
+    font-size:21px;
+
     font-weight:900;
 }
 
@@ -145,104 +221,157 @@ button{
 
 .nav-right{
     display:flex;
+
     align-items:center;
+
     gap:10px;
 }
 
 .admin-email{
-    color:#969fb5;
+    color:#929bb0;
+
     font-size:13px;
 }
 
-.logout{
-    background:#171b28;
-    border:1px solid #3b4259;
+.logout-btn{
+    padding:9px 14px;
+
+    border-radius:9px;
+
+    border:1px solid #394159;
+
+    background:#161a26;
+
     color:#fff;
-    padding:9px 13px;
-    border-radius:8px;
 }
 
-/* HERO */
+
+/* =====================================================
+HERO
+===================================================== */
 
 .hero{
-    padding:30px 0 20px;
+    padding:28px 0 15px;
 }
 
 .hero-box{
-    background:linear-gradient(135deg,#171b2b,#10131f);
-    border:1px solid #30374f;
-    border-radius:20px;
     padding:25px;
+
+    border-radius:20px;
+
+    border:1px solid #30374d;
+
+    background:
+        linear-gradient(
+            135deg,
+            #181d2e,
+            #10131e
+        );
 }
 
 .hero-box h1{
-    font-size:30px;
+    font-size:29px;
+
     margin-bottom:8px;
 }
 
 .hero-box p{
     color:#929bb0;
-    line-height:1.5;
+
+    line-height:1.6;
 }
 
-/* MENU */
+
+/* =====================================================
+MENU
+===================================================== */
 
 .menu-grid{
     display:grid;
-    grid-template-columns:repeat(5,1fr);
+
+    grid-template-columns:
+        repeat(5,1fr);
+
     gap:10px;
-    margin:20px 0;
+
+    margin:20px 0 30px;
 }
 
 .menu-btn{
-    background:#121624;
-    color:#fff;
-    border:1px solid #30374f;
+    border:1px solid #30374d;
+
     border-radius:13px;
+
     padding:15px 8px;
+
+    background:#121623;
+
+    color:#fff;
+
+    transition:.2s;
 }
 
 .menu-btn:hover{
     border-color:#ff1744;
+
+    transform:translateY(-2px);
 }
 
 .menu-icon{
-    font-size:22px;
-    margin-bottom:6px;
+    font-size:23px;
+
+    margin-bottom:7px;
 }
 
 .menu-text{
     font-size:12px;
+
+    font-weight:700;
 }
 
-/* SECTION */
+
+/* =====================================================
+SECTION
+===================================================== */
 
 .section{
-    margin:25px 0;
+    margin:30px 0;
 }
 
 .section-title{
     font-size:22px;
-    margin-bottom:15px;
+
+    font-weight:800;
+
+    margin-bottom:14px;
 }
 
 .panel{
     background:#111522;
-    border:1px solid #30374f;
+
+    border:1px solid #30374d;
+
     border-radius:17px;
+
     padding:20px;
 }
 
-/* FORM */
+
+/* =====================================================
+FORM
+===================================================== */
 
 .form-grid{
     display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:12px;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap:13px;
 }
 
 .form-group{
-    margin-bottom:12px;
+    margin-bottom:4px;
 }
 
 .form-group.full{
@@ -251,86 +380,142 @@ button{
 
 .form-group label{
     display:block;
-    color:#9ba4b8;
+
+    margin-bottom:7px;
+
+    color:#a0a9bc;
+
     font-size:13px;
-    margin-bottom:6px;
 }
 
 .form-group input,
 .form-group textarea,
 .form-group select{
     width:100%;
-    background:#0b0e17;
-    color:#fff;
-    border:1px solid #343b52;
-    border-radius:9px;
+
     padding:12px;
+
+    border-radius:9px;
+
+    border:1px solid #343b53;
+
+    background:#090c14;
+
+    color:#fff;
+
     outline:none;
 }
 
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus{
+    border-color:#ff1744;
+}
+
 .form-group textarea{
+    min-height:100px;
+
     resize:vertical;
 }
 
 .save-btn{
-    background:#ff1744;
-    border:0;
-    color:#fff;
+    margin-top:14px;
+
     padding:12px 20px;
-    border-radius:9px;
-    font-weight:700;
-}
 
-.secondary{
-    background:#191d2a;
-    border:1px solid #3a4158;
+    border:0;
+
+    border-radius:9px;
+
+    background:#ff1744;
+
     color:#fff;
-    padding:10px 15px;
-    border-radius:9px;
+
+    font-weight:800;
 }
 
-/* SERVICES */
+.secondary-btn{
+    margin-top:14px;
+
+    margin-left:7px;
+
+    padding:12px 18px;
+
+    border:1px solid #3c4359;
+
+    border-radius:9px;
+
+    background:#191e2b;
+
+    color:#fff;
+}
+
+
+/* =====================================================
+SERVICE
+===================================================== */
 
 .service-card{
     background:#171b28;
-    border:1px solid #30374f;
-    border-radius:13px;
+
+    border:1px solid #30374d;
+
+    border-radius:14px;
+
     padding:16px;
-    margin-bottom:10px;
+
+    margin-top:10px;
 }
 
 .service-head{
     display:flex;
+
     justify-content:space-between;
+
     gap:10px;
 }
 
 .service-name{
     font-weight:800;
+
+    font-size:16px;
 }
 
 .service-price{
-    color:#ff4566;
-    font-weight:800;
+    color:#ff4567;
+
+    font-weight:900;
+
+    white-space:nowrap;
 }
 
 .service-description{
     color:#929bb0;
+
+    line-height:1.5;
+
     font-size:13px;
+
     margin:8px 0;
 }
 
 .service-actions{
     display:flex;
+
     gap:7px;
-    margin-top:10px;
+
+    margin-top:12px;
 }
 
-.service-actions button{
+.edit-btn,
+.delete-btn{
     border:0;
-    padding:9px 12px;
+
     border-radius:8px;
+
     color:#fff;
+
+    padding:9px 13px;
 }
 
 .edit-btn{
@@ -338,140 +523,249 @@ button{
 }
 
 .delete-btn{
-    background:#b40022;
+    background:#b90028;
 }
 
-/* ORDERS */
+
+/* =====================================================
+ORDERS
+===================================================== */
 
 .order-card{
     background:#171b28;
-    border:1px solid #30374f;
-    border-radius:13px;
+
+    border:1px solid #30374d;
+
+    border-radius:14px;
+
     padding:16px;
+
     margin-bottom:10px;
 }
 
 .order-line{
     display:flex;
+
     justify-content:space-between;
-    gap:10px;
-    padding:5px 0;
+
+    gap:12px;
+
+    padding:6px 0;
+
+    line-height:1.4;
 }
 
-.label{
+.order-label{
     color:#929bb0;
+}
+
+.order-user{
+    max-width:65%;
+
+    word-break:break-all;
+
+    text-align:right;
+
+    font-size:12px;
 }
 
 .order-status{
     display:inline-block;
-    margin-top:8px;
-    padding:6px 10px;
-    background:#2a3042;
+
+    padding:5px 9px;
+
     border-radius:20px;
+
+    background:#2a3041;
+
     font-size:12px;
 }
 
 .status-select{
-    margin-top:10px;
     width:100%;
-    background:#0b0e17;
+
+    margin-top:10px;
+
+    padding:11px;
+
+    border-radius:9px;
+
+    border:1px solid #343b53;
+
+    background:#090c14;
+
     color:#fff;
-    border:1px solid #343b52;
-    border-radius:8px;
-    padding:10px;
 }
 
-/* CHAT */
 
-.chat-users{
+/* =====================================================
+CHAT
+===================================================== */
+
+.chat-layout{
     display:grid;
+
     grid-template-columns:280px 1fr;
+
     gap:12px;
 }
 
 .member-list{
     max-height:500px;
+
     overflow-y:auto;
 }
 
 .member-item{
     width:100%;
+
+    display:block;
+
     text-align:left;
-    padding:13px;
+
     margin-bottom:7px;
-    border:1px solid #30374f;
-    border-radius:9px;
+
+    padding:13px;
+
+    border-radius:10px;
+
+    border:1px solid #30374d;
+
     background:#171b28;
+
     color:#fff;
+}
+
+.member-item:hover{
+    border-color:#ff1744;
 }
 
 .member-item.active{
     border-color:#ff1744;
+
+    background:#202536;
 }
 
-.chat-area{
-    border:1px solid #30374f;
-    border-radius:14px;
+.chat-box{
     overflow:hidden;
+
+    border-radius:15px;
+
+    border:1px solid #30374d;
+
+    background:#0d1019;
 }
 
-.chat-title{
-    padding:13px;
-    border-bottom:1px solid #30374f;
+.chat-header{
+    padding:14px;
+
+    border-bottom:1px solid #30374d;
+
     background:#171b28;
+
+    font-weight:800;
 }
 
 .chat-messages{
-    height:350px;
+    height:380px;
+
     overflow-y:auto;
-    padding:14px;
+
+    padding:15px;
+}
+
+.chat-empty{
+    color:#929bb0;
+
+    text-align:center;
+
+    padding:40px 10px;
 }
 
 .message{
     max-width:80%;
-    padding:10px 13px;
-    border-radius:12px;
-    margin-bottom:9px;
-    font-size:14px;
-    line-height:1.45;
-}
 
-.message.admin{
-    margin-left:auto;
-    background:#ff1744;
+    padding:10px 13px;
+
+    margin-bottom:9px;
+
+    border-radius:13px;
+
+    line-height:1.45;
+
+    font-size:14px;
+
+    word-break:break-word;
 }
 
 .message.member{
     background:#292f40;
+
+    margin-right:auto;
+}
+
+.message.admin{
+    background:#ff1744;
+
+    margin-left:auto;
+}
+
+.message-time{
+    display:block;
+
+    opacity:.7;
+
+    font-size:10px;
+
+    margin-top:4px;
 }
 
 .chat-form{
     display:flex;
+
     gap:8px;
+
     padding:10px;
-    border-top:1px solid #30374f;
+
+    border-top:1px solid #30374d;
 }
 
 .chat-form input{
     flex:1;
+
     min-width:0;
+
     padding:12px;
-    background:#0b0e17;
-    color:#fff;
-    border:1px solid #343b52;
+
     border-radius:9px;
+
+    border:1px solid #343b53;
+
+    background:#090c14;
+
+    color:#fff;
+
+    outline:none;
 }
 
 .chat-form button{
-    background:#ff1744;
-    color:#fff;
-    border:0;
-    border-radius:9px;
     padding:0 17px;
-    font-weight:700;
+
+    border:0;
+
+    border-radius:9px;
+
+    background:#ff1744;
+
+    color:#fff;
+
+    font-weight:800;
 }
 
-/* TABLE */
+
+/* =====================================================
+TABLE
+===================================================== */
 
 .table-wrap{
     overflow-x:auto;
@@ -479,13 +773,18 @@ button{
 
 table{
     width:100%;
+
     border-collapse:collapse;
 }
 
-th,td{
+th,
+td{
     padding:12px;
-    border-bottom:1px solid #292f42;
+
     text-align:left;
+
+    border-bottom:1px solid #292f42;
+
     font-size:13px;
 }
 
@@ -493,18 +792,33 @@ th{
     color:#aeb6c8;
 }
 
+
+/* =====================================================
+LOADING
+===================================================== */
+
 .loading{
     text-align:center;
+
     padding:30px;
+
     color:#929bb0;
 }
 
-/* MOBILE */
+
+/* =====================================================
+MOBILE
+===================================================== */
 
 @media(max-width:800px){
 
+    .container{
+        width:94%;
+    }
+
     .menu-grid{
-        grid-template-columns:repeat(2,1fr);
+        grid-template-columns:
+            repeat(2,1fr);
     }
 
     .form-grid{
@@ -515,7 +829,7 @@ th{
         grid-column:auto;
     }
 
-    .chat-users{
+    .chat-layout{
         grid-template-columns:1fr;
     }
 
@@ -526,7 +840,56 @@ th{
     .admin-email{
         display:none;
     }
+
+    .hero-box h1{
+        font-size:24px;
+    }
+
 }
+
+@media(max-width:480px){
+
+    .nav{
+        min-height:60px;
+    }
+
+    .brand{
+        font-size:17px;
+    }
+
+    .logout-btn{
+        padding:8px 10px;
+    }
+
+    .hero-box{
+        padding:20px;
+    }
+
+    .panel{
+        padding:15px;
+    }
+
+    .service-head{
+        flex-direction:column;
+    }
+
+    .order-line{
+        flex-direction:column;
+        gap:3px;
+    }
+
+    .order-user{
+        max-width:100%;
+
+        text-align:left;
+    }
+
+    .message{
+        max-width:88%;
+    }
+
+}
+
 </style>
 </head>
 
@@ -539,38 +902,45 @@ LOGIN ADMIN
 
 <div id="loginPage">
 
-<div class="login-box">
+    <div class="login-box">
 
-<div class="logo">
-YT <span>MONETIZE</span>
-</div>
+        <div class="logo">
+            YT <span>MONETIZE</span>
+        </div>
 
-<div class="subtitle">
-ADMIN PANEL
-</div>
+        <div class="login-subtitle">
+            ADMIN PANEL
+        </div>
 
-<input
-id="adminEmail"
-type="email"
-placeholder="Email admin"
-autocomplete="email">
+        <input
+            id="adminEmail"
+            type="email"
+            placeholder="Email admin"
+            autocomplete="username"
+        >
 
-<input
-id="adminPassword"
-type="password"
-placeholder="Password"
-autocomplete="current-password">
+        <input
+            id="adminPassword"
+            type="password"
+            placeholder="Password admin"
+            autocomplete="current-password"
+        >
 
-<div id="loginError" class="error"></div>
+        <div
+            id="loginError"
+            class="error">
+        </div>
 
-<button
-id="adminLoginBtn"
-class="primary"
-type="button">
-LOGIN ADMIN
-</button>
+        <button
+            id="adminLoginBtn"
+            class="primary-btn"
+            type="button">
 
-</div>
+            LOGIN ADMIN
+
+        </button>
+
+    </div>
 
 </div>
 
@@ -579,436 +949,570 @@ LOGIN ADMIN
 ADMIN APP
 ===================================================== -->
 
-<div id="adminApp" class="hidden">
-
-<header class="topbar">
-
-<div class="container nav">
-
-<div class="brand">
-YT <span>ADMIN</span>
-</div>
-
-<div class="nav-right">
-
-<span
-id="adminEmailDisplay"
-class="admin-email">
-</span>
-
-<button
-id="logoutBtn"
-class="logout"
-type="button">
-Logout
-</button>
-
-</div>
-
-</div>
-
-</header>
-
-
-<main class="container">
-
-<section class="hero">
-
-<div class="hero-box">
-
-<h1>
-Dashboard Admin
-</h1>
-
-<p>
-Kelola layanan, rekening pembayaran,
-pesanan member dan live chat dari satu tempat.
-</p>
-
-</div>
-
-</section>
-
-
-<!-- MENU -->
-
-<div class="menu-grid">
-
-<button
-class="menu-btn"
-data-target="servicesSection">
-
-<div class="menu-icon">💰</div>
-<div class="menu-text">Harga</div>
-
-</button>
-
-<button
-class="menu-btn"
-data-target="paymentSection">
-
-<div class="menu-icon">💳</div>
-<div class="menu-text">Pembayaran</div>
-
-</button>
-
-<button
-class="menu-btn"
-data-target="ordersSection">
-
-<div class="menu-icon">📦</div>
-<div class="menu-text">Pesanan</div>
-
-</button>
-
-<button
-class="menu-btn"
-data-target="chatSection">
-
-<div class="menu-icon">💬</div>
-<div class="menu-text">Live Chat</div>
-
-</button>
-
-<button
-class="menu-btn"
-data-target="membersSection">
-
-<div class="menu-icon">👥</div>
-<div class="menu-text">Member</div>
-
-</button>
-
-</div>
-
-
-<!-- =====================================================
-SERVICES
-===================================================== -->
-
-<section
-id="servicesSection"
-class="section">
-
-<div class="section-title">
-💰 Kelola Harga Monetisasi
-</div>
-
-<div class="panel">
-
-<div class="form-grid">
-
-<div class="form-group">
-<label>Nama Layanan</label>
-
-<input
-id="serviceName"
-type="text"
-placeholder="Contoh: Monetisasi YouTube Basic">
-
-</div>
-
-
-<div class="form-group">
-<label>Harga</label>
-
-<input
-id="servicePrice"
-type="number"
-placeholder="500000">
-
-</div>
-
-
-<div class="form-group full">
-<label>Deskripsi</label>
-
-<textarea
-id="serviceDescription"
-rows="3"
-placeholder="Deskripsi layanan"></textarea>
-
-</div>
-
-</div>
-
-<div id="serviceFormMessage"></div>
-
-<button
-id="saveServiceBtn"
-class="save-btn"
-type="button">
-Tambah Layanan
-</button>
-
-<button
-id="cancelEditBtn"
-class="secondary hidden"
-type="button">
-Batal Edit
-</button>
-
-</div>
-
-
 <div
-id="servicesList"
-style="margin-top:15px;">
+    id="adminApp"
+    class="hidden">
 
-<div class="loading">
-Memuat layanan...
-</div>
+    <header class="topbar">
 
-</div>
+        <div class="container nav">
 
-</section>
+            <div class="brand">
+                YT <span>ADMIN</span>
+            </div>
 
+            <div class="nav-right">
 
-<!-- =====================================================
-PAYMENT
-===================================================== -->
+                <span
+                    id="adminEmailDisplay"
+                    class="admin-email">
+                </span>
 
-<section
-id="paymentSection"
-class="section">
+                <button
+                    id="logoutBtn"
+                    class="logout-btn"
+                    type="button">
 
-<div class="section-title">
-💳 Pengaturan Pembayaran
-</div>
+                    Logout
 
-<div class="panel">
+                </button>
 
-<div class="form-grid">
+            </div>
 
-<div class="form-group">
-<label>Nama Bank</label>
+        </div>
 
-<input
-id="bankName"
-type="text"
-placeholder="BCA / BRI / Mandiri">
+    </header>
 
-</div>
 
+    <main class="container">
 
-<div class="form-group">
-<label>Nomor Rekening</label>
 
-<input
-id="accountNumber"
-type="text"
-placeholder="1234567890">
+        <!-- =================================================
+        HERO
+        ================================================= -->
 
-</div>
+        <section class="hero">
 
+            <div class="hero-box">
 
-<div class="form-group">
-<label>Nama Pemilik Rekening</label>
+                <h1>
+                    Dashboard Admin
+                </h1>
 
-<input
-id="accountName"
-type="text"
-placeholder="Nama Anda">
+                <p>
+                    Kelola harga monetisasi,
+                    pembayaran, pesanan member
+                    dan live chat.
+                </p>
 
-</div>
+            </div>
 
+        </section>
 
-<div class="form-group">
-<label>E-Wallet</label>
 
-<input
-id="ewallet"
-type="text"
-placeholder="DANA / OVO / GoPay">
+        <!-- =================================================
+        MENU
+        ================================================= -->
 
-</div>
+        <div class="menu-grid">
 
+            <button
+                class="menu-btn"
+                data-target="servicesSection">
 
-<div class="form-group">
-<label>Nomor E-Wallet</label>
+                <div class="menu-icon">
+                    💰
+                </div>
 
-<input
-id="paymentPhone"
-type="text"
-placeholder="08xxxxxxxxxx">
+                <div class="menu-text">
+                    Harga
+                </div>
 
-</div>
+            </button>
 
 
-<div class="form-group">
-<label>URL QRIS</label>
+            <button
+                class="menu-btn"
+                data-target="paymentSection">
 
-<input
-id="qrisUrl"
-type="url"
-placeholder="https://...">
+                <div class="menu-icon">
+                    💳
+                </div>
 
-</div>
+                <div class="menu-text">
+                    Pembayaran
+                </div>
 
-</div>
+            </button>
 
-<div id="paymentMessage"></div>
 
-<button
-id="savePaymentBtn"
-class="save-btn"
-type="button">
-Simpan Pembayaran
-</button>
+            <button
+                class="menu-btn"
+                data-target="ordersSection">
 
-</div>
+                <div class="menu-icon">
+                    📦
+                </div>
 
-</section>
+                <div class="menu-text">
+                    Pesanan
+                </div>
 
+            </button>
 
-<!-- =====================================================
-ORDERS
-===================================================== -->
 
-<section
-id="ordersSection"
-class="section">
+            <button
+                class="menu-btn"
+                data-target="chatSection">
 
-<div class="section-title">
-📦 Pesanan Member
-</div>
+                <div class="menu-icon">
+                    💬
+                </div>
 
-<div
-id="ordersList">
+                <div class="menu-text">
+                    Live Chat
+                </div>
 
-<div class="loading">
-Memuat pesanan...
-</div>
+            </button>
 
-</div>
 
-</section>
+            <button
+                class="menu-btn"
+                data-target="membersSection">
 
+                <div class="menu-icon">
+                    👥
+                </div>
 
-<!-- =====================================================
-CHAT
-===================================================== -->
+                <div class="menu-text">
+                    Member
+                </div>
 
-<section
-id="chatSection"
-class="section">
+            </button>
 
-<div class="section-title">
-💬 Live Chat Member
-</div>
+        </div>
 
-<div class="chat-users">
 
-<div class="panel">
+        <!-- =================================================
+        SERVICES
+        ================================================= -->
 
-<h3 style="margin-bottom:12px;">
-Member
-</h3>
+        <section
+            id="servicesSection"
+            class="section">
 
-<div
-id="memberList"
-class="member-list">
+            <div class="section-title">
+                💰 Harga Monetisasi
+            </div>
 
-<div class="loading">
-Memuat member...
-</div>
 
-</div>
+            <div class="panel">
 
-</div>
+                <div class="form-grid">
 
 
-<div class="chat-area">
+                    <div class="form-group">
 
-<div
-id="chatTitle"
-class="chat-title">
+                        <label>
+                            Nama Layanan
+                        </label>
 
-Pilih member
+                        <input
+                            id="serviceName"
+                            type="text"
+                            placeholder="Contoh: Monetisasi YouTube Basic"
+                        >
 
-</div>
+                    </div>
 
-<div
-id="adminChatMessages"
-class="chat-messages">
 
-<div class="loading">
-Pilih member untuk melihat chat.
-</div>
+                    <div class="form-group">
 
-</div>
+                        <label>
+                            Harga
+                        </label>
 
-<div class="chat-form">
+                        <input
+                            id="servicePrice"
+                            type="number"
+                            placeholder="500000"
+                        >
 
-<input
-id="adminChatInput"
-type="text"
-placeholder="Balas pesan member...">
+                    </div>
 
-<button
-id="sendAdminChatBtn"
-type="button">
-Kirim
-</button>
 
-</div>
+                    <div class="form-group full">
 
-</div>
+                        <label>
+                            Deskripsi
+                        </label>
 
-</div>
+                        <textarea
+                            id="serviceDescription"
+                            placeholder="Deskripsi layanan"
+                        ></textarea>
 
-</section>
+                    </div>
 
 
-<!-- =====================================================
-MEMBERS
-===================================================== -->
+                </div>
 
-<section
-id="membersSection"
-class="section">
 
-<div class="section-title">
-👥 Daftar Member
-</div>
+                <div
+                    id="serviceFormMessage">
+                </div>
 
-<div class="panel table-wrap">
 
-<table>
+                <button
+                    id="saveServiceBtn"
+                    class="save-btn"
+                    type="button">
 
-<thead>
+                    Tambah Layanan
 
-<tr>
+                </button>
 
-<th>Email</th>
-<th>Nama</th>
-<th>Role</th>
-<th>Dibuat</th>
 
-</tr>
+                <button
+                    id="cancelEditBtn"
+                    class="secondary-btn hidden"
+                    type="button">
 
-</thead>
+                    Batal Edit
 
-<tbody id="membersTable">
+                </button>
 
-<tr>
-<td colspan="4">
-<div class="loading">
-Memuat member...
-</div>
-</td>
-</tr>
+            </div>
 
-</tbody>
 
-</table>
+            <div
+                id="servicesList">
 
-</div>
+                <div class="loading">
+                    Memuat layanan...
+                </div>
 
-</section>
+            </div>
 
+        </section>
 
-</main>
+
+        <!-- =================================================
+        PAYMENT
+        ================================================= -->
+
+        <section
+            id="paymentSection"
+            class="section">
+
+            <div class="section-title">
+                💳 Rekening Pembayaran
+            </div>
+
+
+            <div class="panel">
+
+                <div class="form-grid">
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Nama Bank
+                        </label>
+
+                        <input
+                            id="bankName"
+                            type="text"
+                            placeholder="BCA / BRI / Mandiri"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Nomor Rekening
+                        </label>
+
+                        <input
+                            id="accountNumber"
+                            type="text"
+                            placeholder="1234567890"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Nama Pemilik Rekening
+                        </label>
+
+                        <input
+                            id="accountName"
+                            type="text"
+                            placeholder="Nama pemilik"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            E-Wallet
+                        </label>
+
+                        <input
+                            id="ewallet"
+                            type="text"
+                            placeholder="DANA / OVO / GoPay"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Nomor E-Wallet
+                        </label>
+
+                        <input
+                            id="paymentPhone"
+                            type="text"
+                            placeholder="08xxxxxxxxxx"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Link QRIS
+                        </label>
+
+                        <input
+                            id="qrisUrl"
+                            type="url"
+                            placeholder="https://..."
+                        >
+
+                    </div>
+
+
+                </div>
+
+
+                <div
+                    id="paymentMessage">
+                </div>
+
+
+                <button
+                    id="savePaymentBtn"
+                    class="save-btn"
+                    type="button">
+
+                    Simpan Pembayaran
+
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+        ORDERS
+        ================================================= -->
+
+        <section
+            id="ordersSection"
+            class="section">
+
+            <div class="section-title">
+                📦 Pesanan Member
+            </div>
+
+
+            <div
+                id="ordersList">
+
+                <div class="loading">
+                    Memuat pesanan...
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+        CHAT
+        ================================================= -->
+
+        <section
+            id="chatSection"
+            class="section">
+
+            <div class="section-title">
+                💬 Live Chat Member
+            </div>
+
+
+            <div class="chat-layout">
+
+
+                <!-- MEMBER LIST -->
+
+                <div class="panel">
+
+                    <h3
+                        style="margin-bottom:12px;">
+
+                        Daftar Member
+
+                    </h3>
+
+
+                    <div
+                        id="memberList"
+                        class="member-list">
+
+                        <div class="loading">
+                            Memuat member...
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CHAT -->
+
+                <div class="chat-box">
+
+
+                    <div
+                        id="chatTitle"
+                        class="chat-header">
+
+                        Pilih member
+
+                    </div>
+
+
+                    <div
+                        id="adminChatMessages"
+                        class="chat-messages">
+
+                        <div class="chat-empty">
+                            Pilih member untuk
+                            melihat percakapan.
+                        </div>
+
+                    </div>
+
+
+                    <div class="chat-form">
+
+                        <input
+                            id="adminChatInput"
+                            type="text"
+                            placeholder="Tulis balasan..."
+                        >
+
+
+                        <button
+                            id="sendAdminChatBtn"
+                            type="button">
+
+                            Kirim
+
+                        </button>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+        MEMBERS
+        ================================================= -->
+
+        <section
+            id="membersSection"
+            class="section">
+
+            <div class="section-title">
+                👥 Daftar Member
+            </div>
+
+
+            <div class="panel table-wrap">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Email
+                            </th>
+
+                            <th>
+                                Nama
+                            </th>
+
+                            <th>
+                                Role
+                            </th>
+
+                            <th>
+                                Tanggal
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody
+                        id="membersTable">
+
+                        <tr>
+
+                            <td colspan="4">
+
+                                <div class="loading">
+                                    Memuat member...
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+    </main>
 
 </div>
 
@@ -1016,8 +1520,10 @@ Memuat member...
 <script>
 
 /* =====================================================
-SUPABASE CONFIG
-GANTI 2 BAGIAN INI
+SUPABASE
+=====================================================
+
+GANTI HANYA 2 BARIS INI
 ===================================================== */
 
 const SUPABASE_URL =
@@ -1026,29 +1532,27 @@ const SUPABASE_URL =
 const SUPABASE_ANON_KEY =
 "sb_publishable_67asK3gfVhUIpNeEs2uOPQ_2kF4AMQf";
 
-const { createClient } =
-supabase;
 
 const db =
-createClient(
+supabase.createClient(
     SUPABASE_URL,
     SUPABASE_ANON_KEY
 );
 
 
 /* =====================================================
-STATE
+GLOBAL
 ===================================================== */
 
 let adminUser = null;
-
-let editingServiceId = null;
 
 let selectedMemberId = null;
 
 let selectedMemberEmail = "";
 
-let chatTimer = null;
+let editingServiceId = null;
+
+let chatInterval = null;
 
 
 /* =====================================================
@@ -1063,50 +1567,123 @@ document.getElementById("adminApp");
 
 
 /* =====================================================
+ESCAPE HTML
+===================================================== */
+
+function escapeHtml(value){
+
+    return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+/* =====================================================
+RUPIAH
+===================================================== */
+
+function rupiah(value){
+
+    return new Intl.NumberFormat(
+        "id-ID",
+        {
+            style:"currency",
+            currency:"IDR",
+            maximumFractionDigits:0
+        }
+    ).format(
+        Number(value || 0)
+    );
+
+}
+
+
+/* =====================================================
+DATE
+===================================================== */
+
+function dateFormat(value){
+
+    if(!value){
+        return "-";
+    }
+
+    return new Date(value)
+        .toLocaleString("id-ID");
+
+}
+
+
+/* =====================================================
 LOGIN
 ===================================================== */
 
 document
 .getElementById("adminLoginBtn")
 .addEventListener(
-"click",
-adminLogin
+    "click",
+    loginAdmin
 );
 
 
-async function adminLogin(){
+document
+.getElementById("adminPassword")
+.addEventListener(
+    "keydown",
+    function(e){
+
+        if(e.key === "Enter"){
+            loginAdmin();
+        }
+
+    }
+);
+
+
+async function loginAdmin(){
 
     const email =
-    document
-    .getElementById("adminEmail")
-    .value
-    .trim();
+        document
+        .getElementById("adminEmail")
+        .value
+        .trim();
 
     const password =
-    document
-    .getElementById("adminPassword")
-    .value;
+        document
+        .getElementById("adminPassword")
+        .value;
 
     const errorBox =
-    document.getElementById("loginError");
+        document
+        .getElementById("loginError");
+
+    const button =
+        document
+        .getElementById("adminLoginBtn");
+
 
     errorBox.textContent = "";
+
 
     if(!email || !password){
 
         errorBox.textContent =
-        "Email dan password wajib diisi.";
+            "Email dan password wajib diisi.";
 
         return;
+
     }
 
-    const button =
-    document.getElementById(
-        "adminLoginBtn"
-    );
 
     button.disabled = true;
-    button.textContent = "Memeriksa...";
+
+    button.textContent =
+        "MEMERIKSA...";
+
 
     try{
 
@@ -1116,32 +1693,48 @@ async function adminLogin(){
         } =
         await db.auth.signInWithPassword({
 
-            email,
-            password
+            email:email,
+
+            password:password
 
         });
 
-        if(error)
+
+        if(error){
             throw error;
+        }
+
 
         adminUser =
-        data.user;
+            data.user;
+
 
         await verifyAdmin();
+
 
     }catch(error){
 
         console.error(error);
 
+
         errorBox.textContent =
-        error.message ||
-        "Login admin gagal.";
+            error.message ||
+            "Login admin gagal.";
+
+
+        try{
+            await db.auth.signOut();
+        }catch(e){}
+
+        adminUser = null;
+
 
     }finally{
 
         button.disabled = false;
+
         button.textContent =
-        "LOGIN ADMIN";
+            "LOGIN ADMIN";
 
     }
 
@@ -1154,6 +1747,13 @@ VERIFY ADMIN
 
 async function verifyAdmin(){
 
+    if(!adminUser){
+        throw new Error(
+            "Session admin tidak ditemukan."
+        );
+    }
+
+
     const {
         data,
         error
@@ -1164,8 +1764,11 @@ async function verifyAdmin(){
     .eq("id",adminUser.id)
     .maybeSingle();
 
-    if(error)
+
+    if(error){
         throw error;
+    }
+
 
     if(!data){
 
@@ -1177,7 +1780,13 @@ async function verifyAdmin(){
 
     }
 
-    if(data.role !== "admin"){
+
+    if(
+        String(data.role)
+        .toLowerCase()
+        !==
+        "admin"
+    ){
 
         await db.auth.signOut();
 
@@ -1186,6 +1795,7 @@ async function verifyAdmin(){
         );
 
     }
+
 
     openAdmin();
 
@@ -1198,23 +1808,53 @@ OPEN ADMIN
 
 function openAdmin(){
 
-    loginPage.classList.add("hidden");
+    loginPage
+        .classList
+        .add("hidden");
 
-    adminApp.classList.remove("hidden");
+
+    adminApp
+        .classList
+        .remove("hidden");
+
 
     document
     .getElementById(
         "adminEmailDisplay"
     )
     .textContent =
-    adminUser.email || "";
+        adminUser.email || "";
+
 
     loadServices();
+
     loadPayment();
+
     loadOrders();
+
     loadMembers();
 
-    startAdminChatRefresh();
+    loadChatMembers();
+
+
+    if(chatInterval){
+        clearInterval(chatInterval);
+    }
+
+
+    chatInterval =
+        setInterval(
+            function(){
+
+                loadChatMembers();
+
+                if(selectedMemberId){
+                    loadAdminMessages();
+                }
+
+            },
+            5000
+        );
 
 }
 
@@ -1223,7 +1863,7 @@ function openAdmin(){
 SESSION
 ===================================================== */
 
-async function checkAdminSession(){
+async function checkSession(){
 
     try{
 
@@ -1232,19 +1872,30 @@ async function checkAdminSession(){
         } =
         await db.auth.getSession();
 
-        if(!data.session)
-            return;
 
-        adminUser =
-        data.session.user;
+        if(
+            data &&
+            data.session &&
+            data.session.user
+        ){
 
-        await verifyAdmin();
+            adminUser =
+                data.session.user;
+
+            await verifyAdmin();
+
+        }
 
     }catch(error){
 
-        console.error(error);
+        console.error(
+            "SESSION:",
+            error
+        );
 
-        await db.auth.signOut();
+        try{
+            await db.auth.signOut();
+        }catch(e){}
 
         showLogin();
 
@@ -1255,28 +1906,41 @@ async function checkAdminSession(){
 
 function showLogin(){
 
-    loginPage.classList.remove("hidden");
+    loginPage
+        .classList
+        .remove("hidden");
 
-    adminApp.classList.add("hidden");
+
+    adminApp
+        .classList
+        .add("hidden");
 
 }
 
 
+/* =====================================================
+AUTH CHANGE
+===================================================== */
+
 db.auth.onAuthStateChange(
-function(event,session){
+    function(event,session){
 
-    if(!session){
+        if(!session){
 
-        adminUser = null;
+            adminUser = null;
 
-        if(chatTimer)
-            clearInterval(chatTimer);
+            selectedMemberId = null;
 
-        showLogin();
+            if(chatInterval){
+                clearInterval(chatInterval);
+            }
+
+            showLogin();
+
+        }
 
     }
-
-});
+);
 
 
 /* =====================================================
@@ -1286,19 +1950,21 @@ LOGOUT
 document
 .getElementById("logoutBtn")
 .addEventListener(
-"click",
-async function(){
+    "click",
+    async function(){
 
-    if(chatTimer)
-        clearInterval(chatTimer);
+        if(chatInterval){
+            clearInterval(chatInterval);
+        }
 
-    await db.auth.signOut();
+        await db.auth.signOut();
 
-    adminUser = null;
+        adminUser = null;
 
-    showLogin();
+        showLogin();
 
-});
+    }
+);
 
 
 /* =====================================================
@@ -1307,43 +1973,49 @@ MENU
 
 document
 .querySelectorAll(".menu-btn")
-.forEach(function(button){
+.forEach(
+    function(button){
 
-    button.addEventListener(
-    "click",
-    function(){
+        button.addEventListener(
+            "click",
+            function(){
 
-        const target =
-        document.getElementById(
-            button.dataset.target
+                const target =
+                    document.getElementById(
+                        button.dataset.target
+                    );
+
+
+                if(target){
+
+                    target.scrollIntoView({
+                        behavior:"smooth"
+                    });
+
+                }
+
+            }
         );
 
-        if(target){
-
-            target.scrollIntoView({
-                behavior:"smooth"
-            });
-
-        }
-
-    });
-
-});
+    }
+);
 
 
 /* =====================================================
-SERVICES
+LOAD SERVICES
 ===================================================== */
 
 async function loadServices(){
 
     const box =
-    document.getElementById(
-        "servicesList"
-    );
+        document.getElementById(
+            "servicesList"
+        );
+
 
     box.innerHTML =
-    '<div class="loading">Memuat layanan...</div>';
+        '<div class="loading">Memuat layanan...</div>';
+
 
     try{
 
@@ -1354,123 +2026,158 @@ async function loadServices(){
         await db
         .from("services")
         .select("*")
-        .order("created_at",{
-            ascending:false
-        });
+        .order(
+            "created_at",
+            {
+                ascending:false
+            }
+        );
 
-        if(error)
+
+        if(error){
             throw error;
+        }
+
 
         if(!data || data.length === 0){
 
             box.innerHTML =
-            `<div class="panel">
-                Belum ada layanan.
-            </div>`;
+                '<div class="panel">Belum ada layanan.</div>';
 
             return;
 
         }
 
+
         box.innerHTML = "";
 
-        data.forEach(function(service){
 
-            const name =
-            service.name ||
-            service.title ||
-            "Layanan";
+        data.forEach(
+            function(service){
 
-            const div =
-            document.createElement("div");
+                const name =
+                    service.name ||
+                    service.title ||
+                    "Layanan";
 
-            div.className =
-            "service-card";
 
-            div.innerHTML = `
+                const div =
+                    document.createElement("div");
 
-                <div class="service-head">
 
-                    <div class="service-name">
-                        ${escapeHtml(name)}
+                div.className =
+                    "service-card";
+
+
+                div.innerHTML = `
+
+                    <div class="service-head">
+
+                        <div class="service-name">
+
+                            ${escapeHtml(name)}
+
+                        </div>
+
+                        <div class="service-price">
+
+                            ${rupiah(service.price)}
+
+                        </div>
+
                     </div>
 
-                    <div class="service-price">
-                        ${formatRupiah(
-                            service.price
+
+                    <div class="service-description">
+
+                        ${escapeHtml(
+                            service.description || ""
                         )}
+
                     </div>
 
-                </div>
 
-                <div class="service-description">
-                    ${escapeHtml(
-                        service.description || ""
-                    )}
-                </div>
+                    <div>
 
-                <div>
-                    Status:
-                    ${service.active
-                        ? "Aktif"
-                        : "Nonaktif"}
-                </div>
+                        Status:
+                        ${
+                            service.active === false
+                            ? "Nonaktif"
+                            : "Aktif"
+                        }
 
-                <div class="service-actions">
+                    </div>
 
-                    <button
-                        class="edit-btn"
-                        type="button">
-                        Edit
-                    </button>
 
-                    <button
-                        class="delete-btn"
-                        type="button">
-                        Hapus
-                    </button>
+                    <div class="service-actions">
 
-                </div>
+                        <button
+                            type="button"
+                            class="edit-btn">
 
-            `;
+                            Edit
 
-            div
-            .querySelector(".edit-btn")
-            .addEventListener(
-                "click",
-                function(){
+                        </button>
 
-                    editService(service);
 
-                }
-            );
+                        <button
+                            type="button"
+                            class="delete-btn">
 
-            div
-            .querySelector(".delete-btn")
-            .addEventListener(
-                "click",
-                function(){
+                            Hapus
 
-                    deleteService(
-                        service.id
-                    );
+                        </button>
 
-                }
-            );
+                    </div>
 
-            box.appendChild(div);
+                `;
 
-        });
+
+                div
+                .querySelector(".edit-btn")
+                .addEventListener(
+                    "click",
+                    function(){
+
+                        editService(service);
+
+                    }
+                );
+
+
+                div
+                .querySelector(".delete-btn")
+                .addEventListener(
+                    "click",
+                    function(){
+
+                        deleteService(
+                            service.id
+                        );
+
+                    }
+                );
+
+
+                box.appendChild(div);
+
+            }
+        );
+
 
     }catch(error){
 
-        console.error(error);
+        console.error(
+            "SERVICES:",
+            error
+        );
+
 
         box.innerHTML =
-        `<div class="error">
-        Gagal memuat layanan:
-        ${escapeHtml(error.message)}
-        </div>`;
+            `<div class="error">
+                Gagal memuat layanan:<br>
+                ${escapeHtml(error.message)}
+            </div>`;
 
     }
 
@@ -1484,130 +2191,156 @@ SAVE SERVICE
 document
 .getElementById("saveServiceBtn")
 .addEventListener(
-"click",
-saveService
+    "click",
+    saveService
 );
 
 
 async function saveService(){
 
     const name =
-    document
-    .getElementById("serviceName")
-    .value
-    .trim();
+        document
+        .getElementById("serviceName")
+        .value
+        .trim();
+
 
     const price =
-    Number(
-        document
-        .getElementById("servicePrice")
-        .value
-    );
+        Number(
+            document
+            .getElementById("servicePrice")
+            .value
+        );
+
 
     const description =
-    document
-    .getElementById("serviceDescription")
-    .value
-    .trim();
+        document
+        .getElementById("serviceDescription")
+        .value
+        .trim();
+
 
     const message =
-    document
-    .getElementById("serviceFormMessage");
+        document
+        .getElementById(
+            "serviceFormMessage"
+        );
+
+
+    const button =
+        document
+        .getElementById(
+            "saveServiceBtn"
+        );
+
 
     message.innerHTML = "";
+
 
     if(!name){
 
         message.innerHTML =
-        '<div class="error">Nama layanan wajib diisi.</div>';
+            '<div class="error">Nama layanan wajib diisi.</div>';
 
         return;
 
     }
+
 
     if(!price || price < 0){
 
         message.innerHTML =
-        '<div class="error">Harga tidak valid.</div>';
+            '<div class="error">Harga tidak valid.</div>';
 
         return;
 
     }
 
-    const button =
-    document.getElementById(
-        "saveServiceBtn"
-    );
 
     button.disabled = true;
+
 
     try{
 
         let result;
 
+
         if(editingServiceId){
 
             result =
-            await db
-            .from("services")
-            .update({
+                await db
+                .from("services")
+                .update({
 
-                name:name,
+                    name:name,
 
-                title:name,
+                    title:name,
 
-                description:description,
+                    price:price,
 
-                price:price,
+                    description:description,
 
-                updated_at:new Date()
-                .toISOString()
+                    updated_at:
+                        new Date()
+                        .toISOString()
 
-            })
-            .eq(
-                "id",
-                editingServiceId
-            );
+                })
+                .eq(
+                    "id",
+                    editingServiceId
+                );
+
 
         }else{
 
             result =
-            await db
-            .from("services")
-            .insert({
+                await db
+                .from("services")
+                .insert({
 
-                name:name,
+                    name:name,
 
-                title:name,
+                    title:name,
 
-                description:description,
+                    price:price,
 
-                price:price,
+                    description:description,
 
-                active:true
+                    active:true
 
-            });
+                });
 
         }
 
-        if(result.error)
+
+        if(result.error){
             throw result.error;
+        }
+
 
         message.innerHTML =
-        '<div class="success">Berhasil disimpan.</div>';
+            '<div class="success">✓ Layanan berhasil disimpan.</div>';
+
 
         clearServiceForm();
 
         await loadServices();
 
+
     }catch(error){
 
-        console.error(error);
+        console.error(
+            "SERVICE SAVE:",
+            error
+        );
+
 
         message.innerHTML =
-        `<div class="error">
-        ${escapeHtml(error.message)}
-        </div>`;
+            `<div class="error">
+                Gagal menyimpan:<br>
+                ${escapeHtml(error.message)}
+            </div>`;
+
 
     }finally{
 
@@ -1625,46 +2358,61 @@ EDIT SERVICE
 function editService(service){
 
     editingServiceId =
-    service.id;
+        service.id;
+
 
     document
     .getElementById("serviceName")
     .value =
-    service.name ||
-    service.title ||
-    "";
+        service.name ||
+        service.title ||
+        "";
+
 
     document
     .getElementById("servicePrice")
     .value =
-    service.price || 0;
+        service.price || "";
+
 
     document
     .getElementById("serviceDescription")
     .value =
-    service.description || "";
+        service.description || "";
+
 
     document
     .getElementById("saveServiceBtn")
     .textContent =
-    "Simpan Perubahan";
+        "Simpan Perubahan";
+
 
     document
     .getElementById("cancelEditBtn")
-    .classList.remove("hidden");
+    .classList
+    .remove("hidden");
+
+
+    document
+    .getElementById(
+        "servicesSection"
+    )
+    .scrollIntoView({
+        behavior:"smooth"
+    });
 
 }
 
 
 /* =====================================================
-CANCEL EDIT
+CLEAR SERVICE
 ===================================================== */
 
 document
 .getElementById("cancelEditBtn")
 .addEventListener(
-"click",
-clearServiceForm
+    "click",
+    clearServiceForm
 );
 
 
@@ -1672,26 +2420,32 @@ function clearServiceForm(){
 
     editingServiceId = null;
 
+
     document
     .getElementById("serviceName")
     .value = "";
+
 
     document
     .getElementById("servicePrice")
     .value = "";
 
+
     document
     .getElementById("serviceDescription")
     .value = "";
 
+
     document
     .getElementById("saveServiceBtn")
     .textContent =
-    "Tambah Layanan";
+        "Tambah Layanan";
+
 
     document
     .getElementById("cancelEditBtn")
-    .classList.add("hidden");
+    .classList
+    .add("hidden");
 
 }
 
@@ -1702,10 +2456,14 @@ DELETE SERVICE
 
 async function deleteService(id){
 
-    if(!confirm(
-        "Hapus layanan ini?"
-    ))
+    if(
+        !confirm(
+            "Yakin ingin menghapus layanan ini?"
+        )
+    ){
         return;
+    }
+
 
     try{
 
@@ -1717,15 +2475,19 @@ async function deleteService(id){
         .delete()
         .eq("id",id);
 
-        if(error)
+
+        if(error){
             throw error;
+        }
+
 
         await loadServices();
+
 
     }catch(error){
 
         alert(
-            "Gagal menghapus: " +
+            "Gagal menghapus layanan:\n\n" +
             error.message
         );
 
@@ -1735,7 +2497,7 @@ async function deleteService(id){
 
 
 /* =====================================================
-PAYMENT
+LOAD PAYMENT
 ===================================================== */
 
 async function loadPayment(){
@@ -1752,57 +2514,70 @@ async function loadPayment(){
         .eq("id",1)
         .maybeSingle();
 
-        if(error)
-            throw error;
 
-        if(!data)
+        if(error){
+            throw error;
+        }
+
+
+        if(!data){
             return;
+        }
+
 
         document
         .getElementById("bankName")
         .value =
-        data.bank_name || "";
+            data.bank_name || "";
+
 
         document
         .getElementById("accountNumber")
         .value =
-        data.account_number ||
-        data.bank_account ||
-        "";
+            data.account_number || "";
+
 
         document
         .getElementById("accountName")
         .value =
-        data.account_name || "";
+            data.account_name || "";
+
 
         document
         .getElementById("ewallet")
         .value =
-        data.ewallet || "";
+            data.ewallet || "";
+
 
         document
         .getElementById("paymentPhone")
         .value =
-        data.phone || "";
+            data.phone || "";
+
 
         document
         .getElementById("qrisUrl")
         .value =
-        data.qris_url ||
-        data.qris ||
-        "";
+            data.qris_url || "";
+
 
     }catch(error){
 
-        console.error(error);
+        console.error(
+            "PAYMENT LOAD:",
+            error
+        );
+
 
         document
-        .getElementById("paymentMessage")
+        .getElementById(
+            "paymentMessage"
+        )
         .innerHTML =
-        `<div class="error">
-        Gagal memuat pembayaran:
-        ${escapeHtml(error.message)}
-        </div>`;
+            `<div class="error">
+                Gagal membaca pengaturan pembayaran:<br>
+                ${escapeHtml(error.message)}
+            </div>`;
 
     }
 
@@ -1816,132 +2591,191 @@ SAVE PAYMENT
 document
 .getElementById("savePaymentBtn")
 .addEventListener(
-"click",
-savePayment
+    "click",
+    savePayment
 );
 
 
 async function savePayment(){
 
     const message =
-    document
-    .getElementById(
-        "paymentMessage"
-    );
+        document
+        .getElementById(
+            "paymentMessage"
+        );
+
+
+    const button =
+        document
+        .getElementById(
+            "savePaymentBtn"
+        );
+
 
     message.innerHTML = "";
 
-    const button =
-    document
-    .getElementById(
-        "savePaymentBtn"
-    );
-
     button.disabled = true;
+
     button.textContent =
-    "Menyimpan...";
+        "Menyimpan...";
+
 
     try{
 
-        const paymentData = {
-
-            bank_name:
+        const bankName =
             document
             .getElementById("bankName")
             .value
-            .trim(),
+            .trim();
 
-            account_number:
+
+        const accountNumber =
             document
             .getElementById("accountNumber")
             .value
-            .trim(),
+            .trim();
 
-            account_name:
+
+        const accountName =
             document
             .getElementById("accountName")
             .value
-            .trim(),
+            .trim();
 
-            bank_account:
-            document
-            .getElementById("accountNumber")
-            .value
-            .trim(),
 
-            payment_method:
-            document
-            .getElementById("bankName")
-            .value
-            .trim(),
-
-            ewallet:
+        const ewallet =
             document
             .getElementById("ewallet")
             .value
-            .trim(),
+            .trim();
 
-            phone:
+
+        const phone =
             document
             .getElementById("paymentPhone")
             .value
-            .trim(),
+            .trim();
 
-            qris_url:
+
+        const qrisUrl =
             document
             .getElementById("qrisUrl")
             .value
-            .trim(),
+            .trim();
 
-            qris:
-            document
-            .getElementById("qrisUrl")
-            .value
-            .trim(),
+
+        const paymentData = {
+
+            bank_name:bankName,
+
+            account_number:accountNumber,
+
+            account_name:accountName,
+
+            ewallet:ewallet,
+
+            phone:phone,
+
+            qris_url:qrisUrl,
 
             updated_at:
-            new Date().toISOString()
+                new Date()
+                .toISOString()
 
         };
 
 
         /*
-        Kita UPDATE baris ID 1.
-        Tidak INSERT sehingga tidak ada
-        masalah duplicate ID.
+        CEK BARIS SETTING
         */
 
         const {
-            error
+            data:existing,
+            error:checkError
         } =
         await db
         .from("settings")
-        .update(paymentData)
-        .eq("id",1);
+        .select("id")
+        .eq("id",1)
+        .maybeSingle();
 
-        if(error)
-            throw error;
+
+        if(checkError){
+            throw checkError;
+        }
+
+
+        let result;
+
+
+        /*
+        JIKA ADA → UPDATE
+        */
+
+        if(existing){
+
+            result =
+                await db
+                .from("settings")
+                .update(paymentData)
+                .eq("id",1);
+
+        }
+
+
+        /*
+        JIKA BELUM ADA → INSERT
+        */
+
+        else{
+
+            result =
+                await db
+                .from("settings")
+                .insert({
+
+                    id:1,
+
+                    ...paymentData
+
+                });
+
+        }
+
+
+        if(result.error){
+            throw result.error;
+        }
+
 
         message.innerHTML =
-        '<div class="success">Rekening berhasil disimpan.</div>';
+            '<div class="success">✓ Rekening pembayaran berhasil disimpan.</div>';
+
 
         await loadPayment();
 
+
     }catch(error){
 
-        console.error(error);
+        console.error(
+            "PAYMENT SAVE:",
+            error
+        );
+
 
         message.innerHTML =
-        `<div class="error">
-        Gagal menyimpan rekening:
-        ${escapeHtml(error.message)}
-        </div>`;
+            `<div class="error">
+                Gagal menyimpan rekening:<br>
+                ${escapeHtml(error.message)}
+            </div>`;
+
 
     }finally{
 
         button.disabled = false;
+
         button.textContent =
-        "Simpan Pembayaran";
+            "Simpan Pembayaran";
 
     }
 
@@ -1949,26 +2783,29 @@ async function savePayment(){
 
 
 /* =====================================================
-ORDERS
+LOAD ORDERS
 ===================================================== */
 
 async function loadOrders(){
 
     const box =
-    document.getElementById(
-        "ordersList"
-    );
+        document
+        .getElementById(
+            "ordersList"
+        );
+
 
     box.innerHTML =
-    '<div class="loading">Memuat pesanan...</div>';
+        '<div class="loading">Memuat pesanan...</div>';
+
 
     try{
 
         /*
-        Tidak memakai relationship profiles.
-        Jadi tidak bergantung pada schema cache
-        orders -> profiles.
+        TIDAK MENGGUNAKAN
+        RELATIONSHIP PROFILES.
         */
+
 
         const {
             data,
@@ -1984,191 +2821,230 @@ async function loadOrders(){
             price,
             status,
             notes,
-            created_at,
-            services (
-                name,
-                title
-            )
+            created_at
         `)
-        .order("created_at",{
-            ascending:false
-        });
+        .order(
+            "created_at",
+            {
+                ascending:false
+            }
+        );
 
-        if(error)
+
+        if(error){
             throw error;
+        }
+
 
         if(!data || data.length === 0){
 
             box.innerHTML =
-            `<div class="panel">
-                Belum ada pesanan.
-            </div>`;
+                '<div class="panel">Belum ada pesanan.</div>';
 
             return;
 
         }
 
+
         box.innerHTML = "";
 
-        data.forEach(function(order){
 
-            const service =
-            order.services;
+        data.forEach(
+            function(order){
 
-            const serviceName =
-            order.service_name ||
-            (
-                service &&
-                (
-                    service.name ||
-                    service.title
+                const div =
+                    document.createElement("div");
+
+
+                div.className =
+                    "order-card";
+
+
+                div.innerHTML = `
+
+                    <div class="order-line">
+
+                        <span class="order-label">
+                            Layanan
+                        </span>
+
+                        <strong>
+                            ${escapeHtml(
+                                order.service_name ||
+                                "Layanan"
+                            )}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="order-line">
+
+                        <span class="order-label">
+                            User ID
+                        </span>
+
+                        <span class="order-user">
+                            ${escapeHtml(
+                                order.user_id
+                            )}
+                        </span>
+
+                    </div>
+
+
+                    <div class="order-line">
+
+                        <span class="order-label">
+                            Harga
+                        </span>
+
+                        <strong>
+                            ${rupiah(
+                                order.price
+                            )}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="order-line">
+
+                        <span class="order-label">
+                            Catatan
+                        </span>
+
+                        <span>
+                            ${escapeHtml(
+                                order.notes || "-"
+                            )}
+                        </span>
+
+                    </div>
+
+
+                    <div class="order-line">
+
+                        <span class="order-label">
+                            Tanggal
+                        </span>
+
+                        <span>
+                            ${dateFormat(
+                                order.created_at
+                            )}
+                        </span>
+
+                    </div>
+
+
+                    <div>
+
+                        Status:
+                        <span class="order-status">
+
+                            ${escapeHtml(
+                                order.status || "pending"
+                            )}
+
+                        </span>
+
+                    </div>
+
+
+                    <select
+                        class="status-select">
+
+                        <option value="pending"
+                            ${
+                                order.status === "pending"
+                                ? "selected"
+                                : ""
+                            }>
+                            Pending
+                        </option>
+
+
+                        <option value="processing"
+                            ${
+                                order.status === "processing"
+                                ? "selected"
+                                : ""
+                            }>
+                            Processing
+                        </option>
+
+
+                        <option value="paid"
+                            ${
+                                order.status === "paid"
+                                ? "selected"
+                                : ""
+                            }>
+                            Paid
+                        </option>
+
+
+                        <option value="completed"
+                            ${
+                                order.status === "completed"
+                                ? "selected"
+                                : ""
+                            }>
+                            Completed
+                        </option>
+
+
+                        <option value="cancelled"
+                            ${
+                                order.status === "cancelled"
+                                ? "selected"
+                                : ""
+                            }>
+                            Cancelled
+                        </option>
+
+                    </select>
+
+                `;
+
+
+                div
+                .querySelector(
+                    ".status-select"
                 )
-            ) ||
-            "Layanan";
+                .addEventListener(
+                    "change",
+                    function(e){
 
-            const div =
-            document.createElement("div");
+                        updateOrderStatus(
+                            order.id,
+                            e.target.value
+                        );
 
-            div.className =
-            "order-card";
+                    }
+                );
 
-            div.innerHTML = `
 
-                <div class="order-line">
-                    <span class="label">
-                        Layanan
-                    </span>
+                box.appendChild(div);
 
-                    <strong>
-                        ${escapeHtml(
-                            serviceName
-                        )}
-                    </strong>
-                </div>
+            }
+        );
 
-                <div class="order-line">
-                    <span class="label">
-                        User ID
-                    </span>
-
-                    <span style="
-                        font-size:11px;
-                        word-break:break-all;">
-                        ${escapeHtml(
-                            order.user_id
-                        )}
-                    </span>
-                </div>
-
-                <div class="order-line">
-                    <span class="label">
-                        Harga
-                    </span>
-
-                    <strong>
-                        ${formatRupiah(
-                            order.price
-                        )}
-                    </strong>
-                </div>
-
-                <div class="order-line">
-                    <span class="label">
-                        Catatan
-                    </span>
-
-                    <span>
-                        ${escapeHtml(
-                            order.notes || "-"
-                        )}
-                    </span>
-                </div>
-
-                <div class="order-line">
-                    <span class="label">
-                        Tanggal
-                    </span>
-
-                    <span>
-                        ${formatDate(
-                            order.created_at
-                        )}
-                    </span>
-                </div>
-
-                <div>
-                    Status sekarang:
-                    <span class="order-status">
-                        ${escapeHtml(
-                            order.status
-                        )}
-                    </span>
-                </div>
-
-                <select
-                    class="status-select">
-
-                    <option value="pending"
-                        ${order.status === "pending"
-                        ? "selected":""}>
-                        Pending
-                    </option>
-
-                    <option value="processing"
-                        ${order.status === "processing"
-                        ? "selected":""}>
-                        Processing
-                    </option>
-
-                    <option value="paid"
-                        ${order.status === "paid"
-                        ? "selected":""}>
-                        Paid
-                    </option>
-
-                    <option value="completed"
-                        ${order.status === "completed"
-                        ? "selected":""}>
-                        Completed
-                    </option>
-
-                    <option value="cancelled"
-                        ${order.status === "cancelled"
-                        ? "selected":""}>
-                        Cancelled
-                    </option>
-
-                </select>
-
-            `;
-
-            div
-            .querySelector(".status-select")
-            .addEventListener(
-                "change",
-                function(event){
-
-                    updateOrderStatus(
-                        order.id,
-                        event.target.value
-                    );
-
-                }
-            );
-
-            box.appendChild(div);
-
-        });
 
     }catch(error){
 
-        console.error(error);
+        console.error(
+            "ORDERS:",
+            error
+        );
+
 
         box.innerHTML =
-        `<div class="error">
-        Gagal memuat pesanan:
-        ${escapeHtml(error.message)}
-        </div>`;
+            `<div class="error">
+                Gagal memuat pesanan:<br>
+                ${escapeHtml(error.message)}
+            </div>`;
 
     }
 
@@ -2180,7 +3056,7 @@ UPDATE ORDER
 ===================================================== */
 
 async function updateOrderStatus(
-    orderId,
+    id,
     status
 ){
 
@@ -2192,24 +3068,26 @@ async function updateOrderStatus(
         await db
         .from("orders")
         .update({
-
-            status:status,
-
-            updated_at:
-            new Date().toISOString()
-
+            status:status
         })
-        .eq("id",orderId);
+        .eq(
+            "id",
+            id
+        );
 
-        if(error)
+
+        if(error){
             throw error;
+        }
+
 
         await loadOrders();
+
 
     }catch(error){
 
         alert(
-            "Gagal mengubah status: " +
+            "Gagal mengubah status:\n\n" +
             error.message
         );
 
@@ -2219,15 +3097,17 @@ async function updateOrderStatus(
 
 
 /* =====================================================
-MEMBERS
+LOAD MEMBERS
 ===================================================== */
 
 async function loadMembers(){
 
-    const tbody =
-    document.getElementById(
-        "membersTable"
-    );
+    const table =
+        document
+        .getElementById(
+            "membersTable"
+        );
+
 
     try{
 
@@ -2240,80 +3120,105 @@ async function loadMembers(){
         .select(
             "id,email,full_name,role,created_at"
         )
-        .order("created_at",{
-            ascending:false
-        });
+        .order(
+            "created_at",
+            {
+                ascending:false
+            }
+        );
 
-        if(error)
+
+        if(error){
             throw error;
+        }
+
 
         if(!data || data.length === 0){
 
-            tbody.innerHTML =
-            `<tr>
-                <td colspan="4">
-                    Tidak ada member.
-                </td>
-            </tr>`;
+            table.innerHTML =
+                `<tr>
+                    <td colspan="4">
+                        Belum ada member.
+                    </td>
+                </tr>`;
 
             return;
 
         }
 
-        tbody.innerHTML = "";
 
-        data.forEach(function(member){
+        table.innerHTML = "";
 
-            const tr =
-            document.createElement("tr");
 
-            tr.innerHTML = `
+        data.forEach(
+            function(member){
 
-                <td>
-                    ${escapeHtml(
-                        member.email || "-"
-                    )}
-                </td>
+                const tr =
+                    document.createElement("tr");
 
-                <td>
-                    ${escapeHtml(
-                        member.full_name || "-"
-                    )}
-                </td>
 
-                <td>
-                    ${escapeHtml(
-                        member.role
-                    )}
-                </td>
+                tr.innerHTML = `
 
-                <td>
-                    ${formatDate(
-                        member.created_at
-                    )}
-                </td>
+                    <td>
+                        ${escapeHtml(
+                            member.email || "-"
+                        )}
+                    </td>
 
-            `;
 
-            tbody.appendChild(tr);
+                    <td>
+                        ${escapeHtml(
+                            member.full_name || "-"
+                        )}
+                    </td>
 
-        });
+
+                    <td>
+                        ${escapeHtml(
+                            member.role || "-"
+                        )}
+                    </td>
+
+
+                    <td>
+                        ${dateFormat(
+                            member.created_at
+                        )}
+                    </td>
+
+                `;
+
+
+                table.appendChild(tr);
+
+            }
+        );
+
 
     }catch(error){
 
-        console.error(error);
+        console.error(
+            "MEMBERS:",
+            error
+        );
 
-        tbody.innerHTML =
-        `<tr>
-            <td colspan="4">
-                <div class="error">
-                    Gagal memuat member:
-                    ${escapeHtml(
-                        error.message
-                    )}
-                </div>
-            </td>
-        </tr>`;
+
+        table.innerHTML =
+            `<tr>
+                <td colspan="4">
+
+                    <div class="error">
+
+                        Gagal memuat member:<br>
+
+                        ${escapeHtml(
+                            error.message
+                        )}
+
+                    </div>
+
+                </td>
+            </tr>`;
 
     }
 
@@ -2327,9 +3232,11 @@ CHAT MEMBER LIST
 async function loadChatMembers(){
 
     const box =
-    document.getElementById(
-        "memberList"
-    );
+        document
+        .getElementById(
+            "memberList"
+        );
+
 
     try{
 
@@ -2340,85 +3247,132 @@ async function loadChatMembers(){
         await db
         .from("profiles")
         .select(
-            "id,email,full_name,role"
+            "id,email,full_name,role,created_at"
         )
-        .eq("role","member")
-        .order("created_at",{
-            ascending:false
-        });
+        .eq(
+            "role",
+            "member"
+        )
+        .order(
+            "created_at",
+            {
+                ascending:false
+            }
+        );
 
-        if(error)
+
+        if(error){
             throw error;
+        }
+
 
         if(!data || data.length === 0){
 
             box.innerHTML =
-            '<div class="loading">Belum ada member.</div>';
+                '<div class="loading">Belum ada member.</div>';
 
             return;
 
         }
 
+
         box.innerHTML = "";
 
-        data.forEach(function(member){
 
-            const button =
-            document.createElement("button");
+        data.forEach(
+            function(member){
 
-            button.type = "button";
+                const button =
+                    document.createElement(
+                        "button"
+                    );
 
-            button.className =
-            "member-item";
 
-            button.dataset.id =
-            member.id;
+                button.type =
+                    "button";
 
-            button.innerHTML = `
 
-                <strong>
-                    ${escapeHtml(
-                        member.full_name ||
-                        member.email ||
-                        "Member"
-                    )}
-                </strong>
+                button.className =
+                    "member-item";
 
-                <br>
 
-                <small style="
-                    color:#929bb0;">
-                    ${escapeHtml(
-                        member.email || ""
-                    )}
-                </small>
+                button.dataset.id =
+                    member.id;
 
-            `;
 
-            button.addEventListener(
-                "click",
-                function(){
+                if(
+                    selectedMemberId ===
+                    member.id
+                ){
 
-                    selectMember(
-                        member
+                    button.classList.add(
+                        "active"
                     );
 
                 }
-            );
 
-            box.appendChild(button);
 
-        });
+                button.innerHTML = `
+
+                    <strong>
+                        ${escapeHtml(
+                            member.full_name ||
+                            "Member"
+                        )}
+                    </strong>
+
+                    <br>
+
+                    <small style="
+                        color:#929bb0;">
+
+                        ${escapeHtml(
+                            member.email || ""
+                        )}
+
+                    </small>
+
+                `;
+
+
+                button.addEventListener(
+                    "click",
+                    function(){
+
+                        selectMember(
+                            member
+                        );
+
+                    }
+                );
+
+
+                box.appendChild(
+                    button
+                );
+
+            }
+        );
+
 
     }catch(error){
 
-        console.error(error);
+        console.error(
+            "CHAT MEMBERS:",
+            error
+        );
+
 
         box.innerHTML =
-        `<div class="error">
-        Gagal memuat member:
-        ${escapeHtml(error.message)}
-        </div>`;
+            `<div class="error">
+
+                Gagal memuat member:<br>
+
+                ${escapeHtml(
+                    error.message
+                )}
+
+            </div>`;
 
     }
 
@@ -2429,37 +3383,47 @@ async function loadChatMembers(){
 SELECT MEMBER
 ===================================================== */
 
-async function selectMember(member){
+async function selectMember(
+    member
+){
 
     selectedMemberId =
-    member.id;
+        member.id;
+
 
     selectedMemberEmail =
-    member.email || "";
+        member.email || "";
+
 
     document
     .querySelectorAll(
         ".member-item"
     )
-    .forEach(function(item){
+    .forEach(
+        function(item){
 
-        item.classList.toggle(
-            "active",
-            item.dataset.id ===
-            member.id
-        );
+            item.classList.toggle(
+                "active",
+                item.dataset.id ===
+                member.id
+            );
 
-    });
+        }
+    );
+
 
     document
-    .getElementById("chatTitle")
+    .getElementById(
+        "chatTitle"
+    )
     .textContent =
-    "Chat: " +
-    (
-        member.full_name ||
-        member.email ||
-        "Member"
-    );
+        "Chat: " +
+        (
+            member.full_name ||
+            member.email ||
+            "Member"
+        );
+
 
     await loadAdminMessages();
 
@@ -2467,26 +3431,42 @@ async function selectMember(member){
 
 
 /* =====================================================
-LOAD ADMIN CHAT
+LOAD CHAT
 ===================================================== */
 
 async function loadAdminMessages(){
 
     const box =
-    document.getElementById(
-        "adminChatMessages"
-    );
+        document
+        .getElementById(
+            "adminChatMessages"
+        );
+
 
     if(!selectedMemberId){
 
         box.innerHTML =
-        '<div class="loading">Pilih member.</div>';
+            `<div class="chat-empty">
+                Pilih member terlebih dahulu.
+            </div>`;
 
         return;
 
     }
 
+
     try{
+
+        /*
+        HANYA MENGGUNAKAN KOLOM:
+        id
+        user_id
+        sender_id
+        sender_role
+        message
+        created_at
+        */
+
 
         const {
             data,
@@ -2500,69 +3480,116 @@ async function loadAdminMessages(){
             sender_id,
             sender_role,
             message,
-            content,
             created_at
         `)
         .eq(
             "user_id",
             selectedMemberId
         )
-        .order("created_at",{
-            ascending:true
-        });
+        .order(
+            "created_at",
+            {
+                ascending:true
+            }
+        );
 
-        if(error)
+
+        if(error){
             throw error;
+        }
+
 
         if(!data || data.length === 0){
 
             box.innerHTML =
-            '<div class="loading">Belum ada pesan.</div>';
+                `<div class="chat-empty">
+                    Belum ada pesan.
+                </div>`;
 
             return;
 
         }
 
+
         box.innerHTML = "";
 
-        data.forEach(function(item){
 
-            const div =
-            document.createElement("div");
+        data.forEach(
+            function(msg){
 
-            const isAdmin =
-            item.sender_role === "admin" ||
-            item.sender_id === adminUser.id;
+                const div =
+                    document.createElement(
+                        "div"
+                    );
 
-            div.className =
-            "message " +
-            (
-                isAdmin
-                ? "admin"
-                : "member"
-            );
 
-            div.textContent =
-            item.message ||
-            item.content ||
-            "";
+                const isAdmin =
+                    String(
+                        msg.sender_role || ""
+                    ).toLowerCase()
+                    ===
+                    "admin"
+                    ||
+                    msg.sender_id ===
+                    adminUser.id;
 
-            box.appendChild(div);
 
-        });
+                div.className =
+                    "message " +
+                    (
+                        isAdmin
+                        ? "admin"
+                        : "member"
+                    );
+
+
+                const text =
+                    msg.message || "";
+
+
+                div.innerHTML =
+                    escapeHtml(text) +
+                    `
+                    <span class="message-time">
+
+                        ${dateFormat(
+                            msg.created_at
+                        )}
+
+                    </span>
+                    `;
+
+
+                box.appendChild(
+                    div
+                );
+
+            }
+        );
+
 
         box.scrollTop =
-        box.scrollHeight;
+            box.scrollHeight;
+
 
     }catch(error){
 
-        console.error(error);
+        console.error(
+            "LOAD CHAT:",
+            error
+        );
+
 
         box.innerHTML =
-        `<div class="error">
-        Gagal memuat chat:
-        ${escapeHtml(error.message)}
-        </div>`;
+            `<div class="error">
+
+                Gagal memuat chat:<br>
+
+                ${escapeHtml(
+                    error.message
+                )}
+
+            </div>`;
 
     }
 
@@ -2589,11 +3616,11 @@ document
 )
 .addEventListener(
     "keydown",
-    function(event){
+    function(e){
 
-        if(event.key === "Enter"){
+        if(e.key === "Enter"){
 
-            event.preventDefault();
+            e.preventDefault();
 
             sendAdminMessage();
 
@@ -2605,10 +3632,18 @@ document
 
 async function sendAdminMessage(){
 
-    if(
-        !adminUser ||
-        !selectedMemberId
-    ){
+    if(!adminUser){
+
+        alert(
+            "Admin belum login."
+        );
+
+        return;
+
+    }
+
+
+    if(!selectedMemberId){
 
         alert(
             "Pilih member terlebih dahulu."
@@ -2618,27 +3653,43 @@ async function sendAdminMessage(){
 
     }
 
+
     const input =
-    document
-    .getElementById(
-        "adminChatInput"
-    );
+        document
+        .getElementById(
+            "adminChatInput"
+        );
 
-    const text =
-    input.value.trim();
-
-    if(!text)
-        return;
 
     const button =
-    document
-    .getElementById(
-        "sendAdminChatBtn"
-    );
+        document
+        .getElementById(
+            "sendAdminChatBtn"
+        );
+
+
+    const text =
+        input.value.trim();
+
+
+    if(!text){
+        return;
+    }
+
 
     button.disabled = true;
 
+    button.textContent =
+        "Mengirim...";
+
+
     try{
+
+        /*
+        JANGAN menggunakan kolom content.
+        Hanya message.
+        */
+
 
         const {
             error
@@ -2648,111 +3699,53 @@ async function sendAdminMessage(){
         .insert({
 
             user_id:
-            selectedMemberId,
+                selectedMemberId,
 
             sender_id:
-            adminUser.id,
+                adminUser.id,
 
             sender_role:
-            "admin",
+                "admin",
 
             message:
-            text,
-
-            content:
-            text
+                text
 
         });
 
-        if(error)
+
+        if(error){
             throw error;
+        }
+
 
         input.value = "";
 
+
         await loadAdminMessages();
+
 
     }catch(error){
 
-        console.error(error);
+        console.error(
+            "SEND ADMIN CHAT:",
+            error
+        );
+
 
         alert(
-            "Gagal mengirim chat: " +
+            "Gagal membalas live chat:\n\n" +
             error.message
         );
+
 
     }finally{
 
         button.disabled = false;
 
+        button.textContent =
+            "Kirim";
+
     }
-
-}
-
-
-/* =====================================================
-CHAT REFRESH
-===================================================== */
-
-function startAdminChatRefresh(){
-
-    if(chatTimer)
-        clearInterval(chatTimer);
-
-    chatTimer =
-    setInterval(
-        async function(){
-
-            await loadChatMembers();
-
-            if(selectedMemberId)
-                await loadAdminMessages();
-
-        },
-        5000
-    );
-
-}
-
-
-/* =====================================================
-HELPERS
-===================================================== */
-
-function formatRupiah(value){
-
-    return new Intl.NumberFormat(
-        "id-ID",
-        {
-            style:"currency",
-            currency:"IDR",
-            maximumFractionDigits:0
-        }
-    ).format(
-        Number(value || 0)
-    );
-
-}
-
-
-function formatDate(value){
-
-    if(!value)
-        return "-";
-
-    return new Date(value)
-    .toLocaleString("id-ID");
-
-}
-
-
-function escapeHtml(value){
-
-    return String(value ?? "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
 
 }
 
@@ -2761,9 +3754,9 @@ function escapeHtml(value){
 START
 ===================================================== */
 
-checkAdminSession();
+checkSession();
 
 </script>
 
 </body>
-  </html>
+    </html>
