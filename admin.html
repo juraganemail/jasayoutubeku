@@ -2,45 +2,36 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-<title>Admin YouTube Service</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin - YouTube Service</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 *{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-}
-
-html,body{
-    min-height:100%;
-    background:#08080b;
-    color:#fff;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
 }
 
 body{
-    padding-bottom:40px;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#08080b;
+  color:#fff;
+  min-height:100vh;
 }
 
-button,
-input,
-textarea,
-select{
-    font-family:inherit;
+button,input,textarea,select{
+  font:inherit;
 }
 
 button{
-    border:0;
-    cursor:pointer;
+  cursor:pointer;
+  border:0;
 }
 
 .hidden{
-    display:none!important;
+  display:none!important;
 }
 
 /* =========================
@@ -48,214 +39,240 @@ button{
 ========================= */
 
 #loginPage{
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:20px;
-    background:
-        radial-gradient(circle at top,#21132f 0,#08080b 45%);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+  background:
+    radial-gradient(circle at top,#25103d 0,#08080b 45%);
 }
 
 .login-box{
-    width:100%;
-    max-width:500px;
-    background:#111116;
-    border:1px solid #302f3c;
-    border-radius:28px;
-    padding:30px 24px;
-    box-shadow:0 20px 70px rgba(0,0,0,.5);
+  width:100%;
+  max-width:460px;
+  background:#111116;
+  border:1px solid #30303c;
+  border-radius:25px;
+  padding:35px;
+  box-shadow:0 20px 60px rgba(0,0,0,.5);
 }
 
 .logo{
-    text-align:center;
-    font-size:64px;
-    margin-bottom:10px;
+  text-align:center;
+  font-size:60px;
+  margin-bottom:10px;
 }
 
 .login-box h1{
-    text-align:center;
-    font-size:38px;
-    margin-bottom:8px;
+  text-align:center;
+  font-size:38px;
+  margin-bottom:8px;
 }
 
-.login-box .sub{
-    text-align:center;
-    color:#9999a3;
-    margin-bottom:30px;
-    font-size:17px;
+.login-box .subtitle{
+  text-align:center;
+  color:#9999a5;
+  margin-bottom:30px;
+  font-size:18px;
 }
 
 label{
-    display:block;
-    font-size:16px;
-    margin:15px 0 8px;
+  display:block;
+  margin-bottom:8px;
+  color:#ddd;
+  font-size:16px;
 }
 
-input,
-textarea,
-select{
-    width:100%;
-    background:#08080b;
-    border:1px solid #363641;
-    color:#fff;
-    border-radius:15px;
-    padding:15px;
-    font-size:16px;
-    outline:none;
+input,textarea,select{
+  width:100%;
+  background:#08080b;
+  color:#fff;
+  border:1px solid #393944;
+  border-radius:14px;
+  padding:15px;
+  outline:none;
 }
 
-input:focus,
-textarea:focus,
-select:focus{
-    border-color:#7c3aed;
+input:focus,textarea:focus,select:focus{
+  border-color:#7c3aed;
 }
 
-textarea{
-    resize:vertical;
-    min-height:100px;
+.form-group{
+  margin-bottom:18px;
 }
 
-.btn{
-    width:100%;
-    padding:15px;
-    border-radius:15px;
-    font-size:16px;
-    font-weight:700;
-    color:#fff;
-    background:linear-gradient(135deg,#7c3aed,#9333ea);
+.primary{
+  width:100%;
+  background:#7137e8;
+  color:white;
+  padding:16px;
+  border-radius:14px;
+  font-weight:bold;
 }
 
-.btn:active{
-    transform:scale(.98);
+.primary:hover{
+  background:#8249f0;
 }
 
-.message{
-    margin-top:15px;
-    padding:13px;
-    border-radius:13px;
-    text-align:center;
-    background:#1c1c25;
-    color:#ddd;
+.status{
+  margin-top:18px;
+  padding:14px;
+  border-radius:12px;
+  display:none;
+  line-height:1.5;
 }
 
-.message.error{
-    color:#ff7777;
+.status.error{
+  display:block;
+  background:#35151a;
+  color:#ff8585;
+  border:1px solid #61252c;
 }
 
-.message.success{
-    color:#68e08b;
+.status.success{
+  display:block;
+  background:#12301c;
+  color:#78e894;
+  border:1px solid #245b35;
 }
 
 /* =========================
-   ADMIN
+   APP
 ========================= */
 
-#adminPage{
-    display:none;
+#app{
+  display:none;
 }
 
-.header{
-    position:sticky;
-    top:0;
-    z-index:50;
-    background:rgba(8,8,11,.96);
-    backdrop-filter:blur(15px);
-    border-bottom:1px solid #2d2d38;
+header{
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:#09090c;
+  border-bottom:1px solid #292933;
+  padding:15px 20px;
 }
 
 .header-inner{
-    max-width:1200px;
-    margin:auto;
-    padding:14px 18px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
+  max-width:1250px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  gap:15px;
+}
+
+.menu-button{
+  width:50px;
+  height:50px;
+  border-radius:14px;
+  background:#21142e;
+  color:white;
+  font-size:26px;
 }
 
 .brand{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    font-size:22px;
-    font-weight:800;
+  flex:1;
+  font-size:26px;
+  font-weight:bold;
 }
 
 .brand span{
-    color:#a78bfa;
+  color:#9b70ff;
 }
 
-.header-actions{
-    display:flex;
-    gap:8px;
+.refresh-btn{
+  background:#282833;
+  color:#fff;
+  padding:14px 18px;
+  border-radius:14px;
 }
 
-.small-btn{
-    padding:11px 15px;
-    border-radius:13px;
-    background:#282733;
-    color:#fff;
-    font-weight:700;
-}
-
-.logout{
-    background:#421d28;
-    color:#ffb5c1;
-}
-
-.container{
-    width:100%;
-    max-width:1200px;
-    margin:auto;
-    padding:25px 16px;
-}
-
-.page-title{
-    margin-bottom:22px;
-}
-
-.page-title h1{
-    font-size:34px;
-}
-
-.page-title p{
-    color:#9b9ba6;
-    margin-top:7px;
+.logout-btn{
+  background:#421c25;
+  color:#ffb5be;
+  padding:14px 20px;
+  border-radius:14px;
 }
 
 /* =========================
-   STAT
+   LAYOUT
 ========================= */
 
-.stats{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:14px;
-    margin-bottom:20px;
+.container{
+  max-width:1250px;
+  margin:auto;
+  padding:25px 20px 70px;
 }
 
-.stat{
-    background:#111116;
-    border:1px solid #30303b;
-    border-radius:22px;
-    padding:20px;
+.sidebar{
+  position:fixed;
+  top:0;
+  left:-300px;
+  width:280px;
+  height:100vh;
+  z-index:300;
+  background:#111116;
+  border-right:1px solid #30303c;
+  padding:25px 18px;
+  transition:.25s;
+  overflow-y:auto;
 }
 
-.stat-icon{
-    font-size:30px;
-    margin-bottom:15px;
+.sidebar.open{
+  left:0;
 }
 
-.stat-title{
-    color:#a3a3ad;
-    font-size:15px;
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.7);
+  z-index:250;
+  display:none;
 }
 
-.stat-value{
-    font-size:32px;
-    font-weight:800;
-    margin-top:5px;
+.overlay.show{
+  display:block;
+}
+
+.sidebar-title{
+  font-size:23px;
+  font-weight:bold;
+  margin-bottom:25px;
+}
+
+.nav-btn{
+  width:100%;
+  text-align:left;
+  padding:15px;
+  margin-bottom:8px;
+  border-radius:12px;
+  background:transparent;
+  color:#c5c5cc;
+}
+
+.nav-btn:hover,
+.nav-btn.active{
+  background:#251638;
+  color:#fff;
+}
+
+.page{
+  display:none;
+}
+
+.page.active{
+  display:block;
+}
+
+.page-title{
+  font-size:36px;
+  margin-bottom:8px;
+}
+
+.page-subtitle{
+  color:#9999a5;
+  margin-bottom:25px;
 }
 
 /* =========================
@@ -263,88 +280,41 @@ textarea{
 ========================= */
 
 .grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:18px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:18px;
 }
 
 .card{
-    background:#111116;
-    border:1px solid #30303b;
-    border-radius:22px;
-    padding:22px;
-    margin-bottom:18px;
+  background:#111116;
+  border:1px solid #30303c;
+  border-radius:22px;
+  padding:25px;
 }
 
-.card h2{
-    font-size:22px;
-    margin-bottom:17px;
+.stat-icon{
+  font-size:35px;
+  margin-bottom:15px;
 }
 
-.card h3{
-    margin-bottom:10px;
+.stat-name{
+  color:#a0a0aa;
+  font-size:17px;
 }
 
-.muted{
-    color:#9999a4;
+.stat-value{
+  font-size:35px;
+  font-weight:bold;
+  margin-top:8px;
 }
 
-.row{
-    display:flex;
-    gap:10px;
+.section{
+  margin-top:22px;
 }
 
-.row > *{
-    flex:1;
-}
-
-.payment-preview{
-    background:#08080b;
-    border:1px solid #30303b;
-    padding:15px;
-    border-radius:15px;
-    margin-top:12px;
-}
-
-.payment-preview strong{
-    display:block;
-    font-size:18px;
-    margin-bottom:5px;
-}
-
-.price-item{
-    background:#08080b;
-    border:1px solid #30303b;
-    padding:14px;
-    border-radius:15px;
-    margin-bottom:10px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
-}
-
-.price-info strong{
-    display:block;
-}
-
-.price-info small{
-    color:#9999a4;
-}
-
-.delete-btn{
-    background:#4a1d25;
-    color:#ff9eaa;
-    padding:9px 12px;
-    border-radius:10px;
-}
-
-.add-btn{
-    background:#263f2d;
-    color:#79e494;
-    padding:12px;
-    border-radius:12px;
-    font-weight:700;
+.section-title{
+  font-size:24px;
+  margin-bottom:15px;
 }
 
 /* =========================
@@ -352,136 +322,235 @@ textarea{
 ========================= */
 
 .table-wrap{
-    overflow-x:auto;
+  overflow-x:auto;
 }
 
 table{
-    width:100%;
-    border-collapse:collapse;
-    min-width:700px;
+  width:100%;
+  border-collapse:collapse;
+  min-width:700px;
 }
 
-th,
-td{
-    padding:13px;
-    border-bottom:1px solid #2b2b35;
-    text-align:left;
+th,td{
+  padding:14px;
+  border-bottom:1px solid #292933;
+  text-align:left;
 }
 
 th{
-    color:#aaaab5;
-    font-size:13px;
+  color:#aaa;
+  font-size:14px;
 }
 
 td{
-    font-size:14px;
+  color:#eee;
 }
 
-.status{
-    display:inline-block;
-    padding:6px 10px;
-    border-radius:999px;
-    font-size:12px;
-    font-weight:700;
+.badge{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:20px;
+  font-size:13px;
 }
 
-.pending{
-    background:#3b3217;
-    color:#ffd65c;
+.badge-green{
+  background:#12351e;
+  color:#73e591;
 }
 
-.processing{
-    background:#202f4a;
-    color:#75adff;
+.badge-yellow{
+  background:#3b3011;
+  color:#ffd76a;
 }
 
-.completed{
-    background:#193a26;
-    color:#6ee78b;
+.badge-red{
+  background:#42191d;
+  color:#ff8a8a;
 }
 
-.cancelled{
-    background:#422026;
-    color:#ff8797;
+.small-btn{
+  padding:9px 12px;
+  border-radius:9px;
+  background:#7137e8;
+  color:white;
+  margin:2px;
 }
 
-.action-btn{
-    padding:8px 10px;
-    border-radius:9px;
-    margin:2px;
-    color:#fff;
-    background:#292832;
+.small-btn.red{
+  background:#5b2027;
+}
+
+.small-btn.gray{
+  background:#292933;
+}
+
+/* =========================
+   SERVICE
+========================= */
+
+.service-list{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:18px;
+}
+
+.service-item{
+  background:#111116;
+  border:1px solid #30303c;
+  border-radius:18px;
+  padding:20px;
+}
+
+.service-item h3{
+  margin-bottom:8px;
+}
+
+.price{
+  color:#9b70ff;
+  font-size:24px;
+  font-weight:bold;
+  margin:10px 0;
 }
 
 /* =========================
    CHAT
 ========================= */
 
-.chat-list{
-    max-height:500px;
-    overflow-y:auto;
+.chat-layout{
+  display:grid;
+  grid-template-columns:300px 1fr;
+  gap:15px;
 }
 
-.chat-user{
-    border:1px solid #30303b;
-    border-radius:15px;
-    padding:15px;
-    margin-bottom:10px;
-    background:#0b0b0f;
+.member-list{
+  background:#111116;
+  border:1px solid #30303c;
+  border-radius:18px;
+  overflow:hidden;
 }
 
-.chat-user-head{
-    display:flex;
-    justify-content:space-between;
-    gap:10px;
+.member-chat-btn{
+  width:100%;
+  background:transparent;
+  color:white;
+  text-align:left;
+  padding:15px;
+  border-bottom:1px solid #292933;
 }
 
-.chat-user-email{
-    font-weight:700;
-    word-break:break-word;
+.member-chat-btn:hover,
+.member-chat-btn.active{
+  background:#241633;
 }
 
-.chat-messages{
-    margin-top:12px;
-    max-height:250px;
-    overflow-y:auto;
+.chat-box{
+  background:#111116;
+  border:1px solid #30303c;
+  border-radius:18px;
+  min-height:550px;
+  display:flex;
+  flex-direction:column;
 }
 
-.msg{
-    padding:10px 12px;
-    border-radius:12px;
-    margin-bottom:8px;
-    max-width:90%;
+.chat-header{
+  padding:18px;
+  border-bottom:1px solid #292933;
+  font-weight:bold;
 }
 
-.msg.member{
-    background:#252531;
+.messages{
+  flex:1;
+  padding:18px;
+  overflow-y:auto;
+  min-height:400px;
 }
 
-.msg.admin{
-    background:#5428a2;
-    margin-left:auto;
+.message{
+  max-width:80%;
+  margin-bottom:12px;
+  padding:11px 14px;
+  border-radius:14px;
+  line-height:1.5;
 }
 
-.msg small{
-    display:block;
-    opacity:.65;
-    margin-top:4px;
+.message.member{
+  background:#292933;
+  margin-right:auto;
 }
 
-.reply-box{
-    margin-top:10px;
-    display:flex;
-    gap:8px;
+.message.admin{
+  background:#7137e8;
+  margin-left:auto;
 }
 
-.reply-box input{
-    flex:1;
+.message-time{
+  font-size:11px;
+  opacity:.6;
+  margin-top:5px;
 }
 
-.reply-box button{
-    width:auto;
-    padding:12px 17px;
+.chat-form{
+  display:flex;
+  gap:10px;
+  padding:15px;
+  border-top:1px solid #292933;
+}
+
+.chat-form input{
+  flex:1;
+}
+
+.chat-form button{
+  width:100px;
+  border-radius:12px;
+  background:#7137e8;
+  color:#fff;
+  font-weight:bold;
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal{
+  position:fixed;
+  inset:0;
+  z-index:500;
+  background:rgba(0,0,0,.75);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+
+.modal.show{
+  display:flex;
+}
+
+.modal-box{
+  width:100%;
+  max-width:550px;
+  max-height:90vh;
+  overflow:auto;
+  background:#111116;
+  border:1px solid #383843;
+  border-radius:20px;
+  padding:25px;
+}
+
+.modal-title{
+  font-size:25px;
+  margin-bottom:20px;
+}
+
+.modal-actions{
+  display:flex;
+  gap:10px;
+  margin-top:20px;
+}
+
+.modal-actions button{
+  flex:1;
 }
 
 /* =========================
@@ -489,102 +558,99 @@ td{
 ========================= */
 
 #toast{
-    position:fixed;
-    left:50%;
-    bottom:25px;
-    transform:translateX(-50%);
-    z-index:999;
-    background:#22222b;
-    border:1px solid #444450;
-    color:#fff;
-    padding:13px 18px;
-    border-radius:14px;
-    display:none;
-    max-width:90%;
-    text-align:center;
+  position:fixed;
+  right:20px;
+  bottom:20px;
+  z-index:1000;
+  background:#22222b;
+  border:1px solid #444451;
+  color:#fff;
+  padding:15px 20px;
+  border-radius:14px;
+  display:none;
+  max-width:350px;
 }
 
 /* =========================
    MOBILE
 ========================= */
 
-@media(max-width:800px){
+@media(max-width:850px){
 
-    .header-inner{
-        padding:12px;
-    }
+  .grid{
+    grid-template-columns:repeat(2,1fr);
+  }
 
-    .brand{
-        font-size:18px;
-    }
+  .service-list{
+    grid-template-columns:1fr;
+  }
 
-    .small-btn{
-        padding:10px 11px;
-        font-size:13px;
-    }
+  .chat-layout{
+    grid-template-columns:1fr;
+  }
 
-    .container{
-        padding:20px 12px;
-    }
+  .member-list{
+    max-height:220px;
+    overflow-y:auto;
+  }
 
-    .page-title h1{
-        font-size:28px;
-    }
+  .brand{
+    font-size:20px;
+  }
 
-    .stats{
-        grid-template-columns:1fr 1fr;
-        gap:10px;
-    }
+  .refresh-btn{
+    font-size:13px;
+    padding:12px;
+  }
 
-    .stat{
-        padding:15px;
-        border-radius:18px;
-    }
+  .logout-btn{
+    font-size:13px;
+    padding:12px;
+  }
 
-    .stat-value{
-        font-size:27px;
-    }
-
-    .grid{
-        grid-template-columns:1fr;
-    }
-
-    .card{
-        padding:17px;
-        border-radius:18px;
-    }
-
-    .row{
-        flex-direction:column;
-    }
+  .page-title{
+    font-size:30px;
+  }
 }
 
-@media(max-width:420px){
+@media(max-width:500px){
 
-    .header-actions{
-        gap:5px;
-    }
+  .grid{
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
 
-    .small-btn{
-        font-size:12px;
-        padding:9px 8px;
-    }
+  .card{
+    padding:17px;
+  }
 
-    .brand{
-        font-size:16px;
-    }
+  .stat-icon{
+    font-size:27px;
+  }
 
-    .stats{
-        grid-template-columns:1fr 1fr;
-    }
+  .stat-name{
+    font-size:14px;
+  }
 
-    .stat-title{
-        font-size:13px;
-    }
+  .stat-value{
+    font-size:27px;
+  }
 
-    .stat-value{
-        font-size:23px;
-    }
+  .container{
+    padding:20px 12px 60px;
+  }
+
+  .login-box{
+    padding:25px 20px;
+  }
+
+  .login-box h1{
+    font-size:32px;
+  }
+
+  .chat-form button{
+    width:80px;
+  }
 }
 </style>
 </head>
@@ -592,583 +658,986 @@ td{
 <body>
 
 <!-- =====================================================
-     KONFIGURASI SUPABASE
-     CUKUP GANTI 2 BARIS INI
-===================================================== -->
-
-<script>
-const SUPABASE_URL = "https://qnvptfefmbxiaynuhfcx.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_67asK3gfVhUIpNeEs2uOPQ_2kF4AMQf";
-</script>
-
-
-<!-- =====================================================
      LOGIN
 ===================================================== -->
 
 <section id="loginPage">
 
-    <div class="login-box">
+  <div class="login-box">
 
-        <div class="logo">🎬</div>
+    <div class="logo">🎬</div>
 
-        <h1>Admin Panel</h1>
+    <h1>Admin Panel</h1>
 
-        <div class="sub">
-            YouTube Monetization Service
-        </div>
-
-        <form id="loginForm">
-
-            <label>Email Admin</label>
-
-            <input
-                id="adminEmail"
-                type="email"
-                placeholder="Email admin"
-                autocomplete="email"
-                required
-            >
-
-            <label>Password</label>
-
-            <input
-                id="adminPassword"
-                type="password"
-                placeholder="Password admin"
-                autocomplete="current-password"
-                required
-            >
-
-            <br>
-
-            <button class="btn" type="submit">
-                LOGIN ADMIN
-            </button>
-
-        </form>
-
-        <div id="loginMessage" class="message hidden"></div>
-
+    <div class="subtitle">
+      YouTube Monetization Service
     </div>
+
+    <form id="loginForm">
+
+      <div class="form-group">
+        <label>Email Admin</label>
+        <input
+          type="email"
+          id="loginEmail"
+          placeholder="Email admin"
+          autocomplete="username"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+        <input
+          type="password"
+          id="loginPassword"
+          placeholder="Password admin"
+          autocomplete="current-password"
+          required
+        >
+      </div>
+
+      <button
+        type="submit"
+        class="primary"
+        id="loginButton"
+      >
+        LOGIN ADMIN
+      </button>
+
+      <div id="loginStatus" class="status"></div>
+
+    </form>
+
+  </div>
 
 </section>
 
 
 <!-- =====================================================
-     ADMIN PAGE
+     APP
 ===================================================== -->
 
-<section id="adminPage">
+<div id="app">
 
-    <header class="header">
+<header>
 
-        <div class="header-inner">
+  <div class="header-inner">
 
-            <div class="brand">
-                🎬 YOUTUBE <span>ADMIN</span>
-            </div>
+    <button
+      class="menu-button"
+      id="menuButton"
+      type="button"
+    >
+      ☰
+    </button>
 
-            <div class="header-actions">
+    <div class="brand">
+      🎬 YOUTUBE <span>ADMIN</span>
+    </div>
 
-                <button
-                    class="small-btn"
-                    onclick="loadEverything()">
-                    ↻ Refresh
-                </button>
+    <button
+      class="refresh-btn"
+      id="refreshButton"
+      type="button"
+    >
+      ↻ Refresh
+    </button>
 
-                <button
-                    class="small-btn logout"
-                    onclick="logoutAdmin()">
-                    Logout
-                </button>
+    <button
+      class="logout-btn"
+      id="logoutButton"
+      type="button"
+    >
+      Logout
+    </button>
 
-            </div>
+  </div>
 
-        </div>
+</header>
 
-    </header>
 
+<div class="overlay" id="overlay"></div>
 
-    <main class="container">
 
-        <div class="page-title">
+<!-- SIDEBAR -->
 
-            <h1>Dashboard Admin</h1>
+<aside class="sidebar" id="sidebar">
 
-            <p>
-                Kelola layanan monetisasi YouTube,
-                pembayaran, pesanan dan live chat member.
-            </p>
+  <div class="sidebar-title">
+    🎬 MENU ADMIN
+  </div>
 
-        </div>
+  <button class="nav-btn active" data-page="dashboard">
+    📊 Dashboard
+  </button>
 
+  <button class="nav-btn" data-page="members">
+    👥 Member
+  </button>
 
-        <!-- ================= STATS ================= -->
+  <button class="nav-btn" data-page="services">
+    💰 Harga Monetisasi
+  </button>
 
-        <div class="stats">
+  <button class="nav-btn" data-page="payment">
+    💳 Rekening Pembayaran
+  </button>
 
-            <div class="stat">
-                <div class="stat-icon">👥</div>
-                <div class="stat-title">Total Member</div>
-                <div id="totalMembers" class="stat-value">0</div>
-            </div>
+  <button class="nav-btn" data-page="orders">
+    📦 Pesanan
+  </button>
 
-            <div class="stat">
-                <div class="stat-icon">📦</div>
-                <div class="stat-title">Total Pesanan</div>
-                <div id="totalOrders" class="stat-value">0</div>
-            </div>
+  <button class="nav-btn" data-page="chat">
+    💬 Live Chat
+  </button>
 
-            <div class="stat">
-                <div class="stat-icon">⏳</div>
-                <div class="stat-title">Pesanan Pending</div>
-                <div id="pendingOrders" class="stat-value">0</div>
-            </div>
+</aside>
 
-            <div class="stat">
-                <div class="stat-icon">💬</div>
-                <div class="stat-title">Pesan Chat</div>
-                <div id="totalMessages" class="stat-value">0</div>
-            </div>
 
-        </div>
+<main class="container">
 
+<!-- =====================================================
+     DASHBOARD
+===================================================== -->
 
-        <!-- ================= STATUS ================= -->
+<section
+  class="page active"
+  id="page-dashboard"
+>
 
-        <div class="card">
+  <h1 class="page-title">
+    Dashboard Admin
+  </h1>
 
-            <h2>⚡ Status Sistem</h2>
+  <p class="page-subtitle">
+    Kelola layanan monetisasi YouTube
+  </p>
 
-            <div id="systemStatus" class="muted">
-                Memeriksa koneksi...
-            </div>
 
-        </div>
+  <div class="grid">
 
-
-        <div class="grid">
-
-            <!-- ================= PAYMENT ================= -->
-
-            <div class="card">
-
-                <h2>💳 Metode Pembayaran</h2>
-
-                <p class="muted">
-                    Data ini akan disimpan di Supabase
-                    dan dapat ditampilkan di dashboard member.
-                </p>
-
-                <label>Nama Bank / E-Wallet</label>
-
-                <input
-                    id="paymentName"
-                    placeholder="Contoh: BCA / DANA / OVO">
-
-                <label>Nomor Rekening / Nomor E-Wallet</label>
-
-                <input
-                    id="paymentNumber"
-                    placeholder="Contoh: 1234567890">
-
-                <label>Nama Pemilik</label>
-
-                <input
-                    id="paymentOwner"
-                    placeholder="Nama pemilik rekening">
-
-                <br>
-
-                <button
-                    class="btn"
-                    onclick="savePayment()">
-                    SIMPAN PEMBAYARAN
-                </button>
-
-                <div id="paymentPreview"></div>
-
-            </div>
-
-
-            <!-- ================= PRICES ================= -->
-
-            <div class="card">
-
-                <h2>💰 Harga Monetisasi</h2>
-
-                <label>Nama Paket</label>
-
-                <input
-                    id="priceName"
-                    placeholder="Contoh: Monetisasi YouTube">
-
-                <label>Harga</label>
-
-                <input
-                    id="priceValue"
-                    type="number"
-                    placeholder="Contoh: 500000">
-
-                <label>Keterangan</label>
-
-                <input
-                    id="priceDescription"
-                    placeholder="Contoh: Proses 3-7 hari">
-
-                <br>
-
-                <button
-                    class="add-btn"
-                    onclick="addPrice()">
-                    + TAMBAH PAKET
-                </button>
-
-                <div
-                    id="priceList"
-                    style="margin-top:15px;">
-                    Memuat...
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- ================= ORDERS ================= -->
-
-        <div class="card">
-
-            <h2>📦 Pesanan Member</h2>
-
-            <div class="table-wrap">
-
-                <table>
-
-                    <thead>
-
-                        <tr>
-                            <th>Member</th>
-                            <th>Paket</th>
-                            <th>Harga</th>
-                            <th>Status</th>
-                            <th>Tanggal</th>
-                            <th>Aksi</th>
-                        </tr>
-
-                    </thead>
-
-                    <tbody id="ordersTable">
-
-                        <tr>
-                            <td colspan="6">
-                                Memuat pesanan...
-                            </td>
-                        </tr>
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </div>
-
-
-        <!-- ================= CHAT ================= -->
-
-        <div class="card">
-
-            <h2>💬 Live Chat Member</h2>
-
-            <p class="muted">
-                Balas pesan member dari sini.
-            </p>
-
-            <br>
-
-            <div id="chatList" class="chat-list">
-
-                Memuat chat...
-
-            </div>
-
-        </div>
-
-
-        <!-- ================= MEMBER ================= -->
-
-        <div class="card">
-
-            <h2>👥 Daftar Member</h2>
-
-            <div class="table-wrap">
-
-                <table>
-
-                    <thead>
-
-                        <tr>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>ID</th>
-                        </tr>
-
-                    </thead>
-
-                    <tbody id="membersTable">
-
-                        <tr>
-                            <td colspan="3">
-                                Memuat...
-                            </td>
-                        </tr>
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </div>
-
-    </main>
+    <div class="card">
+      <div class="stat-icon">👥</div>
+      <div class="stat-name">Total Member</div>
+      <div class="stat-value" id="totalMembers">0</div>
+    </div>
+
+    <div class="card">
+      <div class="stat-icon">📦</div>
+      <div class="stat-name">Total Pesanan</div>
+      <div class="stat-value" id="totalOrders">0</div>
+    </div>
+
+    <div class="card">
+      <div class="stat-icon">⏳</div>
+      <div class="stat-name">Pesanan Pending</div>
+      <div class="stat-value" id="pendingOrders">0</div>
+    </div>
+
+    <div class="card">
+      <div class="stat-icon">💬</div>
+      <div class="stat-name">Pesan Chat</div>
+      <div class="stat-value" id="totalMessages">0</div>
+    </div>
+
+  </div>
+
+
+  <div class="section card">
+
+    <h2 class="section-title">
+      Status Sistem
+    </h2>
+
+    <p id="systemStatus">
+      Memeriksa koneksi...
+    </p>
+
+    <p style="margin-top:10px;color:#999;">
+      Admin:
+      <span id="adminEmail">-</span>
+    </p>
+
+  </div>
 
 </section>
+
+
+<!-- =====================================================
+     MEMBERS
+===================================================== -->
+
+<section
+  class="page"
+  id="page-members"
+>
+
+  <h1 class="page-title">
+    Data Member
+  </h1>
+
+  <p class="page-subtitle">
+    Daftar akun member yang terdaftar.
+  </p>
+
+  <div class="card">
+
+    <div class="table-wrap">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Dibuat</th>
+          </tr>
+        </thead>
+
+        <tbody id="membersTable">
+          <tr>
+            <td colspan="3">
+              Memuat...
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     SERVICES
+===================================================== -->
+
+<section
+  class="page"
+  id="page-services"
+>
+
+  <h1 class="page-title">
+    Harga Monetisasi
+  </h1>
+
+  <p class="page-subtitle">
+    Tambah dan ubah harga jasa YouTube.
+  </p>
+
+  <button
+    class="primary"
+    style="max-width:250px;margin-bottom:20px;"
+    id="addServiceButton"
+    type="button"
+  >
+    + Tambah Layanan
+  </button>
+
+  <div
+    class="service-list"
+    id="serviceList"
+  >
+    <div class="card">
+      Memuat layanan...
+    </div>
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     PAYMENT
+===================================================== -->
+
+<section
+  class="page"
+  id="page-payment"
+>
+
+  <h1 class="page-title">
+    Rekening Pembayaran
+  </h1>
+
+  <p class="page-subtitle">
+    Informasi ini akan digunakan untuk ditampilkan kepada member.
+  </p>
+
+  <div class="card">
+
+    <form id="paymentForm">
+
+      <div class="form-group">
+        <label>Nama Bank / E-Wallet</label>
+
+        <input
+          id="paymentBank"
+          placeholder="Contoh: BCA / DANA / OVO"
+        >
+      </div>
+
+      <div class="form-group">
+        <label>Nomor Rekening / Nomor E-Wallet</label>
+
+        <input
+          id="paymentNumber"
+          placeholder="Nomor rekening"
+        >
+      </div>
+
+      <div class="form-group">
+        <label>Nama Pemilik</label>
+
+        <input
+          id="paymentOwner"
+          placeholder="Nama pemilik rekening"
+        >
+      </div>
+
+      <div class="form-group">
+        <label>QRIS URL (opsional)</label>
+
+        <input
+          id="paymentQris"
+          placeholder="https://..."
+        >
+      </div>
+
+      <button
+        type="submit"
+        class="primary"
+      >
+        SIMPAN REKENING
+      </button>
+
+    </form>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     ORDERS
+===================================================== -->
+
+<section
+  class="page"
+  id="page-orders"
+>
+
+  <h1 class="page-title">
+    Pesanan
+  </h1>
+
+  <p class="page-subtitle">
+    Kelola pesanan member.
+  </p>
+
+  <div class="card">
+
+    <div class="table-wrap">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>Member</th>
+            <th>Layanan</th>
+            <th>Status</th>
+            <th>Tanggal</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+
+        <tbody id="ordersTable">
+          <tr>
+            <td colspan="5">
+              Memuat...
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     CHAT
+===================================================== -->
+
+<section
+  class="page"
+  id="page-chat"
+>
+
+  <h1 class="page-title">
+    Live Chat
+  </h1>
+
+  <p class="page-subtitle">
+    Balas pesan member.
+  </p>
+
+  <div class="chat-layout">
+
+    <div class="member-list" id="chatMembers">
+
+      <div style="padding:20px;color:#999;">
+        Memuat member...
+      </div>
+
+    </div>
+
+
+    <div class="chat-box">
+
+      <div
+        class="chat-header"
+        id="chatHeader"
+      >
+        Pilih member
+      </div>
+
+      <div
+        class="messages"
+        id="messages"
+      >
+
+        <div
+          style="text-align:center;color:#888;padding-top:80px;"
+        >
+          Pilih member untuk melihat chat.
+        </div>
+
+      </div>
+
+
+      <form
+        class="chat-form"
+        id="chatForm"
+      >
+
+        <input
+          id="chatInput"
+          placeholder="Tulis balasan..."
+          autocomplete="off"
+        >
+
+        <button type="submit">
+          Kirim
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</section>
+
+</main>
+
+</div>
+
+
+<!-- =====================================================
+     SERVICE MODAL
+===================================================== -->
+
+<div
+  class="modal"
+  id="serviceModal"
+>
+
+  <div class="modal-box">
+
+    <div class="modal-title">
+      Tambah / Edit Layanan
+    </div>
+
+    <form id="serviceForm">
+
+      <input
+        type="hidden"
+        id="serviceId"
+      >
+
+      <div class="form-group">
+
+        <label>Nama Layanan</label>
+
+        <input
+          id="serviceName"
+          required
+          placeholder="Contoh: Monetisasi 1.000 Subscriber"
+        >
+
+      </div>
+
+      <div class="form-group">
+
+        <label>Deskripsi</label>
+
+        <textarea
+          id="serviceDescription"
+          rows="4"
+          placeholder="Deskripsi layanan"
+        ></textarea>
+
+      </div>
+
+      <div class="form-group">
+
+        <label>Harga</label>
+
+        <input
+          type="number"
+          id="servicePrice"
+          required
+          placeholder="500000"
+        >
+
+      </div>
+
+      <div class="form-group">
+
+        <label>Status</label>
+
+        <select id="serviceActive">
+
+          <option value="true">
+            Aktif
+          </option>
+
+          <option value="false">
+            Tidak Aktif
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <div class="modal-actions">
+
+        <button
+          type="button"
+          class="small-btn gray"
+          id="closeServiceModal"
+        >
+          Batal
+        </button>
+
+        <button
+          type="submit"
+          class="primary"
+        >
+          Simpan
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
 
 
 <div id="toast"></div>
 
 
 <script>
+/* =====================================================
+   SUPABASE CONFIG
+   EDIT HANYA 2 BAGIAN INI
+===================================================== */
+
+const SUPABASE_URL = "https://qnvptfefmbxiaynuhfcx.supabase.co";
+
+const SUPABASE_ANON_KEY = "sb_publishable_67asK3gfVhUIpNeEs2uOPQ_2kF4AMQf";
+
 
 /* =====================================================
-   SUPABASE
+   SUPABASE CLIENT
 ===================================================== */
 
 let supabaseClient = null;
-let currentAdmin = null;
+
+if(
+  SUPABASE_URL &&
+  SUPABASE_ANON_KEY &&
+  !SUPABASE_URL.includes("MASUKKAN_") &&
+  !SUPABASE_ANON_KEY.includes("MASUKKAN_")
+){
+  supabaseClient =
+    window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY
+    );
+}
 
 
 /* =====================================================
-   INIT
+   GLOBAL
 ===================================================== */
 
-document.addEventListener("DOMContentLoaded", async () => {
+let currentUser = null;
+let currentChatUser = null;
 
-    if (
-        SUPABASE_URL.includes("GANTI_DENGAN") ||
-        SUPABASE_ANON_KEY.includes("GANTI_DENGAN")
-    ) {
 
-        showLoginError(
-            "Supabase URL / Anon Key belum diganti."
+/* =====================================================
+   ELEMENT
+===================================================== */
+
+const loginPage =
+  document.getElementById("loginPage");
+
+const app =
+  document.getElementById("app");
+
+const loginForm =
+  document.getElementById("loginForm");
+
+const loginStatus =
+  document.getElementById("loginStatus");
+
+const loginButton =
+  document.getElementById("loginButton");
+
+
+/* =====================================================
+   TOAST
+===================================================== */
+
+function toast(message){
+
+  const el =
+    document.getElementById("toast");
+
+  el.textContent = message;
+
+  el.style.display = "block";
+
+  clearTimeout(window.toastTimer);
+
+  window.toastTimer =
+    setTimeout(()=>{
+      el.style.display = "none";
+    },3500);
+}
+
+
+/* =====================================================
+   STATUS
+===================================================== */
+
+function showLoginError(message){
+
+  loginStatus.className =
+    "status error";
+
+  loginStatus.textContent =
+    message;
+}
+
+function showLoginSuccess(message){
+
+  loginStatus.className =
+    "status success";
+
+  loginStatus.textContent =
+    message;
+}
+
+
+/* =====================================================
+   CHECK CONFIG
+===================================================== */
+
+if(!supabaseClient){
+
+  showLoginError(
+    "SUPABASE_URL atau SUPABASE_ANON_KEY belum diganti."
+  );
+}
+
+
+/* =====================================================
+   SAFE QUERY
+===================================================== */
+
+async function queryWithTimeout(queryPromise,timeout=10000){
+
+  const timeoutPromise =
+    new Promise((_,reject)=>{
+
+      setTimeout(()=>{
+        reject(
+          new Error(
+            "Koneksi database timeout."
+          )
         );
+      },timeout);
 
-        return;
-    }
+    });
 
-    try {
+  return Promise.race([
+    queryPromise,
+    timeoutPromise
+  ]);
+}
 
-        supabaseClient =
-            window.supabase.createClient(
-                SUPABASE_URL,
-                SUPABASE_ANON_KEY
-            );
 
-        const {
-            data: {
-                session
-            }
-        } = await supabaseClient.auth.getSession();
+/* =====================================================
+   GET PROFILE
+===================================================== */
 
-        if(session){
+async function getProfile(userId){
 
-            const ok =
-                await checkAdmin(session.user);
+  const result =
+    await queryWithTimeout(
+      supabaseClient
+        .from("profiles")
+        .select("*")
+        .eq("id",userId)
+        .maybeSingle()
+    );
 
-            if(ok){
+  if(result.error)
+    throw result.error;
 
-                currentAdmin = session.user;
-
-                showAdmin();
-
-                await loadEverything();
-
-            }else{
-
-                await supabaseClient.auth.signOut();
-
-            }
-
-        }
-
-    }catch(error){
-
-        console.error(error);
-
-        showLoginError(
-            "Gagal menghubungkan Supabase: " +
-            error.message
-        );
-
-    }
-
-});
+  return result.data;
+}
 
 
 /* =====================================================
    LOGIN
 ===================================================== */
 
-document
-.getElementById("loginForm")
-.addEventListener("submit", async function(e){
+loginForm.addEventListener(
+  "submit",
+  async function(e){
 
     e.preventDefault();
 
     if(!supabaseClient){
 
-        showLoginError(
-            "Supabase belum siap."
-        );
+      showLoginError(
+        "Supabase belum dikonfigurasi."
+      );
 
-        return;
+      return;
     }
 
     const email =
-        document.getElementById("adminEmail").value.trim();
+      document.getElementById(
+        "loginEmail"
+      ).value.trim();
 
     const password =
-        document.getElementById("adminPassword").value;
+      document.getElementById(
+        "loginPassword"
+      ).value;
 
-    setLoginMessage(
-        "Sedang login...",
-        false
-    );
+
+    loginButton.disabled = true;
+
+    loginButton.textContent =
+      "MEMERIKSA...";
+
+    loginStatus.style.display =
+      "none";
+
 
     try{
 
-        const {
-            data,
-            error
-        } = await supabaseClient.auth.signInWithPassword({
-            email:email,
-            password:password
-        });
-
-        if(error){
-            throw error;
-        }
-
-        if(!data.user){
-
-            throw new Error(
-                "User tidak ditemukan."
-            );
-
-        }
-
-        const isAdmin =
-            await checkAdmin(data.user);
-
-        if(!isAdmin){
-
-            await supabaseClient.auth.signOut();
-
-            throw new Error(
-                "Akun ini bukan admin."
-            );
-
-        }
-
-        currentAdmin = data.user;
-
-        setLoginMessage(
-            "Login berhasil.",
-            true
+      const auth =
+        await queryWithTimeout(
+          supabaseClient.auth.signInWithPassword({
+            email,
+            password
+          }),
+          12000
         );
 
-        setTimeout(() => {
 
-            showAdmin();
+      if(auth.error)
+        throw auth.error;
 
-            loadEverything();
 
-        },500);
+      const user =
+        auth.data.user;
+
+
+      if(!user){
+
+        throw new Error(
+          "Akun tidak ditemukan."
+        );
+
+      }
+
+
+      const profile =
+        await getProfile(user.id);
+
+
+      if(!profile){
+
+        await supabaseClient.auth.signOut();
+
+        throw new Error(
+          "Profil akun belum tersedia."
+        );
+
+      }
+
+
+      if(
+        String(profile.role).toLowerCase()
+        !== "admin"
+      ){
+
+        await supabaseClient.auth.signOut();
+
+        throw new Error(
+          "Akun ini bukan admin. Role akun harus admin."
+        );
+
+      }
+
+
+      currentUser = user;
+
+      showLoginSuccess(
+        "Login admin berhasil."
+      );
+
+
+      setTimeout(()=>{
+        openApp();
+      },300);
+
 
     }catch(error){
 
-        console.error(error);
+      console.error(error);
 
-        showLoginError(
-            error.message ||
-            "Login gagal."
-        );
+      showLoginError(
+        error.message ||
+        "Login gagal."
+      );
+
+    }finally{
+
+      loginButton.disabled = false;
+
+      loginButton.textContent =
+        "LOGIN ADMIN";
 
     }
 
-});
+  }
+);
 
 
 /* =====================================================
-   CHECK ADMIN
+   OPEN APP
 ===================================================== */
 
-async function checkAdmin(user){
+async function openApp(){
 
-    try{
+  loginPage.style.display =
+    "none";
 
-        const {
-            data,
-            error
-        } = await supabaseClient
-            .from("profiles")
-            .select("id,email,role")
-            .eq("id",user.id)
-            .maybeSingle();
+  app.style.display =
+    "block";
 
-        if(error){
+  document.getElementById(
+    "adminEmail"
+  ).textContent =
+    currentUser.email;
 
-            console.error(
-                "Profile error:",
-                error
-            );
 
-            return false;
-        }
+  document.getElementById(
+    "systemStatus"
+  ).innerHTML =
+    '<span style="color:#70e38c;">✓ Supabase berhasil terhubung</span>';
 
-        if(!data){
 
-            return false;
-        }
-
-        return String(data.role).toLowerCase() === "admin";
-
-    }catch(error){
-
-        console.error(error);
-
-        return false;
-    }
+  await loadDashboard();
 
 }
 
 
 /* =====================================================
-   SHOW ADMIN
+   CHECK SESSION
 ===================================================== */
 
-function showAdmin(){
+async function checkSession(){
 
-    document
-        .getElementById("loginPage")
-        .style.display="none";
+  if(!supabaseClient)
+    return;
 
-    document
-        .getElementById("adminPage")
-        .style.display="block";
+
+  try{
+
+    const result =
+      await queryWithTimeout(
+        supabaseClient.auth.getSession(),
+        8000
+      );
+
+
+    const session =
+      result.data.session;
+
+
+    if(!session)
+      return;
+
+
+    const profile =
+      await getProfile(
+        session.user.id
+      );
+
+
+    if(
+      !profile ||
+      String(profile.role).toLowerCase()
+      !== "admin"
+    ){
+
+      await supabaseClient.auth.signOut();
+
+      return;
+
+    }
+
+
+    currentUser =
+      session.user;
+
+    openApp();
+
+
+  }catch(error){
+
+    console.error(error);
+
+  }
 
 }
 
@@ -1177,50 +1646,271 @@ function showAdmin(){
    LOGOUT
 ===================================================== */
 
-async function logoutAdmin(){
+document
+  .getElementById("logoutButton")
+  .addEventListener(
+    "click",
+    async function(){
 
-    if(supabaseClient){
+      if(supabaseClient){
 
         await supabaseClient.auth.signOut();
 
+      }
+
+      currentUser = null;
+
+      app.style.display =
+        "none";
+
+      loginPage.style.display =
+        "flex";
+
+      loginForm.reset();
+
+      showLoginSuccess(
+        "Berhasil logout."
+      );
+
     }
-
-    location.reload();
-
-}
+  );
 
 
 /* =====================================================
-   LOAD EVERYTHING
+   SIDEBAR
 ===================================================== */
 
-async function loadEverything(){
+const sidebar =
+  document.getElementById("sidebar");
 
-    if(!supabaseClient){
-        return;
+const overlay =
+  document.getElementById("overlay");
+
+
+document
+  .getElementById("menuButton")
+  .addEventListener(
+    "click",
+    ()=>{
+      sidebar.classList.add("open");
+      overlay.classList.add("show");
     }
+  );
 
-    setSystemStatus(
-        "⏳ Sedang memuat data..."
+
+overlay.addEventListener(
+  "click",
+  ()=>{
+    sidebar.classList.remove("open");
+    overlay.classList.remove("show");
+  }
+);
+
+
+/* =====================================================
+   NAVIGATION
+===================================================== */
+
+document
+  .querySelectorAll(".nav-btn")
+  .forEach(button=>{
+
+    button.addEventListener(
+      "click",
+      async function(){
+
+        const page =
+          this.dataset.page;
+
+
+        document
+          .querySelectorAll(".nav-btn")
+          .forEach(btn=>{
+            btn.classList.remove(
+              "active"
+            );
+          });
+
+
+        this.classList.add("active");
+
+
+        document
+          .querySelectorAll(".page")
+          .forEach(section=>{
+            section.classList.remove(
+              "active"
+            );
+          });
+
+
+        const target =
+          document.getElementById(
+            "page-"+page
+          );
+
+
+        if(target)
+          target.classList.add(
+            "active"
+          );
+
+
+        sidebar.classList.remove(
+          "open"
+        );
+
+        overlay.classList.remove(
+          "show"
+        );
+
+
+        if(page==="dashboard")
+          await loadDashboard();
+
+        if(page==="members")
+          await loadMembers();
+
+        if(page==="services")
+          await loadServices();
+
+        if(page==="payment")
+          await loadPayment();
+
+        if(page==="orders")
+          await loadOrders();
+
+        if(page==="chat")
+          await loadChatMembers();
+
+      }
     );
 
-    await Promise.allSettled([
+  });
 
-        loadMembers(),
 
-        loadOrders(),
+/* =====================================================
+   REFRESH
+===================================================== */
 
-        loadMessages(),
+document
+  .getElementById("refreshButton")
+  .addEventListener(
+    "click",
+    async function(){
 
-        loadPayment(),
+      toast("Memperbarui data...");
 
-        loadPrices()
+      await loadDashboard();
+
+      toast("Data diperbarui.");
+
+    }
+  );
+
+
+/* =====================================================
+   DASHBOARD
+===================================================== */
+
+async function loadDashboard(){
+
+  try{
+
+    const [
+      members,
+      orders,
+      pending,
+      messages
+    ] = await Promise.all([
+
+      queryWithTimeout(
+        supabaseClient
+          .from("profiles")
+          .select("id",{
+            count:"exact",
+            head:true
+          })
+      ),
+
+      queryWithTimeout(
+        supabaseClient
+          .from("orders")
+          .select("id",{
+            count:"exact",
+            head:true
+          })
+      ),
+
+      queryWithTimeout(
+        supabaseClient
+          .from("orders")
+          .select("id",{
+            count:"exact",
+            head:true
+          })
+          .eq("status","pending")
+      ),
+
+      queryWithTimeout(
+        supabaseClient
+          .from("messages")
+          .select("id",{
+            count:"exact",
+            head:true
+          })
+      )
 
     ]);
 
-    setSystemStatus(
-        "✓ Supabase berhasil terhubung"
-    );
+
+    if(members.error)
+      throw members.error;
+
+    if(orders.error)
+      throw orders.error;
+
+    if(pending.error)
+      throw pending.error;
+
+    if(messages.error)
+      throw messages.error;
+
+
+    document.getElementById(
+      "totalMembers"
+    ).textContent =
+      members.count || 0;
+
+
+    document.getElementById(
+      "totalOrders"
+    ).textContent =
+      orders.count || 0;
+
+
+    document.getElementById(
+      "pendingOrders"
+    ).textContent =
+      pending.count || 0;
+
+
+    document.getElementById(
+      "totalMessages"
+    ).textContent =
+      messages.count || 0;
+
+
+  }catch(error){
+
+    console.error(error);
+
+    document.getElementById(
+      "systemStatus"
+    ).innerHTML =
+      '<span style="color:#ff8585;">✕ '+escapeHtml(error.message)+'</span>';
+
+  }
 
 }
 
@@ -1231,87 +1921,584 @@ async function loadEverything(){
 
 async function loadMembers(){
 
-    const table =
-        document.getElementById("membersTable");
+  const tbody =
+    document.getElementById(
+      "membersTable"
+    );
 
-    try{
+  tbody.innerHTML =
+    `<tr><td colspan="3">Memuat...</td></tr>`;
 
-        const {
-            data,
-            error
-        } = await supabaseClient
-            .from("profiles")
-            .select("id,email,role")
-            .order("email");
 
-        if(error){
-            throw error;
-        }
+  try{
 
-        document.getElementById(
-            "totalMembers"
-        ).textContent =
-            data.filter(
-                x =>
-                String(x.role).toLowerCase()
-                !== "admin"
-            ).length;
+    const result =
+      await queryWithTimeout(
+        supabaseClient
+          .from("profiles")
+          .select("id,email,role,created_at")
+          .order("created_at",{
+            ascending:false
+          })
+      );
 
-        if(!data.length){
 
-            table.innerHTML =
-                `<tr>
-                    <td colspan="3">
-                        Belum ada member.
-                    </td>
-                </tr>`;
+    if(result.error)
+      throw result.error;
 
-            return;
-        }
 
-        table.innerHTML =
-            data.map(user => {
+    if(!result.data.length){
 
-                const role =
-                    String(user.role || "member")
-                    .toLowerCase();
+      tbody.innerHTML =
+        `<tr>
+          <td colspan="3">
+            Belum ada data member.
+          </td>
+        </tr>`;
 
-                return `
-                <tr>
-                    <td>${escapeHtml(user.email || "-")}</td>
-
-                    <td>
-                        <span class="status ${
-                            role === "admin"
-                            ? "completed"
-                            : "processing"
-                        }">
-                            ${escapeHtml(role.toUpperCase())}
-                        </span>
-                    </td>
-
-                    <td>
-                        ${escapeHtml(user.id)}
-                    </td>
-                </tr>`;
-
-            }).join("");
-
-    }catch(error){
-
-        console.error(error);
-
-        table.innerHTML =
-            `<tr>
-                <td colspan="3">
-                    Gagal memuat member:
-                    ${escapeHtml(error.message)}
-                </td>
-            </tr>`;
+      return;
 
     }
 
+
+    tbody.innerHTML =
+      result.data.map(row=>{
+
+        const role =
+          String(row.role || "member")
+            .toLowerCase();
+
+
+        return `
+          <tr>
+
+            <td>
+              ${escapeHtml(row.email || "-")}
+            </td>
+
+            <td>
+              <span class="badge ${
+                role==="admin"
+                ?"badge-green"
+                :"badge-yellow"
+              }">
+                ${escapeHtml(role)}
+              </span>
+            </td>
+
+            <td>
+              ${formatDate(row.created_at)}
+            </td>
+
+          </tr>
+        `;
+
+      }).join("");
+
+
+  }catch(error){
+
+    tbody.innerHTML =
+      `<tr>
+        <td colspan="3" style="color:#ff8585;">
+          ${escapeHtml(error.message)}
+        </td>
+      </tr>`;
+
+  }
+
 }
+
+
+/* =====================================================
+   SERVICES
+===================================================== */
+
+async function loadServices(){
+
+  const list =
+    document.getElementById(
+      "serviceList"
+    );
+
+
+  list.innerHTML =
+    `<div class="card">Memuat...</div>`;
+
+
+  try{
+
+    const result =
+      await queryWithTimeout(
+        supabaseClient
+          .from("services")
+          .select("*")
+          .order("created_at",{
+            ascending:false
+          })
+      );
+
+
+    if(result.error)
+      throw result.error;
+
+
+    if(!result.data.length){
+
+      list.innerHTML =
+        `<div class="card">
+          Belum ada layanan.
+        </div>`;
+
+      return;
+
+    }
+
+
+    list.innerHTML =
+      result.data.map(service=>{
+
+        return `
+          <div class="service-item">
+
+            <h3>
+              ${escapeHtml(service.name)}
+            </h3>
+
+            <p style="color:#999;">
+              ${escapeHtml(
+                service.description || ""
+              )}
+            </p>
+
+            <div class="price">
+              Rp ${formatNumber(
+                service.price
+              )}
+            </div>
+
+            <p style="margin-bottom:15px;">
+              ${
+                service.active
+                ? '<span class="badge badge-green">AKTIF</span>'
+                : '<span class="badge badge-red">NONAKTIF</span>'
+              }
+            </p>
+
+            <button
+              class="small-btn"
+              onclick='editService(${JSON.stringify(service)})'
+            >
+              Edit
+            </button>
+
+            <button
+              class="small-btn red"
+              onclick="deleteService('${service.id}')"
+            >
+              Hapus
+            </button>
+
+          </div>
+        `;
+
+      }).join("");
+
+
+  }catch(error){
+
+    list.innerHTML =
+      `<div class="card" style="color:#ff8585;">
+        ${escapeHtml(error.message)}
+      </div>`;
+
+  }
+
+}
+
+
+/* =====================================================
+   ADD SERVICE
+===================================================== */
+
+document
+  .getElementById("addServiceButton")
+  .addEventListener(
+    "click",
+    ()=>{
+      document.getElementById(
+        "serviceId"
+      ).value = "";
+
+      document.getElementById(
+        "serviceName"
+      ).value = "";
+
+      document.getElementById(
+        "serviceDescription"
+      ).value = "";
+
+      document.getElementById(
+        "servicePrice"
+      ).value = "";
+
+      document.getElementById(
+        "serviceActive"
+      ).value = "true";
+
+      document
+        .getElementById("serviceModal")
+        .classList.add("show");
+    }
+  );
+
+
+/* =====================================================
+   EDIT SERVICE
+===================================================== */
+
+window.editService =
+function(service){
+
+  document.getElementById(
+    "serviceId"
+  ).value =
+    service.id || "";
+
+  document.getElementById(
+    "serviceName"
+  ).value =
+    service.name || "";
+
+  document.getElementById(
+    "serviceDescription"
+  ).value =
+    service.description || "";
+
+  document.getElementById(
+    "servicePrice"
+  ).value =
+    service.price || "";
+
+  document.getElementById(
+    "serviceActive"
+  ).value =
+    String(service.active) === "false"
+    ? "false"
+    : "true";
+
+
+  document
+    .getElementById("serviceModal")
+    .classList.add("show");
+
+};
+
+
+/* =====================================================
+   CLOSE SERVICE MODAL
+===================================================== */
+
+document
+  .getElementById("closeServiceModal")
+  .addEventListener(
+    "click",
+    ()=>{
+      document
+        .getElementById("serviceModal")
+        .classList.remove("show");
+    }
+  );
+
+
+/* =====================================================
+   SAVE SERVICE
+===================================================== */
+
+document
+  .getElementById("serviceForm")
+  .addEventListener(
+    "submit",
+    async function(e){
+
+      e.preventDefault();
+
+
+      const id =
+        document.getElementById(
+          "serviceId"
+        ).value;
+
+
+      const data = {
+
+        name:
+          document.getElementById(
+            "serviceName"
+          ).value.trim(),
+
+        description:
+          document.getElementById(
+            "serviceDescription"
+          ).value.trim(),
+
+        price:
+          Number(
+            document.getElementById(
+              "servicePrice"
+            ).value
+          ),
+
+        active:
+          document.getElementById(
+            "serviceActive"
+          ).value === "true"
+
+      };
+
+
+      try{
+
+        let result;
+
+
+        if(id){
+
+          result =
+            await queryWithTimeout(
+              supabaseClient
+                .from("services")
+                .update(data)
+                .eq("id",id)
+            );
+
+        }else{
+
+          result =
+            await queryWithTimeout(
+              supabaseClient
+                .from("services")
+                .insert(data)
+            );
+
+        }
+
+
+        if(result.error)
+          throw result.error;
+
+
+        document
+          .getElementById("serviceModal")
+          .classList.remove("show");
+
+
+        toast(
+          "Layanan berhasil disimpan."
+        );
+
+
+        await loadServices();
+
+
+      }catch(error){
+
+        toast(
+          "Gagal: "+error.message
+        );
+
+      }
+
+    }
+  );
+
+
+/* =====================================================
+   DELETE SERVICE
+===================================================== */
+
+window.deleteService =
+async function(id){
+
+  if(!confirm(
+    "Hapus layanan ini?"
+  ))
+    return;
+
+
+  try{
+
+    const result =
+      await queryWithTimeout(
+        supabaseClient
+          .from("services")
+          .delete()
+          .eq("id",id)
+      );
+
+
+    if(result.error)
+      throw result.error;
+
+
+    toast(
+      "Layanan dihapus."
+    );
+
+
+    await loadServices();
+
+
+  }catch(error){
+
+    toast(
+      "Gagal: "+error.message
+    );
+
+  }
+
+};
+
+
+/* =====================================================
+   PAYMENT
+===================================================== */
+
+async function loadPayment(){
+
+  try{
+
+    const result =
+      await queryWithTimeout(
+        supabaseClient
+          .from("settings")
+          .select("*")
+          .eq("id",1)
+          .maybeSingle()
+      );
+
+
+    if(result.error)
+      throw result.error;
+
+
+    const data =
+      result.data;
+
+
+    if(!data)
+      return;
+
+
+    document.getElementById(
+      "paymentBank"
+    ).value =
+      data.bank_name || "";
+
+
+    document.getElementById(
+      "paymentNumber"
+    ).value =
+      data.account_number || "";
+
+
+    document.getElementById(
+      "paymentOwner"
+    ).value =
+      data.account_holder || "";
+
+
+    document.getElementById(
+      "paymentQris"
+    ).value =
+      data.qris_url || "";
+
+
+  }catch(error){
+
+    toast(
+      "Gagal mengambil rekening: "+
+      error.message
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   SAVE PAYMENT
+===================================================== */
+
+document
+  .getElementById("paymentForm")
+  .addEventListener(
+    "submit",
+    async function(e){
+
+      e.preventDefault();
+
+
+      const data = {
+
+        id:1,
+
+        bank_name:
+          document.getElementById(
+            "paymentBank"
+          ).value.trim(),
+
+        account_number:
+          document.getElementById(
+            "paymentNumber"
+          ).value.trim(),
+
+        account_holder:
+          document.getElementById(
+            "paymentOwner"
+          ).value.trim(),
+
+        qris_url:
+          document.getElementById(
+            "paymentQris"
+          ).value.trim()
+
+      };
+
+
+      try{
+
+        const result =
+          await queryWithTimeout(
+            supabaseClient
+              .from("settings")
+              .upsert(
+                data,
+                {onConflict:"id"}
+              )
+          );
+
+
+        if(result.error)
+          throw result.error;
+
+
+        toast(
+          "Rekening berhasil disimpan."
+        );
+
+
+      }catch(error){
+
+        toast(
+          "Gagal menyimpan rekening: "+
+          error.message
+        );
+
+      }
+
+    }
+  );
 
 
 /* =====================================================
@@ -1320,150 +2507,145 @@ async function loadMembers(){
 
 async function loadOrders(){
 
-    const table =
-        document.getElementById("ordersTable");
+  const tbody =
+    document.getElementById(
+      "ordersTable"
+    );
 
-    try{
 
-        const {
-            data,
-            error
-        } = await supabaseClient
-            .from("orders")
-            .select("*")
-            .order("created_at",{
-                ascending:false
-            });
+  tbody.innerHTML =
+    `<tr><td colspan="5">Memuat...</td></tr>`;
 
-        if(error){
-            throw error;
-        }
 
-        document.getElementById(
-            "totalOrders"
-        ).textContent =
-            data.length;
+  try{
 
-        document.getElementById(
-            "pendingOrders"
-        ).textContent =
-            data.filter(
-                x =>
-                String(x.status || "")
-                .toLowerCase()
-                === "pending"
-            ).length;
+    const result =
+      await queryWithTimeout(
+        supabaseClient
+          .from("orders")
+          .select(`
+            id,
+            user_id,
+            service_id,
+            status,
+            created_at,
+            profiles(email),
+            services(name)
+          `)
+          .order("created_at",{
+            ascending:false
+          })
+      );
 
-        if(!data.length){
 
-            table.innerHTML =
-                `<tr>
-                    <td colspan="6">
-                        Belum ada pesanan.
-                    </td>
-                </tr>`;
+    if(result.error)
+      throw result.error;
 
-            return;
-        }
 
-        table.innerHTML =
-            data.map(order => {
+    if(!result.data.length){
 
-                const status =
-                    String(order.status || "pending")
-                    .toLowerCase();
+      tbody.innerHTML =
+        `<tr>
+          <td colspan="5">
+            Belum ada pesanan.
+          </td>
+        </tr>`;
 
-                const statusClass =
-                    ["pending",
-                     "processing",
-                     "completed",
-                     "cancelled"]
-                    .includes(status)
-                    ? status
-                    : "pending";
-
-                return `
-                <tr>
-
-                    <td>
-                        ${escapeHtml(
-                            order.user_email ||
-                            order.email ||
-                            order.user_id ||
-                            "-"
-                        )}
-                    </td>
-
-                    <td>
-                        ${escapeHtml(
-                            order.package_name ||
-                            order.service_name ||
-                            order.package ||
-                            "-"
-                        )}
-                    </td>
-
-                    <td>
-                        ${formatRupiah(
-                            order.amount ||
-                            order.price ||
-                            0
-                        )}
-                    </td>
-
-                    <td>
-                        <span class="status ${statusClass}">
-                            ${escapeHtml(
-                                status.toUpperCase()
-                            )}
-                        </span>
-                    </td>
-
-                    <td>
-                        ${formatDate(
-                            order.created_at
-                        )}
-                    </td>
-
-                    <td>
-
-                        <button
-                            class="action-btn"
-                            onclick="updateOrderStatus('${order.id}','processing')">
-                            Proses
-                        </button>
-
-                        <button
-                            class="action-btn"
-                            onclick="updateOrderStatus('${order.id}','completed')">
-                            Selesai
-                        </button>
-
-                        <button
-                            class="action-btn"
-                            onclick="updateOrderStatus('${order.id}','cancelled')">
-                            Batal
-                        </button>
-
-                    </td>
-
-                </tr>`;
-
-            }).join("");
-
-    }catch(error){
-
-        console.error(error);
-
-        table.innerHTML =
-            `<tr>
-                <td colspan="6">
-                    Gagal memuat pesanan:
-                    ${escapeHtml(error.message)}
-                </td>
-            </tr>`;
+      return;
 
     }
+
+
+    tbody.innerHTML =
+      result.data.map(order=>{
+
+        let badge =
+          "badge-yellow";
+
+
+        if(order.status==="completed")
+          badge="badge-green";
+
+
+        if(order.status==="cancelled")
+          badge="badge-red";
+
+
+        return `
+          <tr>
+
+            <td>
+              ${escapeHtml(
+                order.profiles?.email || "-"
+              )}
+            </td>
+
+            <td>
+              ${escapeHtml(
+                order.services?.name || "-"
+              )}
+            </td>
+
+            <td>
+
+              <span class="badge ${badge}">
+                ${escapeHtml(
+                  order.status || "pending"
+                )}
+              </span>
+
+            </td>
+
+            <td>
+              ${formatDate(
+                order.created_at
+              )}
+            </td>
+
+            <td>
+
+              ${
+                order.status !== "completed"
+                ?
+                `<button
+                  class="small-btn"
+                  onclick="updateOrderStatus('${order.id}','completed')"
+                >
+                  Selesai
+                </button>`
+                :""
+              }
+
+              ${
+                order.status !== "cancelled"
+                ?
+                `<button
+                  class="small-btn red"
+                  onclick="updateOrderStatus('${order.id}','cancelled')"
+                >
+                  Batal
+                </button>`
+                :""
+              }
+
+            </td>
+
+          </tr>
+        `;
+
+      }).join("");
+
+
+  }catch(error){
+
+    tbody.innerHTML =
+      `<tr>
+        <td colspan="5" style="color:#ff8585;">
+          ${escapeHtml(error.message)}
+        </td>
+      </tr>`;
+
+  }
 
 }
 
@@ -1472,865 +2654,399 @@ async function loadOrders(){
    UPDATE ORDER
 ===================================================== */
 
-async function updateOrderStatus(
-    orderId,
-    status
-){
+window.updateOrderStatus =
+async function(id,status){
 
-    try{
+  try{
 
-        const {
-            error
-        } = await supabaseClient
-            .from("orders")
-            .update({
-                status:status
-            })
-            .eq("id",orderId);
+    const result =
+      await queryWithTimeout(
+        supabaseClient
+          .from("orders")
+          .update({status})
+          .eq("id",id)
+      );
 
-        if(error){
-            throw error;
-        }
 
-        toast(
-            "Status pesanan berhasil diubah."
-        );
+    if(result.error)
+      throw result.error;
 
-        await loadOrders();
 
-    }catch(error){
+    toast(
+      "Status pesanan diperbarui."
+    );
 
-        console.error(error);
 
-        toast(
-            "Gagal mengubah pesanan: " +
-            error.message
-        );
+    await loadOrders();
+
+
+  }catch(error){
+
+    toast(
+      "Gagal: "+error.message
+    );
+
+  }
+
+};
+
+
+/* =====================================================
+   CHAT MEMBERS
+===================================================== */
+
+async function loadChatMembers(){
+
+  const box =
+    document.getElementById(
+      "chatMembers"
+    );
+
+
+  box.innerHTML =
+    `<div style="padding:20px;color:#999;">
+      Memuat...
+    </div>`;
+
+
+  try{
+
+    /*
+      Mengambil member dari profiles.
+    */
+
+    const result =
+      await queryWithTimeout(
+        supabaseClient
+          .from("profiles")
+          .select("id,email,role")
+          .neq("role","admin")
+          .order("email")
+      );
+
+
+    if(result.error)
+      throw result.error;
+
+
+    if(!result.data.length){
+
+      box.innerHTML =
+        `<div style="padding:20px;color:#999;">
+          Belum ada member.
+        </div>`;
+
+      return;
 
     }
+
+
+    box.innerHTML =
+      result.data.map(member=>{
+
+        return `
+          <button
+            class="member-chat-btn"
+            onclick="selectChatMember('${member.id}','${escapeAttribute(member.email || "")}')"
+          >
+            👤
+            ${escapeHtml(
+              member.email || "Member"
+            )}
+          </button>
+        `;
+
+      }).join("");
+
+
+  }catch(error){
+
+    box.innerHTML =
+      `<div style="padding:20px;color:#ff8585;">
+        ${escapeHtml(error.message)}
+      </div>`;
+
+  }
 
 }
 
 
 /* =====================================================
-   PAYMENT SETTINGS
+   SELECT CHAT MEMBER
 ===================================================== */
 
-async function loadPayment(){
+window.selectChatMember =
+async function(id,email){
 
-    try{
-
-        const {
-            data,
-            error
-        } = await supabaseClient
-            .from("site_settings")
-            .select("*")
-            .eq("id",1)
-            .maybeSingle();
-
-        if(error){
-
-            console.warn(
-                "site_settings:",
-                error.message
-            );
-
-            return;
-        }
-
-        if(!data){
-            return;
-        }
-
-        document.getElementById(
-            "paymentName"
-        ).value =
-            data.payment_name || "";
-
-        document.getElementById(
-            "paymentNumber"
-        ).value =
-            data.payment_number || "";
-
-        document.getElementById(
-            "paymentOwner"
-        ).value =
-            data.payment_owner || "";
-
-        showPaymentPreview(data);
-
-    }catch(error){
-
-        console.error(error);
-
-    }
-
-}
+  currentChatUser = id;
 
 
-async function savePayment(){
+  document.getElementById(
+    "chatHeader"
+  ).textContent =
+    "Chat: "+email;
 
-    const name =
-        document
-        .getElementById("paymentName")
-        .value
-        .trim();
 
-    const number =
-        document
-        .getElementById("paymentNumber")
-        .value
-        .trim();
+  await loadMessages(id);
 
-    const owner =
-        document
-        .getElementById("paymentOwner")
-        .value
-        .trim();
+};
 
-    if(!name || !number || !owner){
 
-        toast(
-            "Lengkapi semua data pembayaran."
-        );
+/* =====================================================
+   LOAD MESSAGES
+===================================================== */
 
-        return;
-    }
+async function loadMessages(userId){
 
-    try{
+  const box =
+    document.getElementById(
+      "messages"
+    );
 
-        const {
-            error
-        } = await supabaseClient
-            .from("site_settings")
-            .upsert({
-                id:1,
-                payment_name:name,
-                payment_number:number,
-                payment_owner:owner,
-                updated_at:new Date().toISOString()
-            });
 
-        if(error){
-            throw error;
-        }
+  box.innerHTML =
+    `<div style="text-align:center;color:#888;">
+      Memuat pesan...
+    </div>`;
 
-        toast(
-            "Metode pembayaran berhasil disimpan."
-        );
 
-        await loadPayment();
+  try{
 
-    }catch(error){
+    const result =
+      await queryWithTimeout(
+        supabaseClient
+          .from("messages")
+          .select("*")
+          .eq("user_id",userId)
+          .order("created_at",{
+            ascending:true
+          })
+      );
 
-        console.error(error);
 
-        toast(
-            "Gagal menyimpan pembayaran: " +
-            error.message
-        );
+    if(result.error)
+      throw result.error;
+
+
+    if(!result.data.length){
+
+      box.innerHTML =
+        `<div style="text-align:center;color:#888;padding-top:80px;">
+          Belum ada pesan.
+        </div>`;
+
+      return;
 
     }
 
-}
+
+    box.innerHTML =
+      result.data.map(message=>{
+
+        const role =
+          String(
+            message.sender_role ||
+            message.role ||
+            "member"
+          ).toLowerCase();
 
 
-function showPaymentPreview(data){
+        const admin =
+          role === "admin";
 
-    const box =
-        document.getElementById(
-            "paymentPreview"
-        );
 
-    if(!data){
-        box.innerHTML="";
-        return;
-    }
-
-    box.innerHTML = `
-        <div class="payment-preview">
-
-            <strong>
-                ${escapeHtml(
-                    data.payment_name || "-"
-                )}
-            </strong>
+        return `
+          <div class="message ${
+            admin
+            ? "admin"
+            : "member"
+          }">
 
             <div>
-                ${escapeHtml(
-                    data.payment_number || "-"
-                )}
+              ${escapeHtml(
+                message.message || ""
+              )}
             </div>
 
-            <div class="muted">
-                a.n.
-                ${escapeHtml(
-                    data.payment_owner || "-"
-                )}
+            <div class="message-time">
+              ${formatDate(
+                message.created_at
+              )}
             </div>
 
-        </div>
-    `;
+          </div>
+        `;
+
+      }).join("");
+
+
+    box.scrollTop =
+      box.scrollHeight;
+
+
+  }catch(error){
+
+    box.innerHTML =
+      `<div style="color:#ff8585;padding:20px;">
+        ${escapeHtml(error.message)}
+      </div>`;
+
+  }
 
 }
 
 
 /* =====================================================
-   PRICES
+   SEND CHAT
 ===================================================== */
 
-async function loadPrices(){
+document
+  .getElementById("chatForm")
+  .addEventListener(
+    "submit",
+    async function(e){
 
-    const list =
-        document.getElementById(
-            "priceList"
-        );
-
-    try{
-
-        const {
-            data,
-            error
-        } = await supabaseClient
-            .from("site_settings")
-            .select("*")
-            .eq("id",1)
-            .maybeSingle();
-
-        if(error){
-            throw error;
-        }
-
-        let prices = [];
-
-        if(data && Array.isArray(data.prices)){
-
-            prices = data.prices;
-
-        }
-
-        if(!prices.length){
-
-            list.innerHTML =
-                `<div class="muted">
-                    Belum ada paket harga.
-                </div>`;
-
-            return;
-        }
-
-        list.innerHTML =
-            prices.map((item,index) => {
-
-                return `
-                <div class="price-item">
-
-                    <div class="price-info">
-
-                        <strong>
-                            ${escapeHtml(
-                                item.name || "-"
-                            )}
-                        </strong>
-
-                        <div>
-                            ${formatRupiah(
-                                item.price || 0
-                            )}
-                        </div>
-
-                        <small>
-                            ${escapeHtml(
-                                item.description || ""
-                            )}
-                        </small>
-
-                    </div>
-
-                    <button
-                        class="delete-btn"
-                        onclick="deletePrice(${index})">
-                        Hapus
-                    </button>
-
-                </div>`;
-
-            }).join("");
-
-    }catch(error){
-
-        console.error(error);
-
-        list.innerHTML =
-            `<div class="muted">
-                Belum dapat membaca paket harga.
-            </div>`;
-
-    }
-
-}
+      e.preventDefault();
 
 
-async function addPrice(){
-
-    const name =
-        document
-        .getElementById("priceName")
-        .value
-        .trim();
-
-    const price =
-        Number(
-            document
-            .getElementById("priceValue")
-            .value
-        );
-
-    const description =
-        document
-        .getElementById("priceDescription")
-        .value
-        .trim();
-
-    if(!name || !price){
+      if(!currentChatUser){
 
         toast(
-            "Nama paket dan harga wajib diisi."
+          "Pilih member terlebih dahulu."
         );
 
         return;
-    }
 
-    try{
+      }
 
-        const {
-            data,
-            error
-        } = await supabaseClient
-            .from("site_settings")
-            .select("prices")
-            .eq("id",1)
-            .maybeSingle();
 
-        if(error){
-            throw error;
-        }
-
-        let prices =
-            data &&
-            Array.isArray(data.prices)
-            ? data.prices
-            : [];
-
-        prices.push({
-            name:name,
-            price:price,
-            description:description
-        });
-
-        const {
-            error:updateError
-        } = await supabaseClient
-            .from("site_settings")
-            .upsert({
-                id:1,
-                prices:prices,
-                updated_at:new Date().toISOString()
-            });
-
-        if(updateError){
-            throw updateError;
-        }
-
+      const input =
         document.getElementById(
-            "priceName"
-        ).value="";
-
-        document.getElementById(
-            "priceValue"
-        ).value="";
-
-        document.getElementById(
-            "priceDescription"
-        ).value="";
-
-        toast(
-            "Paket berhasil ditambahkan."
+          "chatInput"
         );
 
-        await loadPrices();
 
-    }catch(error){
-
-        console.error(error);
-
-        toast(
-            "Gagal menambah paket: " +
-            error.message
-        );
-
-    }
-
-}
-
-
-async function deletePrice(index){
-
-    if(!confirm(
-        "Hapus paket harga ini?"
-    )){
-        return;
-    }
-
-    try{
-
-        const {
-            data,
-            error
-        } = await supabaseClient
-            .from("site_settings")
-            .select("prices")
-            .eq("id",1)
-            .maybeSingle();
-
-        if(error){
-            throw error;
-        }
-
-        let prices =
-            data &&
-            Array.isArray(data.prices)
-            ? data.prices
-            : [];
-
-        prices.splice(index,1);
-
-        const {
-            error:updateError
-        } = await supabaseClient
-            .from("site_settings")
-            .upsert({
-                id:1,
-                prices:prices,
-                updated_at:new Date().toISOString()
-            });
-
-        if(updateError){
-            throw updateError;
-        }
-
-        toast(
-            "Paket berhasil dihapus."
-        );
-
-        await loadPrices();
-
-    }catch(error){
-
-        console.error(error);
-
-        toast(
-            "Gagal menghapus paket: " +
-            error.message
-        );
-
-    }
-
-}
-
-
-/* =====================================================
-   CHAT
-===================================================== */
-
-async function loadMessages(){
-
-    const list =
-        document.getElementById(
-            "chatList"
-        );
-
-    try{
-
-        const {
-            data,
-            error
-        } = await supabaseClient
-            .from("messages")
-            .select("*")
-            .order("created_at",{
-                ascending:true
-            });
-
-        if(error){
-            throw error;
-        }
-
-        document.getElementById(
-            "totalMessages"
-        ).textContent =
-            data.length;
-
-        if(!data.length){
-
-            list.innerHTML =
-                `<div class="muted">
-                    Belum ada pesan dari member.
-                </div>`;
-
-            return;
-        }
-
-        /*
-         * Kelompokkan pesan berdasarkan user_id
-         */
-
-        const groups = {};
-
-        data.forEach(message => {
-
-            const userId =
-                message.user_id ||
-                message.sender_id ||
-                "unknown";
-
-            if(!groups[userId]){
-                groups[userId]=[];
-            }
-
-            groups[userId].push(message);
-
-        });
-
-
-        list.innerHTML =
-            Object.entries(groups)
-            .map(([userId,messages]) => {
-
-                const last =
-                    messages[messages.length-1];
-
-                const email =
-                    last.user_email ||
-                    last.email ||
-                    userId;
-
-                return `
-                <div class="chat-user">
-
-                    <div class="chat-user-head">
-
-                        <div class="chat-user-email">
-                            👤
-                            ${escapeHtml(email)}
-                        </div>
-
-                        <div class="muted">
-                            ${messages.length}
-                            pesan
-                        </div>
-
-                    </div>
-
-                    <div class="chat-messages">
-
-                        ${
-                            messages
-                            .map(message => {
-
-                                const isAdmin =
-                                    String(
-                                        message.sender_role ||
-                                        message.role ||
-                                        ""
-                                    ).toLowerCase()
-                                    === "admin";
-
-                                return `
-                                <div class="msg ${
-                                    isAdmin
-                                    ? "admin"
-                                    : "member"
-                                }">
-
-                                    ${escapeHtml(
-                                        message.message ||
-                                        message.content ||
-                                        ""
-                                    )}
-
-                                    <small>
-                                        ${formatDate(
-                                            message.created_at
-                                        )}
-                                    </small>
-
-                                </div>`;
-
-                            }).join("")
-                        }
-
-                    </div>
-
-                    <div class="reply-box">
-
-                        <input
-                            id="reply-${escapeHtml(userId)}"
-                            placeholder="Balas member...">
-
-                        <button
-                            class="btn"
-                            onclick="replyMessage('${escapeHtml(userId)}')">
-                            Kirim
-                        </button>
-
-                    </div>
-
-                </div>`;
-
-            }).join("");
-
-    }catch(error){
-
-        console.error(error);
-
-        list.innerHTML =
-            `<div class="muted">
-                Gagal memuat chat:
-                ${escapeHtml(error.message)}
-            </div>`;
-
-    }
-
-}
-
-
-/* =====================================================
-   REPLY CHAT
-===================================================== */
-
-async function replyMessage(userId){
-
-    const input =
-        document.getElementById(
-            "reply-" + userId
-        );
-
-    if(!input){
-        return;
-    }
-
-    const text =
+      const text =
         input.value.trim();
 
-    if(!text){
+
+      if(!text)
         return;
-    }
 
-    try{
 
-        const {
-            error
-        } = await supabaseClient
-            .from("messages")
-            .insert({
+      try{
 
-                user_id:userId,
+        const result =
+          await queryWithTimeout(
+            supabaseClient
+              .from("messages")
+              .insert({
 
-                sender_id:currentAdmin.id,
+                user_id:
+                  currentChatUser,
 
-                sender_role:"admin",
+                sender_role:
+                  "admin",
 
-                message:text
+                message:
+                  text
 
-            });
+              })
+          );
 
-        if(error){
-            throw error;
-        }
 
-        input.value="";
+        if(result.error)
+          throw result.error;
+
+
+        input.value = "";
+
+
+        await loadMessages(
+          currentChatUser
+        );
+
+
+      }catch(error){
 
         toast(
-            "Pesan berhasil dikirim."
+          "Pesan gagal dikirim: "+
+          error.message
         );
 
-        await loadMessages();
-
-    }catch(error){
-
-        console.error(error);
-
-        toast(
-            "Pesan gagal dikirim: " +
-            error.message
-        );
+      }
 
     }
-
-}
-
-
-/* =====================================================
-   SYSTEM STATUS
-===================================================== */
-
-function setSystemStatus(text){
-
-    document.getElementById(
-        "systemStatus"
-    ).innerHTML = text;
-
-}
-
-
-/* =====================================================
-   LOGIN MESSAGE
-===================================================== */
-
-function setLoginMessage(
-    text,
-    success
-){
-
-    const box =
-        document.getElementById(
-            "loginMessage"
-        );
-
-    box.classList.remove(
-        "hidden",
-        "error",
-        "success"
-    );
-
-    box.classList.add(
-        success
-        ? "success"
-        : "error"
-    );
-
-    box.textContent=text;
-
-}
-
-
-function showLoginError(text){
-
-    setLoginMessage(
-        text,
-        false
-    );
-
-}
-
-
-/* =====================================================
-   TOAST
-===================================================== */
-
-let toastTimer;
-
-function toast(text){
-
-    const box =
-        document.getElementById(
-            "toast"
-        );
-
-    box.textContent=text;
-
-    box.style.display="block";
-
-    clearTimeout(toastTimer);
-
-    toastTimer =
-        setTimeout(() => {
-
-            box.style.display="none";
-
-        },3000);
-
-}
+  );
 
 
 /* =====================================================
    HELPERS
 ===================================================== */
 
-function formatRupiah(number){
-
-    return new Intl.NumberFormat(
-        "id-ID",
-        {
-            style:"currency",
-            currency:"IDR",
-            maximumFractionDigits:0
-        }
-    ).format(
-        Number(number) || 0
-    );
-
-}
-
-
-function formatDate(date){
-
-    if(!date){
-        return "-";
-    }
-
-    try{
-
-        return new Date(date)
-            .toLocaleString(
-                "id-ID",
-                {
-                    dateStyle:"short",
-                    timeStyle:"short"
-                }
-            );
-
-    }catch(e){
-
-        return "-";
-
-    }
-
-}
-
-
 function escapeHtml(value){
 
-    return String(value ?? "")
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
+
+
+function escapeAttribute(value){
+
+  return String(value ?? "")
+    .replaceAll("\\","\\\\")
+    .replaceAll("'","\\'")
+    .replaceAll('"','&quot;');
+
+}
+
+
+function formatNumber(value){
+
+  return Number(value || 0)
+    .toLocaleString("id-ID");
+
+}
+
+
+function formatDate(value){
+
+  if(!value)
+    return "-";
+
+
+  try{
+
+    return new Date(value)
+      .toLocaleString(
+        "id-ID",
+        {
+          dateStyle:"short",
+          timeStyle:"short"
+        }
+      );
+
+  }catch{
+
+    return value;
+
+  }
 
 }
 
 
 /* =====================================================
-   AUTO REFRESH CHAT
+   START
 ===================================================== */
 
-setInterval(() => {
-
-    if(
-        supabaseClient &&
-        currentAdmin
-    ){
-
-        loadMessages();
-
-    }
-
-},15000);
+checkSession();
 
 </script>
 
 </body>
-  </html>
+      </html>
